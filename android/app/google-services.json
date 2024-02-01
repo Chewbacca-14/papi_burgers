@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "80031329945",
+    "project_id": "papi-burgers-project",
+    "storage_bucket": "papi-burgers-project.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:80031329945:android:d4916fa543feff58791208",
+        "android_client_info": {
+          "package_name": "com.papiburgers.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDILRocLXJtNkwRe2ChphJOqb2v4I_h7Us"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
