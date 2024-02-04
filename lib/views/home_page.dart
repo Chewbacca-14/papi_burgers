@@ -1,5 +1,10 @@
 import 'package:auto_route/annotations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/constants/color_palette.dart';
+import 'package:papi_burgers/views/login_code_page.dart';
+import 'package:papi_burgers/views/login_page.dart';
+import 'package:papi_burgers/views/menu_main_page.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -10,8 +15,55 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  List<Widget> pages = [
+    const MenuMainPage(),
+    const LoginCodePage(phoneNumber: '550'),
+    const LoginPage(),
+    const LoginCodePage(phoneNumber: '550')
+  ];
+
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      body: Center(
+        child: pages.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home_rounded,
+                color: _selectedIndex == 0 ? primaryColor : primaryGrey),
+            label: 'Главная',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite,
+                color: _selectedIndex == 1 ? primaryColor : primaryGrey),
+            label: 'Любимое',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_basket_rounded,
+                color: _selectedIndex == 2 ? primaryColor : primaryGrey),
+            label: 'Корзина',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person,
+                color: _selectedIndex == 3 ? primaryColor : primaryGrey),
+            label: 'Профиль',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: primaryGrey,
+        iconSize: 28,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
