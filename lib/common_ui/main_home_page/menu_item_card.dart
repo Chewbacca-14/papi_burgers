@@ -31,10 +31,32 @@ class MenuItemCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: Container(
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: NetworkImage(photo), fit: BoxFit.fill)),
+                child: Stack(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(photo), fit: BoxFit.fill)),
+                    ),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: const Color.fromARGB(218, 255, 255, 255),
+                          ),
+                          child: const Center(
+                            child: Icon(Icons.favorite,
+                                color: Color.fromARGB(255, 119, 119, 119)),
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
               h20,
@@ -53,7 +75,6 @@ class MenuItemCard extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                                 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
@@ -73,7 +94,7 @@ class MenuItemCard extends StatelessWidget {
                       ],
                     ),
                     const Spacer(),
-                   const CartButton(),
+                    const CartButton(),
                   ],
                 ),
               )

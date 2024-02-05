@@ -27,10 +27,14 @@ class CustomTabBox extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Image.network(
-              photo,
+            Container(
               width: 80,
               height: 80,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(22),
+                image: DecorationImage(
+                    image: NetworkImage(photo), fit: BoxFit.fill),
+              ),
             ),
             h10,
             Expanded(
@@ -39,6 +43,7 @@ class CustomTabBox extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w700,
                 ),
@@ -49,14 +54,16 @@ class CustomTabBox extends StatelessWidget {
               height: 24,
               width: 24,
               decoration: BoxDecoration(
-                color: background,
+                color: Color.fromARGB(127, 243, 243, 243),
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Center(
                 child: Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 15,
-                  color: isSelected ? const Color.fromARGB(115, 255, 255, 255) : Colors.black,
+                  color: isSelected
+                      ? const Color.fromARGB(115, 255, 255, 255)
+                      : Colors.black,
                 ),
               ),
             ),

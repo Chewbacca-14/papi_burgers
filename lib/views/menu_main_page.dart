@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
@@ -13,7 +15,8 @@ class MenuMainPage extends StatefulWidget {
   State<MenuMainPage> createState() => _MenuMainPageState();
 }
 
-class _MenuMainPageState extends State<MenuMainPage> with TickerProviderStateMixin{
+class _MenuMainPageState extends State<MenuMainPage>
+    with TickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<String> categories = [];
   List<Map<String, dynamic>> menuItems = [];
@@ -23,8 +26,11 @@ class _MenuMainPageState extends State<MenuMainPage> with TickerProviderStateMix
   @override
   void initState() {
     super.initState();
+     fetchData();
     _tabController = TabController(length: categories.length, vsync: this);
-    fetchData();
+    
+   
+   
   }
 
   void fetchData() async {
@@ -36,6 +42,10 @@ class _MenuMainPageState extends State<MenuMainPage> with TickerProviderStateMix
       categories = List<String>.from(restaurantDoc['categories']);
 
       _tabController = TabController(length: categories.length, vsync: this);
+       _tabController.addListener(() {
+      log('${_tabController.index}');
+      setState(() {});
+    });
 
       // Fetch menu items
       menuItems = List<Map<String, dynamic>>.from(restaurantDoc['menu']);
@@ -110,9 +120,17 @@ class _MenuMainPageState extends State<MenuMainPage> with TickerProviderStateMix
                   )),
               h20,
               TabBar(
+                splashBorderRadius: BorderRadius.circular(22),
+              
+                onTap: (value) {
+                  _tabController.animateTo(value);
+                  setState(() {
+                    
+                  });
+                },
                 controller: _tabController,
                 dividerColor: Colors.transparent,
-                isScrollable: true,
+                // isScrollable: true,
                 indicatorColor: Colors.transparent,
                 tabs: categories
                     .map(
@@ -120,13 +138,16 @@ class _MenuMainPageState extends State<MenuMainPage> with TickerProviderStateMix
                         name: category,
                         photo:
                             'https://d27jswm5an3efw.cloudfront.net/app/uploads/2019/07/how-to-make-a-url-for-a-picture-on-your-computer-4.jpg',
-                       isSelected: _tabController.index == categories.indexOf(category),
+                        isSelected: _tabController.index ==
+                            categories.indexOf(category),
                       ),
                     )
                     .toList(),
               ),
               Expanded(
                 child: TabBarView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  controller: _tabController,
                   children: categories.map((category) {
                     List<Map<String, dynamic>> items = menuItems
                         .where((item) => item['cat'] == category)
