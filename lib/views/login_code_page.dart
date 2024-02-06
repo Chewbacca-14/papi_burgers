@@ -87,7 +87,9 @@ class _LoginCodePageState extends State<LoginCodePage> {
                   switch (otpCodeResult) {
                     case LoginCodeResult.success:
                       context.mounted
-                          ? context.router.push(const HomeRoute())
+                          ? context.router.push(
+                              UserDetailsRoute(phoneNumber: widget.phoneNumber),
+                            )
                           : null;
                       break;
                     case LoginCodeResult.wrongOTP:
@@ -105,7 +107,10 @@ class _LoginCodePageState extends State<LoginCodePage> {
               onTap: () async {
                 if (timerController.canResendOTP) {
                   LoginResult loginResult =
-                      await loginController.sentVerifyCode('+420 132457895');
+                      await loginController.sentVerifyCode(
+                    widget.phoneNumber.replaceAll('(', '').replaceAll(')', ''),
+                  );
+                  //+420 132457895
                   timerController.startTimer();
                 } else {
                   showCustomSnackBar(

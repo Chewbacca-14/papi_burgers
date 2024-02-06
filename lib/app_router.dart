@@ -5,6 +5,7 @@ import 'package:papi_burgers/views/login_code_page.dart';
 
 import 'package:papi_burgers/views/login_page.dart';
 import 'package:papi_burgers/views/project_selecting_page.dart';
+import 'package:papi_burgers/views/user_details_page.dart';
 import 'package:papi_burgers/views/user_profile_page.dart';
 part 'app_router.gr.dart';
 
@@ -12,10 +13,11 @@ part 'app_router.gr.dart';
 class AppRouter extends _$AppRouter {
   @override
   List<AutoRoute> get routes => [
-        AutoRoute(page: LoginRoute.page),
+        AutoRoute(page: LoginRoute.page, initial: true),
         AutoRoute(page: LoginCodeRoute.page),
         AutoRoute(page: HomeRoute.page),
         AutoRoute(page: ProjectSelectingRoute.page),
-        AutoRoute(page: UserProfileRoute.page, initial: true)
+        AutoRoute(page: UserProfileRoute.page),
+        AutoRoute(page: UserDetailsRoute.page)
       ];
 }

@@ -1,10 +1,10 @@
 import 'package:auto_route/annotations.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
 import 'package:papi_burgers/views/login_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
+import 'package:papi_burgers/views/user_profile_page.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
@@ -17,9 +17,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     const MenuMainPage(),
-    const LoginCodePage(phoneNumber: '550'),
-    const LoginPage(),
-    const LoginCodePage(phoneNumber: '550')
+    const MenuMainPage(),
+    const MenuMainPage(),
+    const UserProfilePage(),
   ];
 
   int _selectedIndex = 0;

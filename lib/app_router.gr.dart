@@ -43,6 +43,16 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const ProjectSelectingPage(),
       );
     },
+    UserDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<UserDetailsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: UserDetailsPage(
+          key: args.key,
+          phoneNumber: args.phoneNumber,
+        ),
+      );
+    },
     UserProfileRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -130,6 +140,44 @@ class ProjectSelectingRoute extends PageRouteInfo<void> {
   static const String name = 'ProjectSelectingRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserDetailsPage]
+class UserDetailsRoute extends PageRouteInfo<UserDetailsRouteArgs> {
+  UserDetailsRoute({
+    Key? key,
+    required String phoneNumber,
+    List<PageRouteInfo>? children,
+  }) : super(
+          UserDetailsRoute.name,
+          args: UserDetailsRouteArgs(
+            key: key,
+            phoneNumber: phoneNumber,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'UserDetailsRoute';
+
+  static const PageInfo<UserDetailsRouteArgs> page =
+      PageInfo<UserDetailsRouteArgs>(name);
+}
+
+class UserDetailsRouteArgs {
+  const UserDetailsRouteArgs({
+    this.key,
+    required this.phoneNumber,
+  });
+
+  final Key? key;
+
+  final String phoneNumber;
+
+  @override
+  String toString() {
+    return 'UserDetailsRouteArgs{key: $key, phoneNumber: $phoneNumber}';
+  }
 }
 
 /// generated route for

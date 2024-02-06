@@ -20,6 +20,6 @@ class TimerController extends ChangeNotifier {
         notifyListeners();
       }
     });
-    notifyListeners();
+    
   }
 }
