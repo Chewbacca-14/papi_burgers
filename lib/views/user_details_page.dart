@@ -1,6 +1,7 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
@@ -21,20 +22,17 @@ class UserDetailsPage extends StatefulWidget {
 class _UserDetailsPageState extends State<UserDetailsPage> {
   final TextEditingController _nameController = TextEditingController();
 
-  Future<bool> createUserInFirestoreAndCheckIFExists() async {
-   CollectionReference<Map<String, dynamic>> _firestore = FirebaseFirestore.instance.collection('users');
-QuerySnapshot querySnapshot = await _firestore.where('phone', isEqualTo: widget.phoneNumber).get();
-  if(querySnapshot.docs.isNotEmpty) {
+  Future<void> createUserInFirestore() async {
+    CollectionReference<Map<String, dynamic>> firestore =
+        FirebaseFirestore.instance.collection('users');
 
-    return true;
-  } else {
-     await _firestore.add({
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await firestore.add({
+      'uid': uid,
       'name': _nameController.text,
       'phone': widget.phoneNumber,
     });
-    return false;
-  }
-   
   }
 
   @override
@@ -79,7 +77,7 @@ QuerySnapshot querySnapshot = await _firestore.where('phone', isEqualTo: widget.
                       ),
                       h60,
                       ClassicLongButton(
-                          onTap: () {
+                          onTap: () async {
                             if (_nameController.text.isEmpty) {
                               showCustomSnackBar(
                                   context,

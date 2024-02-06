@@ -31,12 +31,12 @@ class _NotificationCardState extends State<NotificationCard> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
+                const Icon(
                   Icons.notifications_active,
                   color: grey9,
                   size: 28,
                 ),
-                Text(
+                const Text(
                   'Уведомления',
                   style: TextStyle(
                       fontSize: 16, color: grey9, fontWeight: FontWeight.w700),

@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:papi_burgers/app_router.dart';
@@ -30,7 +33,10 @@ class _LoginPageState extends State<LoginPage> {
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
 
- 
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,17 +106,16 @@ class _LoginPageState extends State<LoginPage> {
                           'Вы не соглашены с условиями использование',
                           AnimatedSnackBarType.error);
                     } else {
+                      context.mounted
+                          ? showCustomSnackBar(
+                              context, 'Отправка...', AnimatedSnackBarType.info)
+                          : null;
                       LoginResult loginResult =
                           await loginController.sentVerifyCode(
                         _phoneController.text
                             .replaceAll('(', '')
                             .replaceAll(')', ''),
                       );
-
-                      context.mounted
-                          ? showCustomSnackBar(
-                              context, 'Отправка...', AnimatedSnackBarType.info)
-                          : null;
 
                       switch (loginResult) {
                         case LoginResult.error:

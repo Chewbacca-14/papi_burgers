@@ -1,6 +1,7 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
@@ -9,6 +10,7 @@ import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/login_controller.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/controllers/timer_controller.dart';
+import 'package:papi_burgers/views/home_page.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -24,6 +26,18 @@ class LoginCodePage extends StatefulWidget {
 }
 
 class _LoginCodePageState extends State<LoginCodePage> {
+  Future<bool> isUserExists() async {
+    CollectionReference<Map<String, dynamic>> _firestore =
+        FirebaseFirestore.instance.collection('users');
+    QuerySnapshot querySnapshot =
+        await _firestore.where('phone', isEqualTo: widget.phoneNumber).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   final TextEditingController _otpCodeController = TextEditingController();
 
   @override
@@ -86,10 +100,14 @@ class _LoginCodePageState extends State<LoginCodePage> {
                       .checkOTPCode(_otpCodeController.text);
                   switch (otpCodeResult) {
                     case LoginCodeResult.success:
+                      bool isExists = await isUserExists();
                       context.mounted
-                          ? context.router.push(
-                              UserDetailsRoute(phoneNumber: widget.phoneNumber),
-                            )
+                          ? isExists
+                              ? context.router.push(const HomeRoute())
+                              : context.router.push(
+                                  UserDetailsRoute(
+                                      phoneNumber: widget.phoneNumber),
+                                )
                           : null;
                       break;
                     case LoginCodeResult.wrongOTP:

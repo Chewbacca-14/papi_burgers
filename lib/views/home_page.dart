@@ -1,4 +1,5 @@
 import 'package:auto_route/annotations.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
