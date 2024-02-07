@@ -5,6 +5,7 @@ import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
 import 'package:papi_burgers/views/login_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
+import 'package:papi_burgers/views/project_selecting_page.dart';
 import 'package:papi_burgers/views/user_profile_page.dart';
 
 @RoutePage()
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     const MenuMainPage(),
     const MenuMainPage(),
-    const MenuMainPage(),
+    const ProjectSelectingPage(),
     const UserProfilePage(),
   ];
 

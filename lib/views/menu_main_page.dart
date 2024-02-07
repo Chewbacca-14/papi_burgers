@@ -7,6 +7,8 @@ import 'package:papi_burgers/common_ui/main_home_page/custom_tab_box.dart';
 import 'package:papi_burgers/common_ui/main_home_page/menu_item_card.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/restaurant_provider.dart';
+import 'package:provider/provider.dart';
 
 class MenuMainPage extends StatefulWidget {
   const MenuMainPage({super.key});
@@ -26,11 +28,9 @@ class _MenuMainPageState extends State<MenuMainPage>
   @override
   void initState() {
     super.initState();
-     fetchData();
+    fetchData();
+    getRestaurantInfo();
     _tabController = TabController(length: categories.length, vsync: this);
-    
-   
-   
   }
 
   void fetchData() async {
@@ -42,18 +42,42 @@ class _MenuMainPageState extends State<MenuMainPage>
       categories = List<String>.from(restaurantDoc['categories']);
 
       _tabController = TabController(length: categories.length, vsync: this);
-       _tabController.addListener(() {
-      log('${_tabController.index}');
-      setState(() {});
-    });
+      _tabController.addListener(() {
+        log('${_tabController.index}');
+        setState(() {});
+      });
 
       // Fetch menu items
       menuItems = List<Map<String, dynamic>>.from(restaurantDoc['menu']);
     });
   }
 
+  String projectName = '';
+
+  Future<void> getRestaurantInfo() async {
+    RestaurantProvider restaurantProvider =
+        Provider.of<RestaurantProvider>(context, listen: false);
+try {
+
+    QuerySnapshot<Map<String, dynamic>> restaurantSnapshot =
+        await FirebaseFirestore.instance
+            .collection('restaurants')
+            .where('id', isEqualTo: restaurantProvider.restaurantName)
+            .limit(1)
+            .get();
+
+    final restaurantData = restaurantSnapshot.docs.first.data();
+    projectName = restaurantData['name'];
+} catch (e) {
+
+}
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    RestaurantProvider restaurantProvider =
+        Provider.of<RestaurantProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: background,
       appBar: AppBar(
@@ -88,7 +112,7 @@ class _MenuMainPageState extends State<MenuMainPage>
             children: [
               h20,
               Text(
-                'Papi Burgers',
+                projectName,
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.w900,
@@ -121,12 +145,10 @@ class _MenuMainPageState extends State<MenuMainPage>
               h20,
               TabBar(
                 splashBorderRadius: BorderRadius.circular(22),
-              
+
                 onTap: (value) {
                   _tabController.animateTo(value);
-                  setState(() {
-                    
-                  });
+                  setState(() {});
                 },
                 controller: _tabController,
                 dividerColor: Colors.transparent,

@@ -2,6 +2,8 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/project_selecting_box/project_box.dart';
+import 'package:papi_burgers/restaurant_provider.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class ProjectSelectingPage extends StatefulWidget {
@@ -36,6 +38,8 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
 
   @override
   Widget build(BuildContext context) {
+    RestaurantProvider restaurantProvider =
+        Provider.of<RestaurantProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 43, 43, 43),
       body: FutureBuilder(
@@ -50,7 +54,17 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
             return ListView.builder(
               itemCount: restaurantList.length,
               itemBuilder: (context, index) {
-                return ProjectBox(logoImage: restaurantList[index]['logourl'], mainImage: restaurantList[index]['mainImage'],  projectName: restaurantList[index]['name'],);
+                return GestureDetector(
+                  onTap: () {
+                    restaurantProvider.changeRestaurantName(restaurantList[index]['id']);
+                   
+                  },
+                  child: ProjectBox(
+                    logoImage: restaurantList[index]['logourl'],
+                    mainImage: restaurantList[index]['mainImage'],
+                    projectName: restaurantList[index]['name'],
+                  ),
+                );
               },
             );
           }

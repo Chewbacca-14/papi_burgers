@@ -145,11 +145,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         )
                       : SizedBox(),
                   h25,
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 41),
-                  //   child: NotificationCard(),
-                  // )
-                  Text('fasdf'),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 41),
+                    child: NotificationCard(),
+                  )
+                
                 ],
               ),
             ),
