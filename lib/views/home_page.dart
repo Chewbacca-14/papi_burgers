@@ -1,6 +1,7 @@
 import 'package:auto_route/annotations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/common_ui/main_home_page/menu_item_details.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
 import 'package:papi_burgers/views/login_page.dart';
@@ -19,7 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     const MenuMainPage(),
-    const MenuMainPage(),
+    const MenuItemDetails(calories: 2, carbohydrates: 2, description: '', fat: 2, imageUrl: '', ingredients: '', name: '', price: 2, proteins: 2, weight: 2),
     const ProjectSelectingPage(),
     const UserProfilePage(),
   ];

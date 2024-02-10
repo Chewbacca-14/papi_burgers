@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
@@ -180,11 +181,16 @@ try {
                         final menuItemData = items[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: MenuItemCard(
-                              name: menuItemData['name'],
-                              photo: menuItemData['photo'],
-                              price: menuItemData['price'],
-                              weight: 123),
+                          child: GestureDetector(
+                            onTap: () {
+                              // context.router.push();
+                            },
+                            child: MenuItemCard(
+                                name: menuItemData['name'],
+                                photo: menuItemData['photo'],
+                                price: menuItemData['price'],
+                                weight: 123),
+                          ),
                         );
                       },
                     );
