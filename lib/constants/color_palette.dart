@@ -7,3 +7,5 @@ const Color grey9 = Color.fromARGB(255, 153, 153, 153);
 const Color darkGrey = Color.fromARGB(255, 65, 65, 65);
 const Color grey4 = Color.fromARGB(255, 65, 65, 65);
 const Color grey2 = Color.fromARGB(255, 34, 34, 34);
+const Color grey7 = Color.fromARGB(255, 119, 119, 119);
+const Color greyf1 = Color.fromARGB(255, 241, 241, 241);

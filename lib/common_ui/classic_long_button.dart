@@ -4,10 +4,12 @@ import 'package:papi_burgers/constants/color_palette.dart';
 class ClassicLongButton extends StatelessWidget {
   final void Function()? onTap;
   final String buttonText;
+  final bool showRightArrow;
   const ClassicLongButton({
     super.key,
     required this.onTap,
     required this.buttonText,
+    this.showRightArrow = false,
   });
 
   @override
@@ -25,13 +27,29 @@ class ClassicLongButton extends StatelessWidget {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: Center(
-            child: Text(
-              buttonText,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.white
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Center(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Spacer(),
+                  Text(
+                    buttonText,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Spacer(),
+                  showRightArrow
+                      ? const Icon(
+                          Icons.arrow_forward_rounded,
+                          color: Colors.white,
+                        )
+                      : const SizedBox(),
+                ],
               ),
             ),
           ),

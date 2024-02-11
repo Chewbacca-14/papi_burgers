@@ -58,22 +58,28 @@ class _MenuMainPageState extends State<MenuMainPage>
   Future<void> getRestaurantInfo() async {
     RestaurantProvider restaurantProvider =
         Provider.of<RestaurantProvider>(context, listen: false);
-try {
 
-    QuerySnapshot<Map<String, dynamic>> restaurantSnapshot =
-        await FirebaseFirestore.instance
-            .collection('restaurants')
-            .where('id', isEqualTo: restaurantProvider.restaurantName)
-            .limit(1)
-            .get();
+    try {
+      QuerySnapshot<Map<String, dynamic>> restaurantSnapshot =
+          await FirebaseFirestore.instance
+              .collection('restaurants')
+              .where('id', isEqualTo: restaurantProvider.restaurantName)
+              .limit(1)
+              .get();
 
-    final restaurantData = restaurantSnapshot.docs.first.data();
-    projectName = restaurantData['name'];
-} catch (e) {
-
-}
+      // Check if any documents were returned
+      if (restaurantSnapshot.docs.isNotEmpty) {
+        final restaurantData = restaurantSnapshot.docs.first.data();
+        projectName = restaurantData['name'];
+      } else {
+        // Handle case where no documents were found
+        print('No restaurant found with the given ID.');
+      }
+    } catch (e) {
+      // Handle any other errors
+      print('Error fetching restaurant information: $e');
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {

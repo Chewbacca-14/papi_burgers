@@ -4,10 +4,12 @@ import 'package:papi_burgers/constants/color_palette.dart';
 class CounterButton extends StatelessWidget {
   final bool isPlus;
   final void Function()? onTap;
+  final bool isRedButton;
   const CounterButton({
     super.key,
     this.isPlus = false,
     required this.onTap,
+    this.isRedButton = false,
   });
 
   @override
@@ -15,10 +17,10 @@ class CounterButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        height: 24,
-        width: 24,
+        height: 22,
+        width: 22,
         decoration: BoxDecoration(
-          color: grey4,
+          color: !isPlus && isRedButton ? primaryColor : grey4,
           borderRadius: BorderRadius.circular(50),
         ),
         child: Center(

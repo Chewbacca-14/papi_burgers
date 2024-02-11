@@ -1,12 +1,13 @@
 import 'package:auto_route/annotations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/common_ui/main_home_page/menu_item_details.dart';
+import 'package:papi_burgers/views/menu_item_details_page.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
 import 'package:papi_burgers/views/login_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
 import 'package:papi_burgers/views/project_selecting_page.dart';
+import 'package:papi_burgers/views/user_cart_page.dart';
 import 'package:papi_burgers/views/user_profile_page.dart';
 
 @RoutePage()
@@ -20,8 +21,21 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   List<Widget> pages = [
     const MenuMainPage(),
-    const MenuItemDetails(calories: 2, carbohydrates: 2, description: '', fat: 2, imageUrl: '', ingredients: '', name: '', price: 2, proteins: 2, weight: 2),
-    const ProjectSelectingPage(),
+    const MenuItemDetailsPage(
+        calories: 21,
+        carbohydrates: 22,
+        description:
+            'Котлета из говядины, бакинские томаты,малосольные огурцы и сыр. Бургер подаётся на булочке с гарниром на ваш выбор - картофелемфри или по-деревенски',
+        fat: 232,
+        imageUrl:
+            'https://cdn.britannica.com/36/123536-050-95CB0C6E/Variety-fruits-vegetables.jpg',
+        ingredients:
+            'Говядина, булочка для бургера (яйцо куриное, мука пшеничная высший сорт, молоко 3.6%, масло сливочное 84%, сахар, соль, дрожжи), горчица, огурцы малосольные (огурцы, соль, чеснок, укроп, сахар, имбирь, перец острый, перец душистый горошком, перец горошком, лавровый лист), сыр для бургеров (сыр чабан 45%, сливки 33%), помидоры, салат айсберг, лук красный, чеснок.',
+        name: 'Афоня на булочке',
+        price: 245,
+        proteins: 22,
+        weight: 260),
+    UserCartPage(),
     const UserProfilePage(),
   ];
 
