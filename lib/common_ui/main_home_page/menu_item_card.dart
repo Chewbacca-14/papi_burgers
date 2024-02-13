@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:papi_burgers/common_ui/main_home_page/cart_button.dart';
+import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
 class MenuItemCard extends StatelessWidget {
@@ -8,12 +9,16 @@ class MenuItemCard extends StatelessWidget {
   final int price;
   final String photo;
   final int weight;
+  final bool isSaved;
+  final void Function()? onSave;
   const MenuItemCard({
     super.key,
     required this.name,
     required this.photo,
     required this.price,
     required this.weight,
+    this.isSaved = false,
+    required this.onSave,
   });
 
   @override
@@ -34,23 +39,33 @@ class MenuItemCard extends StatelessWidget {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: NetworkImage(photo), fit: BoxFit.fill)),
+                      image: DecorationImage(
+                        image: NetworkImage(photo),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
                   ),
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: const Color.fromARGB(218, 255, 255, 255),
-                        ),
-                        child: const Center(
-                          child: Icon(Icons.favorite,
-                              color: Color.fromARGB(255, 119, 119, 119)),
+                      child: GestureDetector(
+                        onTap: onSave,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: const Color.fromARGB(218, 255, 255, 255),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.favorite,
+                              color: isSaved
+                                  ? primaryColor
+                                  : const Color.fromARGB(255, 119, 119, 119),
+                            ),
+                          ),
                         ),
                       ),
                     ),

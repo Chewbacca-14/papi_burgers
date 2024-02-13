@@ -86,7 +86,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                             } else {
                               createUserInFirestore();
                               context.mounted
-                                  ? context.router.push(const HomeRoute())
+                                  ? context.router.push(HomeRoute())
                                   : null;
                             }
                           },

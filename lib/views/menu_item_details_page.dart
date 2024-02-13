@@ -1,3 +1,5 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/food_energy_column.dart';
@@ -7,9 +9,11 @@ import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/menu_item.dart';
+import 'package:papi_burgers/views/home_page.dart';
 import 'package:papi_burgers/views/user_cart_page.dart';
 import 'package:sqflite/sqflite.dart';
 
+@RoutePage()
 class MenuItemDetailsPage extends StatefulWidget {
   final String name;
   final int price;
@@ -41,6 +45,76 @@ class MenuItemDetailsPage extends StatefulWidget {
 }
 
 class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
+  Future<List<String>> getNamesFromFirestore() async {
+    List<String> names = [];
+
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('liked').get();
+
+    querySnapshot.docs.forEach((doc) {
+      if (doc.exists) {
+        Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
+        if (data != null) {
+          names.add(data['name']);
+        }
+      }
+    });
+
+    return names;
+  }
+
+  Future<void> removeFromSaved(String name) async {
+    CollectionReference<Map<String, dynamic>> firestoreCollection =
+        FirebaseFirestore.instance.collection('liked');
+
+    var querySnapshot =
+        await firestoreCollection.where('name', isEqualTo: name).get();
+    // Check if there's any document matching the query
+    if (querySnapshot.docs.isNotEmpty) {
+      // Delete the first document found (assuming there's only one document with this name)
+      var docRef = querySnapshot.docs[0].reference;
+      await docRef.delete();
+    } else {}
+  }
+
+  Future<void> addToSaved({
+    required int calories,
+    required int carbohydrates,
+    required String description,
+    required int fat,
+    required String imageUrl,
+    required String ingredients,
+    required String name,
+    required int price,
+    required int proteins,
+    required int weight,
+  }) async {
+    CollectionReference<Map<String, dynamic>> firestoreCollection =
+        FirebaseFirestore.instance.collection('liked');
+
+    await firestoreCollection.add({
+      'calories': calories,
+      'carbohydrates': carbohydrates,
+      'description': description,
+      'fat': fat,
+      'imageUrl': imageUrl,
+      'ingredients': ingredients,
+      'name': name,
+      'price': price,
+      'proteins': proteins,
+      'weight': weight,
+    });
+  }
+
+  Future<void> fetchNames() async {
+    List<String> fetchedNames = await getNamesFromFirestore();
+    setState(() {
+      savedNames = fetchedNames;
+    });
+  }
+
+  List<String> savedNames = [];
+
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
   int dishQuantity = 1;
@@ -78,6 +152,12 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
   }
 
   @override
+  void initState() {
+    fetchNames();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
@@ -86,14 +166,41 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Spacer(),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RoundedIcon(icon: Icons.arrow_back),
-                    RoundedIcon(icon: Icons.favorite_outlined)
+                    RoundedIcon(
+                      icon: Icons.arrow_back,
+                      onTap: () => Navigator.pop(context),
+                    ),
+                    RoundedIcon(
+                      icon: Icons.favorite_outlined,
+                      isRedIcon: savedNames.contains(widget.name),
+                      onTap: () {
+                        if (savedNames.contains(widget.name)) {
+                          removeFromSaved(widget.name);
+                          Future.delayed(Duration(milliseconds: 100), () {
+                            fetchNames();
+                          });
+                        } else {
+                          addToSaved(
+                              calories: 44,
+                              carbohydrates: 548,
+                              description: 'description',
+                              fat: 87,
+                              imageUrl: widget.imageUrl,
+                              ingredients: 'ing',
+                              name: widget.name,
+                              price: widget.price,
+                              proteins: 74,
+                              weight: 125);
+                          fetchNames();
+                        }
+                      },
+                    )
                   ],
                 ),
               ),
@@ -101,7 +208,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
               //start of main area
               Container(
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height - 220,
+                height: MediaQuery.of(context).size.height - 170,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.all(
@@ -269,7 +376,9 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => UserCartPage()));
+                                  builder: (context) => HomePage(
+                                        selectedPage: 2,
+                                      )));
                         },
                         child: Container(
                           height: 40,

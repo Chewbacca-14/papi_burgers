@@ -12,7 +12,9 @@ import 'package:papi_burgers/views/user_profile_page.dart';
 
 @RoutePage()
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final int selectedPage;
+
+  const HomePage({super.key, this.selectedPage = 0});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -48,38 +50,55 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
+  void initState() {
+    if (widget.selectedPage != 0) {
+      _selectedIndex = widget.selectedPage;
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
         child: pages.elementAt(_selectedIndex),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+      bottomNavigationBar: NavigationBar(
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.transparent,
+
+        indicatorColor: Colors.transparent,
+        onDestinationSelected: (int index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        destinations: [
+          NavigationDestination(
             icon: Icon(Icons.home_rounded,
                 color: _selectedIndex == 0 ? primaryColor : primaryGrey),
             label: 'Главная',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.favorite,
                 color: _selectedIndex == 1 ? primaryColor : primaryGrey),
             label: 'Любимое',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.shopping_basket_rounded,
                 color: _selectedIndex == 2 ? primaryColor : primaryGrey),
             label: 'Корзина',
           ),
-          BottomNavigationBarItem(
+          NavigationDestination(
             icon: Icon(Icons.person,
                 color: _selectedIndex == 3 ? primaryColor : primaryGrey),
             label: 'Профиль',
           ),
         ],
-        currentIndex: _selectedIndex,
-        selectedItemColor: primaryGrey,
-        iconSize: 28,
-        onTap: _onItemTapped,
+        // currentIndex: _selectedIndex,
+        // selectedItemColor: primaryGrey,
+        // iconSize: 28,
+        // onTap: _onItemTapped,
       ),
     );
   }

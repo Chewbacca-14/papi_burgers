@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/delivery_price_provider.dart';
+import 'package:provider/provider.dart';
 
-class PriceInfoSheet extends StatelessWidget {
+class PriceInfoSheet extends StatefulWidget {
   final int dishPrice;
   final int deliveryPrice;
   final int totalPrice;
@@ -15,7 +19,16 @@ class PriceInfoSheet extends StatelessWidget {
   });
 
   @override
+  State<PriceInfoSheet> createState() => _PriceInfoSheetState();
+}
+
+class _PriceInfoSheetState extends State<PriceInfoSheet> {
+  bool isDelivery = true;
+
+  @override
   Widget build(BuildContext context) {
+    DeliveryPriceProvider deliveryPriceProvider =
+        Provider.of<DeliveryPriceProvider>(context);
     return Container(
       width: MediaQuery.of(context).size.width,
       height: 188,
@@ -35,16 +48,36 @@ class PriceInfoSheet extends StatelessWidget {
         children: [
           h16,
           PriceInfoRow(
-              isTotalPrice: false, name: 'Сумма заказа', value: dishPrice),
+              isTotalPrice: false,
+              name: 'Сумма заказа',
+              value: widget.dishPrice),
           h10,
           buildDividingLine(),
           h10,
           PriceInfoRow(
-              isTotalPrice: false, name: 'Доставка', value: deliveryPrice),
+            isTotalPrice: false,
+            name: 'Доставка',
+            value: widget.deliveryPrice,
+            isDeliveryRow: true,
+            isDelivery: isDelivery,
+            deliveryOnTap: () {
+              deliveryPriceProvider.changeDeliveryPrice(250);
+              setState(() {
+                isDelivery = true;
+              });
+            },
+            takeAwayOnTap: () {
+              deliveryPriceProvider.changeDeliveryPrice(0);
+              setState(() {
+                isDelivery = false;
+              });
+            },
+          ),
           h10,
           buildDividingLine(),
           h10,
-          PriceInfoRow(isTotalPrice: true, name: 'Итого', value: totalPrice),
+          PriceInfoRow(
+              isTotalPrice: true, name: 'Итого', value: widget.totalPrice),
           h10,
           Padding(
             padding: const EdgeInsets.symmetric(
@@ -62,42 +95,116 @@ class PriceInfoSheet extends StatelessWidget {
   }
 }
 
-class PriceInfoRow extends StatelessWidget {
+class PriceInfoRow extends StatefulWidget {
   final int value;
   final String name;
   final bool isTotalPrice;
-  const PriceInfoRow({
+  bool isDeliveryRow;
+  bool isDelivery;
+  final void Function()? deliveryOnTap;
+  final void Function()? takeAwayOnTap;
+  PriceInfoRow({
     super.key,
     required this.isTotalPrice,
     required this.name,
     required this.value,
+    this.isDelivery = false,
+    this.isDeliveryRow = false,
+    this.deliveryOnTap,
+    this.takeAwayOnTap,
   });
 
+  @override
+  State<PriceInfoRow> createState() => _PriceInfoRowState();
+}
+
+class _PriceInfoRowState extends State<PriceInfoRow> {
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          Text(
-            name,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: isTotalPrice ? FontWeight.w700 : null,
+      child: !widget.isDeliveryRow
+          ? Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  widget.name,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: widget.isTotalPrice ? FontWeight.w700 : null,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${widget.value} ₽',
+                  style: TextStyle(
+                    fontSize: widget.isTotalPrice ? 16 : 14,
+                    color: widget.isTotalPrice ? primaryColor : null,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            )
+          : Container(
+              color: Colors.transparent,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: widget.deliveryOnTap,
+                    child: Text(
+                      widget.name,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: widget.isDeliveryRow && !widget.isDelivery
+                            ? Colors.black
+                            : primaryColor,
+                        fontWeight: widget.isTotalPrice || widget.isDelivery
+                            ? FontWeight.w700
+                            : null,
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        ' | ',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight:
+                              widget.isTotalPrice ? FontWeight.w700 : null,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: widget.takeAwayOnTap,
+                        child: Text(
+                          'Самовывоз',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: widget.isDeliveryRow && widget.isDelivery
+                                ? Colors.black
+                                : primaryColor,
+                            fontWeight:
+                                widget.isTotalPrice || !widget.isDelivery
+                                    ? FontWeight.w700
+                                    : null,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  Text(
+                    '${widget.value} ₽',
+                    style: TextStyle(
+                      fontSize: widget.isTotalPrice ? 16 : 14,
+                      color: widget.isTotalPrice ? primaryColor : null,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Spacer(),
-          Text(
-            '$value ₽',
-            style: TextStyle(
-              fontSize: isTotalPrice ? 16 : 14,
-              color: isTotalPrice ? primaryColor : null,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

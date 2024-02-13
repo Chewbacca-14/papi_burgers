@@ -16,9 +16,14 @@ abstract class _$AppRouter extends RootStackRouter {
   @override
   final Map<String, PageFactory> pagesMap = {
     HomeRoute.name: (routeData) {
+      final args =
+          routeData.argsAs<HomeRouteArgs>(orElse: () => const HomeRouteArgs());
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const HomePage(),
+        child: HomePage(
+          key: args.key,
+          selectedPage: args.selectedPage,
+        ),
       );
     },
     LoginCodeRoute.name: (routeData) {
@@ -37,10 +42,41 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const LoginPage(),
       );
     },
+    MenuItemDetailsRoute.name: (routeData) {
+      final args = routeData.argsAs<MenuItemDetailsRouteArgs>();
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: MenuItemDetailsPage(
+          key: args.key,
+          calories: args.calories,
+          carbohydrates: args.carbohydrates,
+          description: args.description,
+          fat: args.fat,
+          imageUrl: args.imageUrl,
+          ingredients: args.ingredients,
+          name: args.name,
+          price: args.price,
+          proteins: args.proteins,
+          weight: args.weight,
+        ),
+      );
+    },
+    MenuMainRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MenuMainPage(),
+      );
+    },
     ProjectSelectingRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProjectSelectingPage(),
+      );
+    },
+    UserCartRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UserCartPage(),
       );
     },
     UserDetailsRoute.name: (routeData) {
@@ -64,16 +100,39 @@ abstract class _$AppRouter extends RootStackRouter {
 
 /// generated route for
 /// [HomePage]
-class HomeRoute extends PageRouteInfo<void> {
-  const HomeRoute({List<PageRouteInfo>? children})
-      : super(
+class HomeRoute extends PageRouteInfo<HomeRouteArgs> {
+  HomeRoute({
+    Key? key,
+    int selectedPage = 0,
+    List<PageRouteInfo>? children,
+  }) : super(
           HomeRoute.name,
+          args: HomeRouteArgs(
+            key: key,
+            selectedPage: selectedPage,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'HomeRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<HomeRouteArgs> page = PageInfo<HomeRouteArgs>(name);
+}
+
+class HomeRouteArgs {
+  const HomeRouteArgs({
+    this.key,
+    this.selectedPage = 0,
+  });
+
+  final Key? key;
+
+  final int selectedPage;
+
+  @override
+  String toString() {
+    return 'HomeRouteArgs{key: $key, selectedPage: $selectedPage}';
+  }
 }
 
 /// generated route for
@@ -129,6 +188,103 @@ class LoginRoute extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [MenuItemDetailsPage]
+class MenuItemDetailsRoute extends PageRouteInfo<MenuItemDetailsRouteArgs> {
+  MenuItemDetailsRoute({
+    Key? key,
+    required int calories,
+    required int carbohydrates,
+    required String description,
+    required int fat,
+    required String imageUrl,
+    required String ingredients,
+    required String name,
+    required int price,
+    required int proteins,
+    required int weight,
+    List<PageRouteInfo>? children,
+  }) : super(
+          MenuItemDetailsRoute.name,
+          args: MenuItemDetailsRouteArgs(
+            key: key,
+            calories: calories,
+            carbohydrates: carbohydrates,
+            description: description,
+            fat: fat,
+            imageUrl: imageUrl,
+            ingredients: ingredients,
+            name: name,
+            price: price,
+            proteins: proteins,
+            weight: weight,
+          ),
+          initialChildren: children,
+        );
+
+  static const String name = 'MenuItemDetailsRoute';
+
+  static const PageInfo<MenuItemDetailsRouteArgs> page =
+      PageInfo<MenuItemDetailsRouteArgs>(name);
+}
+
+class MenuItemDetailsRouteArgs {
+  const MenuItemDetailsRouteArgs({
+    this.key,
+    required this.calories,
+    required this.carbohydrates,
+    required this.description,
+    required this.fat,
+    required this.imageUrl,
+    required this.ingredients,
+    required this.name,
+    required this.price,
+    required this.proteins,
+    required this.weight,
+  });
+
+  final Key? key;
+
+  final int calories;
+
+  final int carbohydrates;
+
+  final String description;
+
+  final int fat;
+
+  final String imageUrl;
+
+  final String ingredients;
+
+  final String name;
+
+  final int price;
+
+  final int proteins;
+
+  final int weight;
+
+  @override
+  String toString() {
+    return 'MenuItemDetailsRouteArgs{key: $key, calories: $calories, carbohydrates: $carbohydrates, description: $description, fat: $fat, imageUrl: $imageUrl, ingredients: $ingredients, name: $name, price: $price, proteins: $proteins, weight: $weight}';
+  }
+}
+
+/// generated route for
+/// [MenuMainPage]
+class MenuMainRoute extends PageRouteInfo<void> {
+  const MenuMainRoute({List<PageRouteInfo>? children})
+      : super(
+          MenuMainRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'MenuMainRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [ProjectSelectingPage]
 class ProjectSelectingRoute extends PageRouteInfo<void> {
   const ProjectSelectingRoute({List<PageRouteInfo>? children})
@@ -138,6 +294,20 @@ class ProjectSelectingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProjectSelectingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserCartPage]
+class UserCartRoute extends PageRouteInfo<void> {
+  const UserCartRoute({List<PageRouteInfo>? children})
+      : super(
+          UserCartRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserCartRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

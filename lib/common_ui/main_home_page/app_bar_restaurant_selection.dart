@@ -19,7 +19,7 @@ class AppBarRestaurantSelection extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(5).copyWith(left: 11),
         child: Row(
           children: [
             Image.network(logoImageUrl),
@@ -30,13 +30,14 @@ class AppBarRestaurantSelection extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(width: 1, color: background),
+                border: Border.all(
+                    width: 1, color: const Color.fromARGB(255, 250, 250, 250)),
               ),
-              child: Center(
+              child: const Center(
                 child: Icon(
-                  Icons.arrow_forward_ios_rounded,
+                  Icons.more_horiz_outlined,
                   size: 15,
-                  color: Color.fromARGB(255, 153, 153, 153),
+                  color: Color.fromARGB(255, 51, 51, 51),
                 ),
               ),
             ),

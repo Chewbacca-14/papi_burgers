@@ -19,6 +19,14 @@ class CustomTabBox extends StatelessWidget {
       width: 100,
       height: 190,
       decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Color.fromARGB(8, 0, 0, 0),
+            blurRadius: 12,
+            spreadRadius: 8,
+            offset: Offset(0, 8),
+          ),
+        ],
         color: isSelected ? primaryColor : Colors.white,
         borderRadius: BorderRadius.circular(22),
       ),
@@ -54,16 +62,16 @@ class CustomTabBox extends StatelessWidget {
               height: 24,
               width: 24,
               decoration: BoxDecoration(
-                color: Color.fromARGB(127, 243, 243, 243),
+                color: isSelected
+                    ? const Color.fromARGB(255, 199, 65, 65)
+                    : const Color.fromARGB(255, 246, 246, 246),
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Center(
                 child: Icon(
                   Icons.keyboard_arrow_down_rounded,
-                  size: 15,
-                  color: isSelected
-                      ? const Color.fromARGB(115, 255, 255, 255)
-                      : Colors.black,
+                  size: 20,
+                  color: isSelected ? Colors.white : Colors.black,
                 ),
               ),
             ),

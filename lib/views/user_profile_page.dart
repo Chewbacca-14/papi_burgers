@@ -62,7 +62,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
     User? user = FirebaseAuth.instance.currentUser;
     return SafeArea(
       child: Scaffold(
-          backgroundColor: background,
+          backgroundColor: greyf1,
           body: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Center(
@@ -149,7 +149,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     padding: const EdgeInsets.symmetric(horizontal: 41),
                     child: NotificationCard(),
                   )
-                
                 ],
               ),
             ),

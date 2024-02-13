@@ -103,7 +103,7 @@ class _LoginCodePageState extends State<LoginCodePage> {
                       bool isExists = await isUserExists();
                       context.mounted
                           ? isExists
-                              ? context.router.push(const HomeRoute())
+                              ? context.router.push(HomeRoute())
                               : context.router.push(
                                   UserDetailsRoute(
                                       phoneNumber: widget.phoneNumber),

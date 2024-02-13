@@ -1,4 +1,6 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/price_info_sheet.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
@@ -7,8 +9,11 @@ import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
+import 'package:papi_burgers/delivery_price_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
+@RoutePage()
 class UserCartPage extends StatefulWidget {
   const UserCartPage({super.key});
 
@@ -39,28 +44,29 @@ class _UserCartPageState extends State<UserCartPage> {
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
-  int deliveryPrice = 250;
   int dishPrice = 0;
   int totalPrice = 0;
 
-  bool isEmptyCart = false;
+  bool isEmptyCart = true;
 
   Future<void> calculatePrice() async {
+    DeliveryPriceProvider deliveryPriceProvider =
+        Provider.of<DeliveryPriceProvider>(context, listen: false);
     int getDishPrice = await _databaseHelper.calculatePrice();
     setState(() {
       dishPrice = getDishPrice;
-      totalPrice = dishPrice + deliveryPrice;
+      totalPrice = dishPrice + deliveryPriceProvider.deliveryPrice;
     });
   }
 
-  void checkIsEmptyCart(bool istrue) {
-    setState(() {
-      isEmptyCart = istrue;
-    });
-  }
+  // void checkIsEmptyCart(bool istrue) {
+  //   isEmptyCart = istrue;
+  // }
 
   @override
   Widget build(BuildContext context) {
+    DeliveryPriceProvider deliveryPriceProvider =
+        Provider.of<DeliveryPriceProvider>(context, listen: true);
     return SafeArea(
       child: Scaffold(
           backgroundColor: background,
@@ -71,10 +77,9 @@ class _UserCartPageState extends State<UserCartPage> {
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    RoundedIcon(icon: Icons.arrow_back),
                     Text(
                       'Корзина',
                       style: TextStyle(
@@ -82,7 +87,8 @@ class _UserCartPageState extends State<UserCartPage> {
                           fontSize: 18,
                           fontWeight: FontWeight.w700),
                     ),
-                    RoundedIcon(icon: Icons.info_outlined)
+                    // const Spacer(),
+                    // RoundedIcon(icon: Icons.info_outlined)
                   ],
                 ),
               ),
@@ -91,9 +97,9 @@ class _UserCartPageState extends State<UserCartPage> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 110,
+                  height: MediaQuery.of(context).size.height - 190,
                   decoration: const BoxDecoration(
-                    color: Colors.white,
+                    color: greyf1,
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),
@@ -117,8 +123,11 @@ class _UserCartPageState extends State<UserCartPage> {
                                     child: Text('Error: ${snapshot.error}'));
                               } else if (!snapshot.hasData ||
                                   snapshot.data!.isEmpty) {
-                                checkIsEmptyCart(true);
-
+                                Future.delayed(Duration.zero, () {
+                                  setState(() {
+                                    isEmptyCart = true;
+                                  });
+                                });
                                 return Center(
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -166,16 +175,21 @@ class _UserCartPageState extends State<UserCartPage> {
                                         padding: const EdgeInsets.symmetric(
                                             horizontal: 94),
                                         child: ClassicLongButton(
-                                            onTap: () {},
+                                            onTap: () {
+                                              context.router.push(HomeRoute());
+                                            },
                                             buttonText: 'Перейти в меню'),
                                       )
                                     ],
                                   ),
                                 );
                               } else {
-                                checkIsEmptyCart(false);
-
                                 calculatePrice();
+                                Future.delayed(Duration.zero, () {
+                                  setState(() {
+                                    isEmptyCart = false;
+                                  });
+                                });
                                 return ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: snapshot.data!.length,
@@ -203,16 +217,17 @@ class _UserCartPageState extends State<UserCartPage> {
                           ),
                         ),
                       ),
-                      isEmptyCart
-                          ? SizedBox()
-                          : Align(
-                              alignment: Alignment.bottomCenter,
-                              child: PriceInfoSheet(
-                                deliveryPrice: deliveryPrice,
-                                dishPrice: dishPrice,
-                                totalPrice: totalPrice,
-                              ),
-                            ),
+                      Visibility(
+                        visible: !isEmptyCart,
+                        child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: PriceInfoSheet(
+                            deliveryPrice: deliveryPriceProvider.deliveryPrice,
+                            dishPrice: dishPrice,
+                            totalPrice: totalPrice,
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
