@@ -6,6 +6,7 @@ import 'package:papi_burgers/controllers/login_controller.dart';
 import 'package:papi_burgers/controllers/timer_controller.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/delivery_price_provider.dart';
+import 'package:papi_burgers/navigation_index_provider.dart';
 import 'package:papi_burgers/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
@@ -45,5 +46,8 @@ List<SingleChildWidget> providers = [
   ),
   ChangeNotifierProvider<DeliveryPriceProvider>(
     create: (_) => DeliveryPriceProvider(),
+  ),
+  ChangeNotifierProvider<NavigationIndexProvider>(
+    create: (_) => NavigationIndexProvider(),
   ),
 ];

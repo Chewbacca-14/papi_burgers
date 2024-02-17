@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 
 class AppBarRestaurantSelection extends StatelessWidget {
@@ -22,7 +23,8 @@ class AppBarRestaurantSelection extends StatelessWidget {
         padding: const EdgeInsets.all(5).copyWith(left: 11),
         child: Row(
           children: [
-            Image.network(logoImageUrl),
+            // Image.network(logoImageUrl),
+            SvgPicture.asset('assets/logo.svg'),
             const Spacer(),
             Container(
               width: 32,

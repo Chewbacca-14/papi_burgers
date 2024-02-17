@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/constants/color_palette.dart';
 
 class CartButton extends StatefulWidget {
   const CartButton({super.key});
@@ -19,8 +20,10 @@ class _CartButtonState extends State<CartButton> {
           border:
               Border.all(width: 1, color: Color.fromARGB(255, 241, 241, 241))),
       child: Center(
-        child: Image.asset('assets/cart_icon.png'),
-      ),
+          child: Icon(
+        Icons.add_shopping_cart_rounded,
+        color: primaryColor,
+      )),
     );
   }
 }

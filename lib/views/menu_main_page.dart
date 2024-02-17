@@ -1,8 +1,12 @@
 import 'dart:developer';
 
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'package:grouped_list/grouped_list.dart';
 import 'package:papi_burgers/app_router.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
 import 'package:papi_burgers/common_ui/main_home_page/custom_tab_box.dart';
@@ -12,6 +16,9 @@ import 'package:papi_burgers/common_ui/main_home_page/search_bottom_sheet.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
+import 'package:papi_burgers/models/user.dart';
+import 'package:papi_burgers/navigation_index_provider.dart';
 import 'package:papi_burgers/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +34,7 @@ class _MenuMainPageState extends State<MenuMainPage>
     with TickerProviderStateMixin {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<String> categories = [];
+  List<String> catImages = [];
   List<Map<String, dynamic>> menuItems = [];
 
   late TabController _tabController;
@@ -82,6 +90,8 @@ class _MenuMainPageState extends State<MenuMainPage>
     } else {}
   }
 
+  var user = FirebaseAuth.instance.currentUser;
+
   Future<void> addToSaved({
     required int calories,
     required int carbohydrates,
@@ -127,7 +137,7 @@ class _MenuMainPageState extends State<MenuMainPage>
 
     setState(() {
       categories = List<String>.from(restaurantDoc['categories']);
-
+      catImages = List<String>.from(restaurantDoc['catImages']);
       _tabController = TabController(length: categories.length, vsync: this);
       _tabController.addListener(() {
         log('${_tabController.index}');
@@ -165,6 +175,9 @@ class _MenuMainPageState extends State<MenuMainPage>
   Widget build(BuildContext context) {
     RestaurantProvider restaurantProvider =
         Provider.of<RestaurantProvider>(context, listen: false);
+    NavigationIndexProvider navigationIndexProvider =
+        Provider.of<NavigationIndexProvider>(context, listen: true);
+
     return Scaffold(
       backgroundColor: greyf1,
       appBar: AppBar(
@@ -193,163 +206,210 @@ class _MenuMainPageState extends State<MenuMainPage>
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: DefaultTabController(
-          length: categories.length,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              h20,
-              Text(
-                // projectName,
-                'Papi Burgers',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              Text(
-                'Доставка еды и напитков',
-                style: TextStyle(
-                  fontSize: 16,
-                ),
-              ),
-              h20,
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        searchBottomSheet();
-                      },
-                      child: Container(
-                        height: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          color: Color.fromARGB(255, 246, 246, 246),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(14),
-                          child: Row(
-                            children: [
-                              Icon(Icons.search),
-                              w12,
-                              Text(
-                                'Найдите любимое блюдо...',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Color.fromARGB(255, 153, 153, 153),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
+            length: categories.length,
+            child: SingleChildScrollView(
+              child: SizedBox(
+                height: menuItems.length.toDouble() != 0
+                    ? menuItems.length.toDouble() * 300 * 1.4
+                    : 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    h20,
+                    Text(
+                      // projectName,
+                      'Papi Burgers',
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
-                  ),
-                  w12,
-                  RoundedIcon(
-                    icon: Icons.location_on_outlined,
-                    isWhite: true,
-                  )
-                ],
-              ),
-              h20,
-              TabBar(
-                splashBorderRadius: BorderRadius.circular(22),
-                labelPadding: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-
-                onTap: (value) {
-                  _tabController.animateTo(value);
-                  setState(() {});
-                },
-                controller: _tabController,
-                dividerColor: Colors.transparent,
-                // isScrollable: true,
-                indicatorColor: Colors.transparent,
-                tabs: categories
-                    .map(
-                      (category) => CustomTabBox(
-                        name: category,
-                        photo:
-                            'https://static.vecteezy.com/system/resources/previews/030/683/548/large_2x/burgers-high-quality-4k-hdr-free-photo.jpg',
-                        isSelected: _tabController.index ==
-                            categories.indexOf(category),
+                    Text(
+                      'Доставка еды и напитков',
+                      style: TextStyle(
+                        fontSize: 16,
                       ),
-                    )
-                    .toList(),
-              ),
-              Expanded(
-                child: TabBarView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  controller: _tabController,
-                  children: categories.map((category) {
-                    List<Map<String, dynamic>> items = menuItems
-                        .where((item) => item['cat'] == category)
-                        .toList();
-
-                    return ListView.builder(
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        final menuItemData = items[index];
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
+                    ),
+                    h20,
+                    Row(
+                      children: [
+                        Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              context.router.push(
-                                MenuItemDetailsRoute(
-                                    calories: 545,
-                                    carbohydrates: 412,
-                                    description: 'bla bla bla',
-                                    fat: 587,
-                                    imageUrl: menuItemData['photo'],
-                                    ingredients: 'jkadsf fsdjkl dfkl jfsd',
-                                    name: menuItemData['name'],
-                                    price: menuItemData['price'],
-                                    proteins: 777,
-                                    weight: 458),
-                              );
+                              searchBottomSheet();
                             },
-                            child: MenuItemCard(
-                              name: menuItemData['name'],
-                              photo: menuItemData['photo'],
-                              price: menuItemData['price'],
-                              weight: 123,
-                              isSaved:
-                                  savedNames.contains(menuItemData['name']),
-                              onSave: () {
-                                if (savedNames.contains(menuItemData['name'])) {
-                                  removeFromSaved(menuItemData['name']);
-                                  Future.delayed(Duration(milliseconds: 100),
-                                      () {
-                                    fetchNames();
-                                  });
-                                } else {
-                                  addToSaved(
-                                      calories: 44,
-                                      carbohydrates: 548,
-                                      description: 'description',
-                                      fat: 87,
-                                      imageUrl: menuItemData['photo'],
-                                      ingredients: 'ing',
-                                      name: menuItemData['name'],
-                                      price: menuItemData['price'],
-                                      proteins: 74,
-                                      weight: 125);
-                                  fetchNames();
-                                }
-                              },
+                            child: Container(
+                              height: 48,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: Color.fromARGB(255, 246, 246, 246),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(14),
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.search),
+                                    w12,
+                                    Text(
+                                      'Найдите любимое блюдо...',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color:
+                                            Color.fromARGB(255, 153, 153, 153),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
-                        );
+                        ),
+                        w12,
+                        RoundedIcon(
+                          icon: Icons.location_on_outlined,
+                          isWhite: true,
+                          onTap: () {
+                            context.router.push(const RestaurantMapRoute());
+                          },
+                        )
+                      ],
+                    ),
+                    h20,
+                    TabBar(
+                      splashBorderRadius: BorderRadius.circular(22),
+                      labelPadding: EdgeInsets.zero,
+                      padding: EdgeInsets.zero,
+
+                      onTap: (value) {
+                        _tabController.animateTo(value);
+                        setState(() {});
                       },
-                    );
-                  }).toList(),
+                      controller: _tabController,
+                      dividerColor: Colors.transparent,
+                      // isScrollable: true,
+                      indicatorColor: Colors.transparent,
+                      tabs: categories
+                          .map(
+                            (category) => CustomTabBox(
+                              name: category,
+                              photo: catImages[categories.indexOf(category)],
+                              isSelected: _tabController.index ==
+                                  categories.indexOf(category),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    h20,
+                    Expanded(
+                      child: TabBarView(
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        controller: _tabController,
+                        children: categories.map((category) {
+                          List<Map<String, dynamic>> items = menuItems
+                              .where((item) => item['cat'] == category)
+                              .toList();
+                          return GroupedListView(
+                            physics: NeverScrollableScrollPhysics(),
+                            elements: items,
+                            groupBy: (element) {
+                              return element['subcat'];
+                            },
+                            groupSeparatorBuilder: (value) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 20),
+                                child: Text(
+                                  '$value',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            },
+                            itemBuilder: (context, element) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 6),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    context.router.push(
+                                      MenuItemDetailsRoute(
+                                        calories: element['calories'],
+                                        carbohydrates: element['carbohydrates'],
+                                        description: element['description'],
+                                        fat: element['fat'],
+                                        imageUrl: element['photo'],
+                                        ingredients: element['ingredients'],
+                                        name: element['name'],
+                                        price: element['price'],
+                                        proteins: element['proteins'],
+                                        weight: element['weight'],
+                                        allergens: element['allergens'],
+                                      ),
+                                    );
+                                  },
+                                  child: MenuItemCard(
+                                    name: element['name'],
+                                    photo: element['photo'],
+                                    price: element['price'],
+                                    weight: 123,
+                                    isSaved:
+                                        savedNames.contains(element['name']),
+                                    onSave: () {
+                                      if (savedNames
+                                          .contains(element['name'])) {
+                                        removeFromSaved(element['name']);
+                                        Future.delayed(
+                                            Duration(milliseconds: 100), () {
+                                          fetchNames();
+                                        });
+                                      } else {
+                                        if (user != null) {
+                                          addToSaved(
+                                            calories: element['calories'],
+                                            carbohydrates:
+                                                element['carbohydrates'],
+                                            description: element['description'],
+                                            fat: element['fat'],
+                                            imageUrl: element['photo'],
+                                            ingredients: element['ingredients'],
+                                            name: element['name'],
+                                            price: element['price'],
+                                            proteins: element['proteins'],
+                                            weight: element['weight'],
+                                          );
+                                          fetchNames();
+                                        } else {
+                                          showCustomSnackBar(
+                                              context,
+                                              'Ой! Кажется вы не авторизированы',
+                                              AnimatedSnackBarType.warning);
+                                          navigationIndexProvider
+                                              .changeIndex(3);
+                                        }
+                                      }
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                          // return ListView.builder(
+                          //   physics: NeverScrollableScrollPhysics(),
+                          //   itemCount: items.length,
+                          //   shrinkWrap: true,
+                          //   itemBuilder: (context, index) {
+                          //     final  element = items[index];
+
+                          //   },
+                          // );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-        ),
+            )),
       ),
     );
   }
@@ -372,3 +432,38 @@ class CustomTab extends StatelessWidget {
     );
   }
 }
+// GroupedListView<dynamic, String>(
+//                     order: GroupedListOrder.DESC,
+//                     physics: BouncingScrollPhysics(),
+//                     shrinkWrap: true,
+//                     elements: showSearchField ? filteredData : historyData,
+//                     groupBy: (element) {
+//                       String timestampstring = element['date'];
+
+//                       int timestampMillis = int.parse(timestampstring);
+
+//                       DateTime timestamp =
+//                           DateTime.fromMillisecondsSinceEpoch(timestampMillis);
+
+//                       String formattedDate = formatDate(
+//                           timestamp, 'dd MMMM yyyy', isRu ? 'ru' : 'en');
+
+//                       return formattedDate;
+//                     },
+//                     groupSeparatorBuilder: (String groupByValue) => Padding(
+//                       padding: EdgeInsets.symmetric(
+//                         horizontal: 36.w,
+//                       ),
+//                       child: Text(
+//                         groupByValue == formattedDate
+//                             ? '${localizations.today} - ${groupByValue}'
+//                             : groupByValue == formattedYesterday
+//                                 ? '${localizations.yesterday} - ${groupByValue}'
+//                                 : groupByValue,
+//                         style: TextStyle(
+//                           fontWeight: FontWeight.bold,
+//                           color: Color.fromARGB(255, 78, 150, 213),
+//                         ),
+//                       ),
+//                     ),
+//                     itemBuilder: (context, dynamic element) {

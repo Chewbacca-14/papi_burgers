@@ -41,6 +41,7 @@ class DatabaseHelper {
     proteins INTEGER,
     weight INTEGER,
     quantity INTEGER
+    
     )
   ''');
   }
@@ -61,6 +62,7 @@ class DatabaseHelper {
     proteins INTEGER,
     weight INTEGER,
     quantity INTEGER
+   
     ''',
         instance: instance);
   }

@@ -105,10 +105,18 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                     itemBuilder: (context, index) {
                       final menuItem = filteredMenuItems[index];
                       return SearchingDishBox(
-                          imageUrl: menuItem['photo'],
-                          name: menuItem['name'],
-                          price: menuItem['price'],
-                          weight: 254);
+                        calories: menuItem['calories'],
+                        carbohydrates: menuItem['carbohydrates'],
+                        description: menuItem['description'],
+                        fat: menuItem['fat'],
+                        imageUrl: menuItem['photo'],
+                        ingredients: menuItem['ingredients'],
+                        name: menuItem['name'],
+                        price: menuItem['price'],
+                        proteins: menuItem['proteins'],
+                        weight: menuItem['weight'],
+                        allergens: menuItem['allergens'],
+                      );
                     },
                   );
                 },

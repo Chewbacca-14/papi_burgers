@@ -10,6 +10,7 @@ import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/delivery_price_provider.dart';
+import 'package:papi_burgers/navigation_index_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -65,13 +66,15 @@ class _UserCartPageState extends State<UserCartPage> {
 
   @override
   Widget build(BuildContext context) {
+    NavigationIndexProvider navigationIndexProvider =
+        Provider.of<NavigationIndexProvider>(context, listen: true);
     DeliveryPriceProvider deliveryPriceProvider =
         Provider.of<DeliveryPriceProvider>(context, listen: true);
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: background,
           body: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               const Spacer(),
               const Padding(
@@ -176,7 +179,8 @@ class _UserCartPageState extends State<UserCartPage> {
                                             horizontal: 94),
                                         child: ClassicLongButton(
                                             onTap: () {
-                                              context.router.push(HomeRoute());
+                                              navigationIndexProvider
+                                                  .changeIndex(0);
                                             },
                                             buttonText: 'Перейти в меню'),
                                       )

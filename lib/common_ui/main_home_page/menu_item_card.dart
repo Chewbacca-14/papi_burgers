@@ -1,3 +1,6 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:papi_burgers/common_ui/main_home_page/cart_button.dart';
@@ -37,11 +40,76 @@ class MenuItemCard extends StatelessWidget {
             Expanded(
               child: Stack(
                 children: [
+                  CachedNetworkImage(
+                    imageUrl: photo,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(16),
+                        image: DecorationImage(
+                          image: NetworkImage(photo),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) => Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.grey[200],
+                      ),
+                      height: 155,
+                      width: 155,
+                    ),
+                    errorWidget: (context, url, error) => Container(
+                      height: 155,
+                      width: 155,
+                      color: Colors.grey[200], // Placeholder color
+                      child: const Center(
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red, // Error icon color
+                        ),
+                      ),
+                    ),
+                  ),
                   Container(
                     decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(photo),
-                        fit: BoxFit.fill,
+                      color: Color.fromARGB(60, 255, 255, 255),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                  ),
+                  Center(
+                    child: CachedNetworkImage(
+                      imageUrl: photo,
+                      imageBuilder: (context, imageProvider) => Container(
+                        height: 155,
+                        width: 155,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                      ),
+                      placeholder: (context, url) => Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          color: Colors.grey[200],
+                        ),
+                        height: 155,
+                        width: 155,
+                      ),
+                      errorWidget: (context, url, error) => Container(
+                        height: 155,
+                        width: 155,
+                        color: Colors.grey[200], // Placeholder color
+                        child: const Center(
+                          child: Icon(
+                            Icons.error,
+                            color: Colors.red, // Error icon color
+                          ),
+                        ),
                       ),
                     ),
                   ),

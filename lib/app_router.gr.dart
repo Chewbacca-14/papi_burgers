@@ -26,6 +26,12 @@ abstract class _$AppRouter extends RootStackRouter {
         ),
       );
     },
+    LikedDishesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const LikedDishesPage(),
+      );
+    },
     LoginCodeRoute.name: (routeData) {
       final args = routeData.argsAs<LoginCodeRouteArgs>();
       return AutoRoutePage<dynamic>(
@@ -58,6 +64,7 @@ abstract class _$AppRouter extends RootStackRouter {
           price: args.price,
           proteins: args.proteins,
           weight: args.weight,
+          allergens: args.allergens,
         ),
       );
     },
@@ -71,6 +78,12 @@ abstract class _$AppRouter extends RootStackRouter {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
         child: const ProjectSelectingPage(),
+      );
+    },
+    RestaurantMapRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const RestaurantMapPage(),
       );
     },
     UserCartRoute.name: (routeData) {
@@ -133,6 +146,20 @@ class HomeRouteArgs {
   String toString() {
     return 'HomeRouteArgs{key: $key, selectedPage: $selectedPage}';
   }
+}
+
+/// generated route for
+/// [LikedDishesPage]
+class LikedDishesRoute extends PageRouteInfo<void> {
+  const LikedDishesRoute({List<PageRouteInfo>? children})
+      : super(
+          LikedDishesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'LikedDishesRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -202,6 +229,7 @@ class MenuItemDetailsRoute extends PageRouteInfo<MenuItemDetailsRouteArgs> {
     required int price,
     required int proteins,
     required int weight,
+    required String allergens,
     List<PageRouteInfo>? children,
   }) : super(
           MenuItemDetailsRoute.name,
@@ -217,6 +245,7 @@ class MenuItemDetailsRoute extends PageRouteInfo<MenuItemDetailsRouteArgs> {
             price: price,
             proteins: proteins,
             weight: weight,
+            allergens: allergens,
           ),
           initialChildren: children,
         );
@@ -240,6 +269,7 @@ class MenuItemDetailsRouteArgs {
     required this.price,
     required this.proteins,
     required this.weight,
+    required this.allergens,
   });
 
   final Key? key;
@@ -264,9 +294,11 @@ class MenuItemDetailsRouteArgs {
 
   final int weight;
 
+  final String allergens;
+
   @override
   String toString() {
-    return 'MenuItemDetailsRouteArgs{key: $key, calories: $calories, carbohydrates: $carbohydrates, description: $description, fat: $fat, imageUrl: $imageUrl, ingredients: $ingredients, name: $name, price: $price, proteins: $proteins, weight: $weight}';
+    return 'MenuItemDetailsRouteArgs{key: $key, calories: $calories, carbohydrates: $carbohydrates, description: $description, fat: $fat, imageUrl: $imageUrl, ingredients: $ingredients, name: $name, price: $price, proteins: $proteins, weight: $weight, allergens: $allergens}';
   }
 }
 
@@ -294,6 +326,20 @@ class ProjectSelectingRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'ProjectSelectingRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [RestaurantMapPage]
+class RestaurantMapRoute extends PageRouteInfo<void> {
+  const RestaurantMapRoute({List<PageRouteInfo>? children})
+      : super(
+          RestaurantMapRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'RestaurantMapRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

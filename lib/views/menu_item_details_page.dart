@@ -1,5 +1,10 @@
+import 'dart:ui';
+
+import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/food_energy_column.dart';
@@ -7,10 +12,12 @@ import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/menu_item.dart';
+import 'package:papi_burgers/navigation_index_provider.dart';
 import 'package:papi_burgers/views/home_page.dart';
-import 'package:papi_burgers/views/user_cart_page.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 @RoutePage()
@@ -25,6 +32,7 @@ class MenuItemDetailsPage extends StatefulWidget {
   final int proteins;
   final int fat;
   final int carbohydrates;
+  final String allergens;
 
   const MenuItemDetailsPage({
     super.key,
@@ -38,6 +46,7 @@ class MenuItemDetailsPage extends StatefulWidget {
     required this.price,
     required this.proteins,
     required this.weight,
+    required this.allergens,
   });
 
   @override
@@ -157,8 +166,12 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
     super.initState();
   }
 
+  var user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
+    NavigationIndexProvider navigationIndexProvider =
+        Provider.of<NavigationIndexProvider>(context, listen: true);
+
     return SafeArea(
       child: Scaffold(
           backgroundColor: background,
@@ -186,18 +199,27 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                             fetchNames();
                           });
                         } else {
-                          addToSaved(
-                              calories: 44,
-                              carbohydrates: 548,
-                              description: 'description',
-                              fat: 87,
-                              imageUrl: widget.imageUrl,
-                              ingredients: 'ing',
-                              name: widget.name,
-                              price: widget.price,
-                              proteins: 74,
-                              weight: 125);
-                          fetchNames();
+                          if (user != null) {
+                            addToSaved(
+                                calories: 44,
+                                carbohydrates: 548,
+                                description: 'description',
+                                fat: 87,
+                                imageUrl: widget.imageUrl,
+                                ingredients: 'ing',
+                                name: widget.name,
+                                price: widget.price,
+                                proteins: 74,
+                                weight: 125);
+                            fetchNames();
+                          } else {
+                            showCustomSnackBar(
+                                context,
+                                'Ой! Кажется вы не авторизированы',
+                                AnimatedSnackBarType.warning);
+                            navigationIndexProvider.changeIndex(3);
+                            Navigator.pop(context);
+                          }
                         }
                       },
                     )
@@ -223,13 +245,65 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         //image of menu item
-                        Container(
-                          height: 200,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              image: DecorationImage(
+                        Stack(
+                          children: [
+                            Container(
+                              height: 200,
+                              width: MediaQuery.of(context).size.width,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(16),
+                                image: DecorationImage(
                                   image: NetworkImage(widget.imageUrl),
-                                  fit: BoxFit.fill)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                              child: BackdropFilter(
+                                filter: ImageFilter.blur(sigmaX: 2, sigmaY: 2),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                      color: Colors.white.withOpacity(0.0)),
+                                ),
+                              ),
+                            ),
+                            Center(
+                              child: CachedNetworkImage(
+                                imageUrl: widget.imageUrl,
+                                imageBuilder: (context, imageProvider) =>
+                                    Container(
+                                  height: 198,
+                                  width: 198,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(16),
+                                    image: DecorationImage(
+                                      image: NetworkImage(widget.imageUrl),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                                placeholder: (context, url) => Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Colors.grey[200],
+                                  ),
+                                  height: 155,
+                                  width: 155,
+                                ),
+                                errorWidget: (context, url, error) => Container(
+                                  height: 155,
+                                  width: 155,
+                                  color: Colors.grey[200], // Placeholder color
+                                  child: const Center(
+                                    child: Icon(
+                                      Icons.error,
+                                      color: Colors.red, // Error icon color
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                         h30,
                         Text(
@@ -273,6 +347,20 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                         h10,
                         Text(
                           widget.ingredients,
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w300),
+                        ),
+                        h30,
+                        const Text(
+                          'Аллергены',
+                          style: TextStyle(
+                              color: grey7,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700),
+                        ),
+                        h10,
+                        Text(
+                          widget.allergens,
                           style: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w300),
                         ),
@@ -373,12 +461,8 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                       child: GestureDetector(
                         onTap: () {
                           addToCart(widget.name);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage(
-                                        selectedPage: 2,
-                                      )));
+                          navigationIndexProvider.changeIndex(2);
+                          Navigator.pop(context);
                         },
                         child: Container(
                           height: 40,
