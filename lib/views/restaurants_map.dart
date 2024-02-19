@@ -1,8 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:papi_burgers/common_ui/restaurant_info_dialog.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
+import 'package:papi_burgers/models/restaurant_model.dart';
 
 @RoutePage()
 class RestaurantMapPage extends StatefulWidget {
@@ -13,41 +15,55 @@ class RestaurantMapPage extends StatefulWidget {
 }
 
 class _RestaurantMapPageState extends State<RestaurantMapPage> {
-  GoogleMapController? mapController;
+ 
 
   final LatLng initialLocation = LatLng(47.221809, 39.720261);
-  final LatLng markerLocation = LatLng(47.232257, 39.747759);
+  late GoogleMapController mapController;
+  List<Restaurant> restaurants = [];
 
-  void _onMapCreated(GoogleMapController controller) {
+  Future<void> fetchRestaurants() async {
+    QuerySnapshot querySnapshot =
+        await FirebaseFirestore.instance.collection('restaurantmap').get();
     setState(() {
-      mapController = controller;
+      restaurants = querySnapshot.docs
+          .map((doc) => Restaurant.fromFirestore(doc))
+          .toList();
     });
   }
 
-  Set<Marker> _createMarker() {
-    return <Marker>[
-      Marker(
-        markerId: MarkerId('myLocation'),
-        position: markerLocation,
-        onTap: () {
-          _showInfoDialog();
-        },
-      ),
-    ].toSet();
+  @override
+  void initState() {
+    super.initState();
+    fetchRestaurants();
   }
 
-  void _showInfoDialog() {
+  Set<Marker> _createMarkers() {
+    return restaurants.map((restaurant) {
+      return Marker(
+        markerId: MarkerId(restaurant.name),
+        position: LatLng(restaurant.latitude, restaurant.longtitude),
+        infoWindow: InfoWindow(
+          title: restaurant.name,
+          snippet: restaurant.logoUrl,
+        ),
+        onTap: () {
+          _onMarkerTapped(restaurant);
+        },
+      );
+    }).toSet();
+  }
+
+  void _onMarkerTapped(Restaurant restaurant) {
     showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return RestaurantInfoPage(
-            address: 'г.Ростов-на-Дону, Кировский район, проспект',
-            logoUrl:
-                'https://firebasestorage.googleapis.com/v0/b/papi-burgers-project.appspot.com/o/restaurants_images%2F%D0%BB%D0%BE%D0%B3%D0%BE%D1%82%D0%B8%D0%BF%20%D0%9F%D0%B0%D0%BF%D0%B8%20%D0%B1%D1%83%D1%80%D0%B3%D0%B5%D1%80_%D0%9C%D0%BE%D0%BD%D1%82%D0%B0%D0%B6%D0%BD%D0%B0%D1%8F%20%D0%BE%D0%B1%D0%BB%D0%B0%D1%81%D1%82%D1%8C%201%20%D0%BA%D0%BE%D0%BF%D0%B8%D1%8F.png?alt=media&token=ff6fac81-57f4-43bc-9564-fcb227dafcca',
-            name: 'Papi burger’s',
-            schedule: 'круглосуточно');
-      },
-    );
+        context: context,
+        builder: (context) {
+          return RestaurantInfoPage(
+            address: restaurant.address,
+            logoUrl: restaurant.logoUrl,
+            name: restaurant.name,
+            schedule: restaurant.schedule,
+          );
+        });
   }
 
   @override
@@ -86,12 +102,14 @@ class _RestaurantMapPageState extends State<RestaurantMapPage> {
                     compassEnabled: false,
                     mapToolbarEnabled: false,
                     zoomControlsEnabled: false,
-                    onMapCreated: _onMapCreated,
                     initialCameraPosition: CameraPosition(
                       target: initialLocation,
                       zoom: 12.0,
                     ),
-                    markers: _createMarker(),
+                    markers: _createMarkers(),
+                    onMapCreated: (controller) {
+                      mapController = controller;
+                    },
                   ),
                 ),
               ),
