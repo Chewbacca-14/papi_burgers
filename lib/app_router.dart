@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/views/address_add_page.dart';
 import 'package:papi_burgers/views/home_page.dart';
 import 'package:papi_burgers/views/liked_dishes_page.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
@@ -20,7 +21,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: LoginCodeRoute.page),
-        AutoRoute(page: HomeRoute.page, initial: true),
+        AutoRoute(page: HomeRoute.page),
         AutoRoute(page: ProjectSelectingRoute.page),
         AutoRoute(page: UserProfileRoute.page),
         AutoRoute(page: UserDetailsRoute.page),
@@ -29,5 +30,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: UserCartRoute.page),
         AutoRoute(page: LikedDishesRoute.page),
         AutoRoute(page: RestaurantMapRoute.page),
+         AutoRoute(page: AddressAddRoute.page, initial: true),
       ];
 }
