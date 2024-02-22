@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:papi_burgers/constants/db_tables_names.dart';
+import 'package:papi_burgers/models/address_model.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -44,6 +45,17 @@ class DatabaseHelper {
     
     )
   ''');
+
+    await db.execute('''
+    CREATE TABLE $userAddresses (
+    id INTEGER PRIMARY KEY,
+    address TEXT,
+    frontDoorNumber INTEGER,
+    numberFlat INTEGER,
+    floor INTEGER,
+    comment TEXT
+    )
+  ''');
   }
 
   Future<void> createTables() async {
@@ -63,6 +75,18 @@ class DatabaseHelper {
     weight INTEGER,
     quantity INTEGER
    
+    ''',
+        instance: instance);
+
+    await createNewTable(
+        tableName: userAddresses,
+        arguments: '''
+    id INTEGER PRIMARY KEY,
+    address TEXT,
+    frontDoorNumber INTEGER,
+    numberFlat INTEGER,
+    floor INTEGER,
+    comment TEXT
     ''',
         instance: instance);
   }
@@ -107,6 +131,24 @@ class DatabaseHelper {
       'weight': dish.weigth,
       'quantity': quantity,
     });
+  }
+
+  Future<int> addAddress({required Address address}) async {
+    Database db = await instance.database;
+    return await db.insert(userAddresses, {
+      'address': address.address,
+      'frontDoorNumber': address.frontDoorNumber,
+      'numberFlat': address.numberFlat,
+      'floor': address.floor,
+      'comment': address.comment,
+    });
+  }
+
+  Future<int> deleteAddress({
+    required int id,
+  }) async {
+    Database db = await instance.database;
+    return await db.delete(userAddresses, where: 'id = ?', whereArgs: [id]);
   }
 
   Future<int> deleteDishFromCart({

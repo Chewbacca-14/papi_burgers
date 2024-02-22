@@ -4,6 +4,7 @@ import 'package:papi_burgers/app_router.dart';
 
 import 'package:papi_burgers/controllers/login_controller.dart';
 import 'package:papi_burgers/controllers/timer_controller.dart';
+import 'package:papi_burgers/current_address_provider.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/delivery_price_provider.dart';
 import 'package:papi_burgers/navigation_index_provider.dart';
@@ -49,5 +50,8 @@ List<SingleChildWidget> providers = [
   ),
   ChangeNotifierProvider<NavigationIndexProvider>(
     create: (_) => NavigationIndexProvider(),
+  ),
+  ChangeNotifierProvider<CurrentAddressProvider>(
+    create: (_) => CurrentAddressProvider(),
   ),
 ];

@@ -98,6 +98,12 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const RestaurantMapPage(),
       );
     },
+    UserAddressesRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const UserAddressesPage(),
+      );
+    },
     UserCartRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -380,6 +386,20 @@ class RestaurantMapRoute extends PageRouteInfo<void> {
         );
 
   static const String name = 'RestaurantMapRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [UserAddressesPage]
+class UserAddressesRoute extends PageRouteInfo<void> {
+  const UserAddressesRoute({List<PageRouteInfo>? children})
+      : super(
+          UserAddressesRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'UserAddressesRoute';
 
   static const PageInfo<void> page = PageInfo<void>(name);
 }

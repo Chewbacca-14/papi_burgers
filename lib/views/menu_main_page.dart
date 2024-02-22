@@ -5,6 +5,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import 'package:grouped_list/grouped_list.dart';
 import 'package:papi_burgers/app_router.dart';
@@ -128,6 +129,11 @@ class _MenuMainPageState extends State<MenuMainPage>
     getRestaurantInfo();
     _tabController = TabController(length: categories.length, vsync: this);
     fetchNames();
+    request();
+  }
+
+  void request() async {
+    await  Geolocator.requestPermission();
   }
 
   void fetchData() async {
@@ -269,7 +275,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                           icon: Icons.location_on_outlined,
                           isWhite: true,
                           onTap: () {
-                            context.router.push(const RestaurantMapRoute());
+                            context.router.push(const AddressAddRoute());
                           },
                         )
                       ],

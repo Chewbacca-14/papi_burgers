@@ -11,6 +11,7 @@ import 'package:papi_burgers/views/menu_item_details_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
 import 'package:papi_burgers/views/project_selecting_page.dart';
 import 'package:papi_burgers/views/restaurants_map.dart';
+import 'package:papi_burgers/views/user_addresses_page.dart';
 import 'package:papi_burgers/views/user_cart_page.dart';
 import 'package:papi_burgers/views/user_details_page.dart';
 import 'package:papi_burgers/views/user_profile_page.dart';
@@ -22,7 +23,7 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: LoginCodeRoute.page),
-        AutoRoute(page: HomeRoute.page),
+        AutoRoute(page: HomeRoute.page, initial: true),
         AutoRoute(page: ProjectSelectingRoute.page),
         AutoRoute(page: UserProfileRoute.page),
         AutoRoute(page: UserDetailsRoute.page),
@@ -31,7 +32,8 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: UserCartRoute.page),
         AutoRoute(page: LikedDishesRoute.page),
         AutoRoute(page: RestaurantMapRoute.page),
-         AutoRoute(page: AddressAddRoute.page),
-       AutoRoute(page: AddressSearchRoute.page, initial: true),
+        AutoRoute(page: AddressAddRoute.page),
+        AutoRoute(page: AddressSearchRoute.page),
+        AutoRoute(page: UserAddressesRoute.page),
       ];
 }
