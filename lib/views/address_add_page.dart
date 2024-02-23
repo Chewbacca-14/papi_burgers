@@ -4,7 +4,9 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -41,47 +43,43 @@ class _AddressAddPageState extends State<AddressAddPage> {
 
   Position? currentPosition;
 
-void _onMapCreated(GoogleMapController controller) {
+  void _onMapCreated(GoogleMapController controller) {
     setState(() {
       mapController = controller;
     });
   }
 
-  String currentAddress = '';
+  CameraPosition? cameraPositionString;
 
-  void getCurrentAddress() async {
-    try {
-      currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.best,
-      );
+  // void getCurrentAddress() async {
+  //   try {
+  //     currentPosition = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.best,
+  //     );
 
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        currentPosition!.latitude,
-        currentPosition!.longitude,
-      );
+  //     List<Placemark> placemarks = await placemarkFromCoordinates(
+  //       currentPosition!.latitude,
+  //       currentPosition!.longitude,
+  //     );
 
-      Placemark placemark = placemarks.first;
-      String street = placemark.street ?? '';
+  //     Placemark placemark = placemarks.first;
+  //     String street = placemark.street ?? '';
 
-      String address = street;
-      
-        // setState(() {
-        //   locationFromMap = address;
-       
-        // });
-    
-      
+  //     String address = street;
 
-  log(address);
-    } catch (e) {
-      debugPrint('Error fetching current position: $e');
-    }
-  }
+  //       // setState(() {
+  //       //   locationFromMap = address;
 
-@override
+  //       // });
+
+  // log(address);
+  //   } catch (e) {
+  //     debugPrint('Error fetching current position: $e');
+  //   }
+  // }
+
+  @override
   void initState() {
-    
-    getCurrentAddress();
     super.initState();
   }
 
@@ -89,137 +87,191 @@ void _onMapCreated(GoogleMapController controller) {
   Widget build(BuildContext context) {
     CurrentAddressProvider currentAddressProvider =
         Provider.of<CurrentAddressProvider>(context, listen: true);
-    return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height - 380,
-            child: GoogleMap(
-                onMapCreated: _onMapCreated,
-              zoomControlsEnabled: false,
-              initialCameraPosition: CameraPosition(
-                zoom: 12,
-                target: initialLocation,
+    return SafeArea(
+      child: Scaffold(
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: MediaQuery.of(context).size.height - 390,
+              child: Stack(
+                children: [
+                  GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    onCameraMove: (CameraPosition cameraPosition) async {
+                      cameraPositionString = cameraPosition;
+                    },
+                    onCameraIdle: () async {
+                      if (cameraPositionString != null) {
+                        List<Placemark> placemarks =
+                            await placemarkFromCoordinates(
+                          cameraPositionString!.target.latitude,
+                          cameraPositionString!.target.longitude,
+                          localeIdentifier: 'ru_RU',
+                        );
+
+                        if (placemarks.isNotEmpty) {
+                          Placemark placemark = placemarks.first;
+                          String street = placemark.street ?? '';
+                          String number = placemark.name ?? '';
+                          String locationMap =
+                              '$street $number'; // Concatenate street and number
+                          debugPrint(locationMap); // Print the complete address
+                          currentAddressProvider
+                              .changeCurrentAddress(locationMap);
+                        }
+                      }
+                    },
+                    zoomControlsEnabled: false,
+                    initialCameraPosition: CameraPosition(
+                      zoom: 12,
+                      target: initialLocation,
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: SvgPicture.asset('assets/map_pointer.svg')
+                  ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              height: 100,
-              width: MediaQuery.of(context).size.width,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    h20,
-                    GestureDetector(
-                      onTap: () {
-                        context.router.push(const AddressSearchRoute());
-                      },
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          border: Border.all(width: 1.3, color: grey4),
-                        ),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: Row(
-                              children: [
-                                const Icon(Icons.location_city_rounded,
-                                    color: grey4),
-                                w12,
-                                Expanded(
-                                    child: Text(
-                                        currentAddressProvider.currentAddress,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(
-                                            color: grey4,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.w500)))
-                              ],
+            Expanded(
+              flex: 1,
+              child: Container(
+                height: 100,
+                width: MediaQuery.of(context).size.width,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    children: [
+                      h20,
+                      GestureDetector(
+                        onTap: () {
+                          context.router.push(const AddressSearchRoute());
+                        },
+                        child: Container(
+                          height: 50,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(width: 1.3, color: grey4),
+                          ),
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 15),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                 
+                                  
+                                 Padding(
+                                   padding: const EdgeInsets.only(left: 37),
+                                   child: const Text(
+                                                'Нажмите, чтобы выбрать вручную',
+                                                overflow: TextOverflow.ellipsis,
+                                                style:  TextStyle(
+                                                    color:Color.fromARGB(255, 169, 169, 169),
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.w500)),
+                                 ),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.location_city_rounded,
+                                          color: grey4),
+                                      w12,
+                                      Expanded(
+                                          child: Text(
+                                              currentAddressProvider.currentAddress,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(
+                                                  color: grey4,
+                                                  fontSize: 17,
+                                                  fontWeight: FontWeight.w500)))
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    h20,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Expanded(
-                          child: AddressInfoTextField(
-                              addressController: frontDoorsController,
-                              hintText: 'Подъезд',
-                              keyBoardType: TextInputType.number,
-                              iconData: Icons.door_front_door),
-                        ),
-                        w12,
-                        Expanded(
-                          child: AddressInfoTextField(
-                              addressController: numberFlatController,
-                              keyBoardType: TextInputType.number,
-                              hintText: 'Домофон',
-                              iconData: Icons.phone),
-                        ),
-                      ],
-                    ),
-                    h20,
-                    AddressInfoTextField(
-                        addressController: floorController,
-                        hintText: 'Этаж',
-                        keyBoardType: TextInputType.number,
-                        iconData: Icons.store_mall_directory_outlined),
-                    h20,
-                    AddressInfoTextField(
-                        addressController: commentController,
-                        hintText: 'Комментарий курьеру',
-                        iconData: Icons.comment),
-                    h20,
-                    ClassicLongButton(
-                        onTap: () {
-                          if (currentAddressProvider.currentAddress ==
-                              'Выбрать вручную') {
-                            showCustomSnackBar(context, 'Введите адрес',
-                                AnimatedSnackBarType.error);
-                          } else if (frontDoorsController.text.isEmpty ||
-                              floorController.text.isEmpty ||
-                              numberFlatController.text.isEmpty) {
-                            showCustomSnackBar(context, 'Заполните все поля',
-                                AnimatedSnackBarType.error);
-                          } else {
-                            try {
-                              DatabaseHelper.instance.addAddress(
-                                  address: Address(
-                                      address:
-                                          currentAddressProvider.currentAddress,
-                                      frontDoorNumber:
-                                          int.parse(frontDoorsController.text),
-                                      numberFlat:
-                                          int.parse(numberFlatController.text),
-                                      floor: int.parse(floorController.text)));
-                              showCustomSnackBar(context, 'Сохранено',
-                                  AnimatedSnackBarType.success);
-                                  context.router.push(const UserAddressesRoute());
-                            } catch (e) {
-                              showCustomSnackBar(
-                                  context,
-                                  'Ошибка - ${e.toString()}',
+                      h20,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Expanded(
+                            child: AddressInfoTextField(
+                                addressController: frontDoorsController,
+                                hintText: 'Подъезд',
+                                keyBoardType: TextInputType.number,
+                                iconData: Icons.door_front_door),
+                          ),
+                          w12,
+                          Expanded(
+                            child: AddressInfoTextField(
+                                addressController: numberFlatController,
+                                keyBoardType: TextInputType.number,
+                                hintText: 'Домофон',
+                                iconData: Icons.phone),
+                          ),
+                        ],
+                      ),
+                      h20,
+                      AddressInfoTextField(
+                          addressController: floorController,
+                          hintText: 'Этаж',
+                          keyBoardType: TextInputType.number,
+                          iconData: Icons.store_mall_directory_outlined),
+                      h20,
+                      AddressInfoTextField(
+                          addressController: commentController,
+                          hintText: 'Комментарий курьеру',
+                          iconData: Icons.comment),
+                      h20,
+                      ClassicLongButton(
+                          onTap: () {
+                            if (currentAddressProvider.currentAddress ==
+                                'Выбрать вручную') {
+                              showCustomSnackBar(context, 'Введите адрес',
                                   AnimatedSnackBarType.error);
+                            } else if (frontDoorsController.text.isEmpty ||
+                                floorController.text.isEmpty ||
+                                numberFlatController.text.isEmpty) {
+                              showCustomSnackBar(context, 'Заполните все поля',
+                                  AnimatedSnackBarType.error);
+                            } else {
+                              try {
+                                DatabaseHelper.instance.addAddress(
+                                    address: Address(
+                                        address: currentAddressProvider
+                                            .currentAddress,
+                                        frontDoorNumber: int.parse(
+                                            frontDoorsController.text),
+                                        numberFlat: int.parse(
+                                            numberFlatController.text),
+                                        floor:
+                                            int.parse(floorController.text)));
+                                showCustomSnackBar(context, 'Сохранено',
+                                    AnimatedSnackBarType.success);
+                                context.router.push(const UserAddressesRoute());
+                              } catch (e) {
+                                showCustomSnackBar(
+                                    context,
+                                    'Ошибка - ${e.toString()}',
+                                    AnimatedSnackBarType.error);
+                              }
                             }
-                          }
-                        },
-                        buttonText: 'Сохранить'),
-                  ],
+                          },
+                          buttonText: 'Сохранить'),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
