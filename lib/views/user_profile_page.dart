@@ -148,6 +148,26 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 41),
                     child: NotificationCard(),
+                  ),
+                  h16,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 41),
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(26),
+                        border: Border.all(
+                          width: 1,
+                          color: const Color.fromARGB(255, 241, 241, 241),
+                        ),
+                      ),
+                      child: ClassicLongButton(
+                          onTap: () {
+                            context.router.push(const UserAddressesRoute());
+                          },
+                          buttonText: 'Мои адреса'),
+                    ),
                   )
                 ],
               ),

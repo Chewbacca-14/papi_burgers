@@ -94,7 +94,7 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                 var address = addressesList[index];
                 return ListTile(
                   title: Text(
-                    '${address.id}',
+                    '${address.address}',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                   ),
                   trailing: IconButton(

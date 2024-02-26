@@ -4,6 +4,7 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -133,7 +134,7 @@ class _MenuMainPageState extends State<MenuMainPage>
   }
 
   void request() async {
-    await  Geolocator.requestPermission();
+    await Geolocator.requestPermission();
   }
 
   void fetchData() async {
@@ -196,16 +197,21 @@ class _MenuMainPageState extends State<MenuMainPage>
                       'https://firebasestorage.googleapis.com/v0/b/papi-burgers-project.appspot.com/o/restaurants_images%2FGroup%202549.png?alt=media&token=a41aa87f-1395-4d0a-a081-9a8545a779eb'),
             ),
             w12,
-            Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: const Center(
-                  child: MoreIcon(),
-                )),
+            GestureDetector(
+              onTap: () {
+                context.router.push(const AboutProjectRoute());
+              },
+              child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: const Center(
+                    child: MoreIcon(),
+                  )),
+            ),
           ],
         ),
       ),
@@ -275,7 +281,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                           icon: Icons.location_on_outlined,
                           isWhite: true,
                           onTap: () {
-                            context.router.push(const AddressAddRoute());
+                            context.router.push(const RestaurantMapRoute());
                           },
                         )
                       ],

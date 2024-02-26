@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:papi_burgers/common_ui/restaurant_info_dialog.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
+import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/models/restaurant_model.dart';
 
 @RoutePage()
@@ -15,8 +16,6 @@ class RestaurantMapPage extends StatefulWidget {
 }
 
 class _RestaurantMapPageState extends State<RestaurantMapPage> {
- 
-
   final LatLng initialLocation = LatLng(47.221809, 39.720261);
   late GoogleMapController mapController;
   List<Restaurant> restaurants = [];
@@ -74,12 +73,30 @@ class _RestaurantMapPageState extends State<RestaurantMapPage> {
         body: Column(
           children: [
             const Spacer(),
-            Text(
-              'Наши проекты',
-              style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                w12,
+                IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.white,
+                    )),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 5,
+                ),
+                Text(
+                  'Наши проекты',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700),
+                ),
+                Spacer(),
+              ],
             ),
             const Spacer(),
             Align(
