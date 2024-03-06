@@ -1,14 +1,9 @@
 import 'package:auto_route/annotations.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/navigation_index_provider.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/views/liked_dishes_page.dart';
-import 'package:papi_burgers/views/menu_item_details_page.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
-import 'package:papi_burgers/views/login_code_page.dart';
-import 'package:papi_burgers/views/login_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
-import 'package:papi_burgers/views/project_selecting_page.dart';
 import 'package:papi_burgers/views/user_cart_page.dart';
 import 'package:papi_burgers/views/user_profile_page.dart';
 import 'package:provider/provider.dart';
@@ -42,7 +37,6 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: NavigationBar(
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.transparent,
-
         indicatorColor: Colors.transparent,
         onDestinationSelected: (int index) {
           setState(() {
@@ -72,17 +66,15 @@ class _HomePageState extends State<HomePage> {
             label: 'Корзина',
           ),
           NavigationDestination(
-            icon: Icon(Icons.person,
-                color: navigationIndexProvider.selectedIndex == 3
-                    ? primaryColor
-                    : primaryGrey),
+            icon: Icon(
+              Icons.person,
+              color: navigationIndexProvider.selectedIndex == 3
+                  ? primaryColor
+                  : primaryGrey,
+            ),
             label: 'Профиль',
           ),
         ],
-        // currentIndex: _selectedIndex,
-        // selectedItemColor: primaryGrey,
-        // iconSize: 28,
-        // onTap: _onItemTapped,
       ),
     );
   }

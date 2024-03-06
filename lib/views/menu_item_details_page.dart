@@ -15,8 +15,8 @@ import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/menu_item.dart';
-import 'package:papi_burgers/navigation_index_provider.dart';
-import 'package:papi_burgers/views/home_page.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
+import 'package:papi_burgers/views/refactored_pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 

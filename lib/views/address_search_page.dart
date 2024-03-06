@@ -10,7 +10,7 @@ import 'package:papi_burgers/common_ui/address_info_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
-import 'package:papi_burgers/current_address_provider.dart';
+import 'package:papi_burgers/providers/current_address_provider.dart';
 import 'package:papi_burgers/models/location_model.dart';
 import 'package:provider/provider.dart';
 

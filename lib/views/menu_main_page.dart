@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:grouped_list/grouped_list.dart';
-import 'package:papi_burgers/app_router.dart';
+import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
 import 'package:papi_burgers/common_ui/main_home_page/custom_tab_box.dart';
 import 'package:papi_burgers/common_ui/main_home_page/menu_item_card.dart';
@@ -20,8 +20,8 @@ import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/models/user.dart';
-import 'package:papi_burgers/navigation_index_provider.dart';
-import 'package:papi_burgers/restaurant_provider.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
+import 'package:papi_burgers/providers/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()
@@ -131,6 +131,11 @@ class _MenuMainPageState extends State<MenuMainPage>
     _tabController = TabController(length: categories.length, vsync: this);
     fetchNames();
     request();
+    Future.delayed(Duration(milliseconds: 900), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
   }
 
   void request() async {
@@ -138,9 +143,11 @@ class _MenuMainPageState extends State<MenuMainPage>
   }
 
   void fetchData() async {
+    RestaurantProvider restaurantProvider =
+        Provider.of<RestaurantProvider>(context, listen: false);
     // Fetch categories
     DocumentSnapshot restaurantDoc =
-        await _firestore.collection('restaurants').doc('PB1').get();
+        await _firestore.collection('restaurants').doc(restaurantProvider.restaurantName).get();
 
     setState(() {
       categories = List<String>.from(restaurantDoc['categories']);
@@ -177,6 +184,10 @@ class _MenuMainPageState extends State<MenuMainPage>
       } else {}
     } catch (e) {}
   }
+
+  bool isLoading = true;
+
+  
 
   @override
   Widget build(BuildContext context) {
@@ -215,172 +226,141 @@ class _MenuMainPageState extends State<MenuMainPage>
           ],
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: DefaultTabController(
-            length: categories.length,
-            child: SingleChildScrollView(
-              child: SizedBox(
-                height: menuItems.length.toDouble() != 0
-                    ? menuItems.length.toDouble() * 300 * 1.4
-                    : 300,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    h20,
-                    Text(
-                      // projectName,
-                      'Papi Burgers',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    Text(
-                      'Доставка еды и напитков',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    h20,
-                    Row(
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: DefaultTabController(
+                length: categories.length,
+                child: SingleChildScrollView(
+                  child: SizedBox(
+                    height: menuItems.length.toDouble() != 0
+                        ? menuItems.length.toDouble() * 300 * 2.3
+                        : 300,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              searchBottomSheet();
-                            },
-                            child: Container(
-                              height: 48,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16),
-                                color: Color.fromARGB(255, 246, 246, 246),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(14),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.search),
-                                    w12,
-                                    Text(
-                                      'Найдите любимое блюдо...',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color:
-                                            Color.fromARGB(255, 153, 153, 153),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
+                        h20,
+                        Text(
+                          // projectName,
+                          'Papi Burgers',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
-                        w12,
-                        RoundedIcon(
-                          icon: Icons.location_on_outlined,
-                          isWhite: true,
-                          onTap: () {
-                            context.router.push(const RestaurantMapRoute());
-                          },
-                        )
-                      ],
-                    ),
-                    h20,
-                    TabBar(
-                      splashBorderRadius: BorderRadius.circular(22),
-                      labelPadding: EdgeInsets.zero,
-                      padding: EdgeInsets.zero,
-
-                      onTap: (value) {
-                        _tabController.animateTo(value);
-                        setState(() {});
-                      },
-                      controller: _tabController,
-                      dividerColor: Colors.transparent,
-                      // isScrollable: true,
-                      indicatorColor: Colors.transparent,
-                      tabs: categories
-                          .map(
-                            (category) => CustomTabBox(
-                              name: category,
-                              photo: catImages[categories.indexOf(category)],
-                              isSelected: _tabController.index ==
-                                  categories.indexOf(category),
-                            ),
-                          )
-                          .toList(),
-                    ),
-                    h20,
-                    Expanded(
-                      child: TabBarView(
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        controller: _tabController,
-                        children: categories.map((category) {
-                          List<Map<String, dynamic>> items = menuItems
-                              .where((item) => item['cat'] == category)
-                              .toList();
-                          return GroupedListView(
-                            physics: NeverScrollableScrollPhysics(),
-                            elements: items,
-                            groupBy: (element) {
-                              return element['subcat'];
-                            },
-                            groupSeparatorBuilder: (value) {
-                              return Padding(
-                                padding: const EdgeInsets.only(top: 20),
-                                child: Text(
-                                  '$value',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
+                        Text(
+                          'Доставка еды и напитков',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        h20,
+                        Row(
+                          children: [
+                            Expanded(
+                              child: GestureDetector(
+                                onTap: () {
+                                  searchBottomSheet();
+                                },
+                                child: Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    color: Color.fromARGB(255, 246, 246, 246),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(14),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.search),
+                                        w12,
+                                        Text(
+                                          'Найдите любимое блюдо...',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color:
+                                                Color.fromARGB(255, 153, 153, 153),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                            itemBuilder: (context, element) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 6),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    context.router.push(
-                                      MenuItemDetailsRoute(
-                                        calories: element['calories'],
-                                        carbohydrates: element['carbohydrates'],
-                                        description: element['description'],
-                                        fat: element['fat'],
-                                        imageUrl: element['photo'],
-                                        ingredients: element['ingredients'],
-                                        name: element['name'],
-                                        price: element['price'],
-                                        proteins: element['proteins'],
-                                        weight: element['weight'],
-                                        allergens: element['allergens'],
+                              ),
+                            ),
+                            w12,
+                            RoundedIcon(
+                              icon: Icons.location_on_outlined,
+                              isWhite: true,
+                              onTap: () {
+                                context.router.push(const RestaurantMapRoute());
+                              },
+                            )
+                          ],
+                        ),
+                        h20,
+                        TabBar(
+                          splashBorderRadius: BorderRadius.circular(22),
+                          labelPadding: EdgeInsets.zero,
+                          padding: EdgeInsets.zero,
+          
+                          onTap: (value) {
+                            _tabController.animateTo(value);
+                            setState(() {});
+                          },
+                          controller: _tabController,
+                          dividerColor: Colors.transparent,
+                          // isScrollable: true,
+                          indicatorColor: Colors.transparent,
+                          tabs: categories
+                              .map(
+                                (category) => CustomTabBox(
+                                  name: category,
+                                  photo: catImages[categories.indexOf(category)],
+                                  isSelected: _tabController.index ==
+                                      categories.indexOf(category),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                        h20,
+                        Expanded(
+                          child: TabBarView(
+                            physics: const AlwaysScrollableScrollPhysics(),
+                            controller: _tabController,
+                            children: categories.map((category) {
+                              List<Map<String, dynamic>> items = menuItems
+                                  .where((item) => item['cat'] == category)
+                                  .toList();
+                              return GroupedListView(
+                                physics: NeverScrollableScrollPhysics(),
+                                elements: items,
+                                groupBy: (element) {
+                                  return element['subcat'];
+                                },
+                                groupSeparatorBuilder: (value) {
+                                  return Padding(
+                                    padding: const EdgeInsets.only(top: 20),
+                                    child: Text(
+                                      '$value',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
                                       ),
-                                    );
-                                  },
-                                  child: MenuItemCard(
-                                    name: element['name'],
-                                    photo: element['photo'],
-                                    price: element['price'],
-                                    weight: 123,
-                                    isSaved:
-                                        savedNames.contains(element['name']),
-                                    onSave: () {
-                                      if (savedNames
-                                          .contains(element['name'])) {
-                                        removeFromSaved(element['name']);
-                                        Future.delayed(
-                                            Duration(milliseconds: 100), () {
-                                          fetchNames();
-                                        });
-                                      } else {
-                                        if (user != null) {
-                                          addToSaved(
+                                    ),
+                                  );
+                                },
+                                itemBuilder: (context, element) {
+                                  return Padding(
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 6),
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        context.router.push(
+                                          MenuItemDetailsRoute(
                                             calories: element['calories'],
-                                            carbohydrates:
-                                                element['carbohydrates'],
+                                            carbohydrates: element['carbohydrates'],
                                             description: element['description'],
                                             fat: element['fat'],
                                             imageUrl: element['photo'],
@@ -389,39 +369,75 @@ class _MenuMainPageState extends State<MenuMainPage>
                                             price: element['price'],
                                             proteins: element['proteins'],
                                             weight: element['weight'],
-                                          );
-                                          fetchNames();
-                                        } else {
-                                          showCustomSnackBar(
-                                              context,
-                                              'Ой! Кажется вы не авторизированы',
-                                              AnimatedSnackBarType.warning);
-                                          navigationIndexProvider
-                                              .changeIndex(3);
-                                        }
-                                      }
-                                    },
-                                  ),
-                                ),
+                                            allergens: element['allergens'],
+                                          ),
+                                        );
+                                      },
+                                      child: MenuItemCard(
+                                        name: element['name'],
+                                        photo: element['photo'],
+                                        price: element['price'],
+                                        weight: 123,
+                                        isSaved:
+                                            savedNames.contains(element['name']),
+                                        onSave: () {
+                                          if (savedNames
+                                              .contains(element['name'])) {
+                                            removeFromSaved(element['name']);
+                                            Future.delayed(
+                                                Duration(milliseconds: 100), () {
+                                              fetchNames();
+                                            });
+                                          } else {
+                                            if (user != null) {
+                                              addToSaved(
+                                                calories: element['calories'],
+                                                carbohydrates:
+                                                    element['carbohydrates'],
+                                                description: element['description'],
+                                                fat: element['fat'],
+                                                imageUrl: element['photo'],
+                                                ingredients: element['ingredients'],
+                                                name: element['name'],
+                                                price: element['price'],
+                                                proteins: element['proteins'],
+                                                weight: element['weight'],
+                                              );
+                                              fetchNames();
+                                            } else {
+                                              showCustomSnackBar(
+                                                  context,
+                                                  'Ой! Кажется вы не авторизированы',
+                                                  AnimatedSnackBarType.warning);
+                                              navigationIndexProvider
+                                                  .changeIndex(3);
+                                            }
+                                          }
+                                        },
+                                      ),
+                                    ),
+                                  );
+                                },
                               );
-                            },
-                          );
-                          // return ListView.builder(
-                          //   physics: NeverScrollableScrollPhysics(),
-                          //   itemCount: items.length,
-                          //   shrinkWrap: true,
-                          //   itemBuilder: (context, index) {
-                          //     final  element = items[index];
-
-                          //   },
-                          // );
-                        }).toList(),
-                      ),
+                              // return ListView.builder(
+                              //   physics: NeverScrollableScrollPhysics(),
+                              //   itemCount: items.length,
+                              //   shrinkWrap: true,
+                              //   itemBuilder: (context, index) {
+                              //     final  element = items[index];
+          
+                              //   },
+                              // );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
-            )),
+                  ),
+                )),
+          ),
+          isLoading ? Container(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, color: Colors.white, child: Center(child: CircularProgressIndicator(color: primaryColor,),),) : SizedBox(),
+        ],
       ),
     );
   }

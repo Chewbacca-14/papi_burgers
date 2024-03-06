@@ -3,7 +3,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/app_router.dart';
+import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/classic_text_field.dart';
 import 'package:papi_burgers/constants/color_palette.dart';

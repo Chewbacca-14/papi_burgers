@@ -6,6 +6,8 @@ import 'package:papi_burgers/common_ui/restaurant_info_dialog.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/models/restaurant_model.dart';
+import 'package:papi_burgers/providers/firestore_db_provider.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class RestaurantMapPage extends StatefulWidget {
@@ -16,17 +18,48 @@ class RestaurantMapPage extends StatefulWidget {
 }
 
 class _RestaurantMapPageState extends State<RestaurantMapPage> {
-  final LatLng initialLocation = LatLng(47.221809, 39.720261);
+  final LatLng initialLocation = const LatLng(47.221809, 39.720261);
   late GoogleMapController mapController;
   List<Restaurant> restaurants = [];
 
+  Set<Marker> _createMarkers() {
+    return restaurants.map(
+      (restaurant) {
+        return Marker(
+          markerId: MarkerId(restaurant.name),
+          position: LatLng(restaurant.latitude, restaurant.longtitude),
+          infoWindow: InfoWindow(
+            title: restaurant.name,
+            snippet: restaurant.logoUrl,
+          ),
+          onTap: () {
+            _onMarkerTapped(restaurant);
+          },
+        );
+      },
+    ).toSet();
+  }
+
+  void _onMarkerTapped(Restaurant restaurant) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return RestaurantInfoPage(
+          address: restaurant.address,
+          logoUrl: restaurant.logoUrl,
+          name: restaurant.name,
+          schedule: restaurant.schedule,
+        );
+      },
+    );
+  }
+
   Future<void> fetchRestaurants() async {
-    QuerySnapshot querySnapshot =
-        await FirebaseFirestore.instance.collection('restaurantmap').get();
+    FirestoreDBProvider firestoreDBProvider =
+        Provider.of<FirestoreDBProvider>(context, listen: false);
+    var restaurantList = await firestoreDBProvider.fetchRestaurantsForMap();
     setState(() {
-      restaurants = querySnapshot.docs
-          .map((doc) => Restaurant.fromFirestore(doc))
-          .toList();
+      restaurants = restaurantList;
     });
   }
 
@@ -34,35 +67,6 @@ class _RestaurantMapPageState extends State<RestaurantMapPage> {
   void initState() {
     super.initState();
     fetchRestaurants();
-  }
-
-  Set<Marker> _createMarkers() {
-    return restaurants.map((restaurant) {
-      return Marker(
-        markerId: MarkerId(restaurant.name),
-        position: LatLng(restaurant.latitude, restaurant.longtitude),
-        infoWindow: InfoWindow(
-          title: restaurant.name,
-          snippet: restaurant.logoUrl,
-        ),
-        onTap: () {
-          _onMarkerTapped(restaurant);
-        },
-      );
-    }).toSet();
-  }
-
-  void _onMarkerTapped(Restaurant restaurant) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return RestaurantInfoPage(
-            address: restaurant.address,
-            logoUrl: restaurant.logoUrl,
-            name: restaurant.name,
-            schedule: restaurant.schedule,
-          );
-        });
   }
 
   @override
@@ -81,35 +85,35 @@ class _RestaurantMapPageState extends State<RestaurantMapPage> {
                     onPressed: () {
                       Navigator.pop(context);
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.arrow_back_ios,
                       color: Colors.white,
                     )),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 5,
                 ),
-                Text(
+                const Text(
                   'Наши проекты',
                   style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
                       fontWeight: FontWeight.w700),
                 ),
-                Spacer(),
+                const Spacer(),
               ],
             ),
             const Spacer(),
             Align(
               alignment: Alignment.bottomCenter,
               child: ClipRRect(
-                borderRadius: BorderRadius.only(
+                borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
                 ),
                 child: Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height - 110,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(20),
                       topRight: Radius.circular(20),

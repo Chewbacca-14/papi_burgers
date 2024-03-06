@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
-import 'package:papi_burgers/delivery_price_provider.dart';
+import 'package:papi_burgers/providers/delivery_price_provider.dart';
 import 'package:provider/provider.dart';
 
 class PriceInfoSheet extends StatefulWidget {

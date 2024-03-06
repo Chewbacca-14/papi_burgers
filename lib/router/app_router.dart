@@ -1,17 +1,17 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/views/about_project_page.dart';
+import 'package:papi_burgers/views/refactored_pages/about_project_page.dart';
 import 'package:papi_burgers/views/address_add_page.dart';
 import 'package:papi_burgers/views/address_search_page.dart';
-import 'package:papi_burgers/views/home_page.dart';
+import 'package:papi_burgers/views/refactored_pages/home_page.dart';
 import 'package:papi_burgers/views/liked_dishes_page.dart';
 import 'package:papi_burgers/views/login_code_page.dart';
 
-import 'package:papi_burgers/views/login_page.dart';
+import 'package:papi_burgers/views/refactored_pages/login_page.dart';
 import 'package:papi_burgers/views/menu_item_details_page.dart';
 import 'package:papi_burgers/views/menu_main_page.dart';
-import 'package:papi_burgers/views/project_selecting_page.dart';
-import 'package:papi_burgers/views/restaurants_map.dart';
+import 'package:papi_burgers/views/refactored_pages/project_selecting_page.dart';
+import 'package:papi_burgers/views/refactored_pages/restaurants_map.dart';
 import 'package:papi_burgers/views/user_addresses_page.dart';
 import 'package:papi_burgers/views/user_cart_page.dart';
 import 'package:papi_burgers/views/user_details_page.dart';
@@ -24,8 +24,8 @@ class AppRouter extends _$AppRouter {
   List<AutoRoute> get routes => [
         AutoRoute(page: LoginRoute.page),
         AutoRoute(page: LoginCodeRoute.page),
-        AutoRoute(page: HomeRoute.page, initial: true),
-        AutoRoute(page: ProjectSelectingRoute.page),
+        AutoRoute(page: HomeRoute.page),
+        AutoRoute(page: ProjectSelectingRoute.page, initial: true),
         AutoRoute(page: UserProfileRoute.page),
         AutoRoute(page: UserDetailsRoute.page),
         AutoRoute(page: MenuMainRoute.page),

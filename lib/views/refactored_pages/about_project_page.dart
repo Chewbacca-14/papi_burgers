@@ -1,10 +1,11 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/common_ui/work_position_card.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/providers/firestore_db_provider.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class AboutProjectPage extends StatefulWidget {
@@ -16,20 +17,23 @@ class AboutProjectPage extends StatefulWidget {
 
 class _AboutProjectPageState extends State<AboutProjectPage> {
   String restaurantDescription = '';
-  List positions = [];
   String restaurantName = '';
   String logoUrl =
       'https://www.google.com/url?sa=i&url=https%3A%2F%2Fdesignpowers.com%2Fblog%2Furl-best-practices&psig=AOvVaw0s9pgomSGUclZDl9HovM-v&ust=1708864361930000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCKD_8Pv9w4QDFQAAAAAdAAAAABAE';
 
-  Future getAllRestaurantData() async {
-    DocumentReference<Map<String, dynamic>> firestoreCollection =
-        FirebaseFirestore.instance.collection('restaurants').doc('PB1');
+  List positions = [];
 
-    var restaurantData = await firestoreCollection.get();
+  Future<void> getAllRestaurantData() async {
+    FirestoreDBProvider firestoreDBProvider =
+        Provider.of<FirestoreDBProvider>(context, listen: false);
+
+    DocumentSnapshot<Map<String, dynamic>> restaurantData =
+        await firestoreDBProvider.getAllRestaurantData();
+
     setState(() {
       restaurantDescription = restaurantData['restaurantDescription'];
       restaurantName = restaurantData['name'];
-      logoUrl = restaurantData['logourl'];
+      logoUrl = restaurantData['logoUrl'];
       positions = restaurantData['positions'];
     });
   }
@@ -49,8 +53,8 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Spacer(),
-             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -64,10 +68,10 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
                         Icons.arrow_back_ios,
                         color: Colors.white,
                       )),
-                       SizedBox(
-                  width: MediaQuery.of(context).size.width / 10,
-                ),
-                  Text(
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width / 10,
+                  ),
+                  const Text(
                     'О проекте & Вакансии',
                     style: TextStyle(
                         color: Colors.white,
@@ -104,7 +108,7 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               border: Border.all(width: 1, color: greyf1),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromARGB(34, 0, 0, 0),
                                   blurRadius: 12,
@@ -120,7 +124,7 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
                           w20,
                           Text(
                             restaurantName,
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 25,
                                 color: grey4,
                                 fontWeight: FontWeight.w800),
@@ -148,7 +152,7 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
                       h16,
                       Text(
                         restaurantDescription,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                         ),
                       ),
@@ -173,18 +177,18 @@ class _AboutProjectPageState extends State<AboutProjectPage> {
                       h16,
                       Expanded(
                         child: ListView.builder(
-                            itemCount: positions.length,
-                            itemBuilder: (context, index) {
-                              var positionData = positions[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 5),
-                                child: WorkPositionCard(
-                                    description: positionData['description'],
-                                    positionName: positionData['positionName'],
-                                    salary: positionData['salary']),
-                              );
-                            }),
+                          itemCount: positions.length,
+                          itemBuilder: (context, index) {
+                            var positionData = positions[index];
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 5),
+                              child: WorkPositionCard(
+                                  description: positionData['description'],
+                                  positionName: positionData['positionName'],
+                                  salary: positionData['salary']),
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),

@@ -3,14 +3,14 @@ import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/app_router.dart';
+import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/auth_pages/pin_code_fields.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/login_controller.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/controllers/timer_controller.dart';
-import 'package:papi_burgers/views/home_page.dart';
+import 'package:papi_burgers/views/refactored_pages/home_page.dart';
 import 'package:provider/provider.dart';
 
 @RoutePage()

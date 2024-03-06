@@ -1,14 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/app_router.dart';
+import 'package:papi_burgers/router/app_router.dart';
 
 import 'package:papi_burgers/controllers/login_controller.dart';
 import 'package:papi_burgers/controllers/timer_controller.dart';
-import 'package:papi_burgers/current_address_provider.dart';
+import 'package:papi_burgers/providers/current_address_provider.dart';
 import 'package:papi_burgers/db/db_helper.dart';
-import 'package:papi_burgers/delivery_price_provider.dart';
-import 'package:papi_burgers/navigation_index_provider.dart';
-import 'package:papi_burgers/restaurant_provider.dart';
+import 'package:papi_burgers/providers/delivery_price_provider.dart';
+import 'package:papi_burgers/providers/firestore_db_provider.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
+import 'package:papi_burgers/providers/restaurant_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -53,5 +54,8 @@ List<SingleChildWidget> providers = [
   ),
   ChangeNotifierProvider<CurrentAddressProvider>(
     create: (_) => CurrentAddressProvider(),
+  ),
+  ChangeNotifierProvider<FirestoreDBProvider>(
+    create: (_) => FirestoreDBProvider(),
   ),
 ];

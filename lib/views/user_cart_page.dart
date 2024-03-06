@@ -1,6 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/app_router.dart';
+import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/price_info_sheet.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
@@ -9,8 +9,8 @@ import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
-import 'package:papi_burgers/delivery_price_provider.dart';
-import 'package:papi_burgers/navigation_index_provider.dart';
+import 'package:papi_burgers/providers/delivery_price_provider.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
