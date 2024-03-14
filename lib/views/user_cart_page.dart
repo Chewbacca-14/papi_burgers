@@ -243,7 +243,8 @@ class _UserCartPageState extends State<UserCartPage> {
                                 [
                                   OrderModel(
                                       id: '1',
-                                      userId: '',
+                                      userId: FirebaseAuth
+                                          .instance.currentUser!.uid,
                                       isTakeAway: isDelivery,
                                       menuItems: _snapshotData!
                                           .map((item) => MenuItem(

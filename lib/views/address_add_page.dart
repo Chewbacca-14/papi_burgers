@@ -125,7 +125,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
 
   @override
   Widget build(BuildContext context) {
-     OrderAddressProvider orderAddressProvider =
+    OrderAddressProvider orderAddressProvider =
         Provider.of<OrderAddressProvider>(context);
     CurrentAddressProvider currentAddressProvider =
         Provider.of<CurrentAddressProvider>(context, listen: true);
@@ -160,12 +160,12 @@ class _AddressAddPageState extends State<AddressAddPage> {
                             cameraPositionString!.target.longitude,
                             localeIdentifier: 'ru_RU',
                           );
-          
+
                           calculateDistance(LatLng(
                             cameraPositionString!.target.latitude,
                             cameraPositionString!.target.longitude,
                           ));
-          
+
                           if (placemarks.isNotEmpty) {
                             Placemark placemark = placemarks.first;
                             String street = placemark.street ?? '';
@@ -223,8 +223,8 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(15),
-                                    border: Border.all(
-                                        width: 1.3, color: grey4),
+                                    border:
+                                        Border.all(width: 1.3, color: grey4),
                                   ),
                                   child: Center(
                                     child: Padding(
@@ -237,12 +237,11 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 37),
+                                            padding:
+                                                const EdgeInsets.only(left: 37),
                                             child: const Text(
                                                 'Нажмите, чтобы выбрать вручную',
-                                                overflow:
-                                                    TextOverflow.ellipsis,
+                                                overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
                                                     color: Color.fromARGB(
                                                         255, 169, 169, 169),
@@ -253,22 +252,20 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                           Row(
                                             children: [
                                               const Icon(
-                                                  Icons
-                                                      .location_city_rounded,
+                                                  Icons.location_city_rounded,
                                                   color: grey4),
                                               w12,
                                               Expanded(
                                                   child: Text(
                                                       currentAddressProvider
                                                           .currentAddress,
-                                                      overflow: TextOverflow
-                                                          .ellipsis,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
                                                       style: const TextStyle(
                                                           color: grey4,
                                                           fontSize: 17,
                                                           fontWeight:
-                                                              FontWeight
-                                                                  .w500)))
+                                                              FontWeight.w500)))
                                             ],
                                           ),
                                         ],
@@ -283,8 +280,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                 children: [
                                   Expanded(
                                     child: AddressInfoTextField(
-                                        addressController:
-                                            frontDoorsController,
+                                        addressController: frontDoorsController,
                                         hintText: isInSelectedArea
                                             ? 'Подъезд'
                                             : 'NE TO',
@@ -294,8 +290,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                   w12,
                                   Expanded(
                                     child: AddressInfoTextField(
-                                        addressController:
-                                            numberFlatController,
+                                        addressController: numberFlatController,
                                         keyBoardType: TextInputType.number,
                                         hintText: 'Домофон',
                                         iconData: Icons.phone),
@@ -317,8 +312,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                               h20,
                               ClassicLongButton(
                                   onTap: () {
-                                    if (currentAddressProvider
-                                            .currentAddress ==
+                                    if (currentAddressProvider.currentAddress ==
                                         'Выбрать вручную') {
                                       showCustomSnackBar(
                                           context,
@@ -335,25 +329,23 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                     } else {
                                       try {
                                         DatabaseHelper.instance.addAddress(
-                                            address: Address(
-                                                address:
-                                                    currentAddressProvider
-                                                        .currentAddress,
-                                                frontDoorNumber: int.parse(
-                                                    frontDoorsController
-                                                        .text),
-                                                numberFlat: int.parse(
-                                                    numberFlatController
-                                                        .text),
-                                                floor: int.parse(
-                                                    floorController.text)));
-                                        showCustomSnackBar(
-                                            context,
-                                            'Сохранено',
+                                          address: Address(
+                                            address: currentAddressProvider
+                                                .currentAddress,
+                                            frontDoorNumber: int.parse(
+                                                frontDoorsController.text),
+                                            numberFlat: int.parse(
+                                                numberFlatController.text),
+                                            floor: int.parse(
+                                              floorController.text,
+                                            ),
+                                            comment: commentController.text,
+                                          ),
+                                        );
+                                        showCustomSnackBar(context, 'Сохранено',
                                             AnimatedSnackBarType.success);
-                                        context.router.push(
-                                            const UserAddressesRoute());
-                                          
+                                        context.router
+                                            .push(const UserAddressesRoute());
                                       } catch (e) {
                                         showCustomSnackBar(
                                             context,
@@ -377,14 +369,13 @@ class _AddressAddPageState extends State<AddressAddPage> {
                               Text(
                                 'Адрес не в зоне доставки',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18),
+                                    fontWeight: FontWeight.bold, fontSize: 18),
                               ),
                               h20,
                               ClassicLongButton(
                                   onTap: () {
-                                    mapController!.animateCamera(
-                                        CameraUpdate.newLatLng(
+                                    mapController!
+                                        .animateCamera(CameraUpdate.newLatLng(
                                       LatLng(47.228376, 39.702242),
                                     ));
                                   },

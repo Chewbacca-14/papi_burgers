@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 
 class DateTimeProvider extends ChangeNotifier {
-
-  
-
   var date = DateTime.now();
   late String _selectedDate; // Declare as late
 
-  int _selectedHour = 00;
+  int _selectedHour = 12;
   int _selectedMinute = 00;
 
   DateTimeProvider() {
@@ -59,9 +56,9 @@ class DateTimeProvider extends ChangeNotifier {
       minutes = List.generate(60, (index) => index)
           .where((hour) => hour >= 0 && hour <= 59)
           .toList();
-    hours = List.generate(maxTime - minTime + 1, (index) => index + minTime)
-    .where((hour) => hour >= minTime && hour <= maxTime)
-    .toList();
+      hours = List.generate(maxTime - minTime + 1, (index) => index + minTime)
+          .where((hour) => hour >= minTime && hour <= maxTime)
+          .toList();
     }
 
     Future.delayed(const Duration(milliseconds: 100), () {
@@ -72,29 +69,28 @@ class DateTimeProvider extends ChangeNotifier {
   }
 }
 
-
 String getFormattedText(DateTime date) {
-    var daysOfWeek = ["пн.", "вт.", "ср.", "чт.", "пт.", "сб.", "вс."];
-    var currentDay = date.day;
-    var months = [
-      "янв.",
-      "фев.",
-      "мар.",
-      "апр.",
-      "май",
-      "июн.",
-      "июл.",
-      "авг.",
-      "сен.",
-      "окт.",
-      "ноя.",
-      "дек."
-    ];
-    var currentMonth = date.month;
+  var daysOfWeek = ["пн.", "вт.", "ср.", "чт.", "пт.", "сб.", "вс."];
+  var currentDay = date.day;
+  var months = [
+    "янв.",
+    "фев.",
+    "мар.",
+    "апр.",
+    "май",
+    "июн.",
+    "июл.",
+    "авг.",
+    "сен.",
+    "окт.",
+    "ноя.",
+    "дек."
+  ];
+  var currentMonth = date.month;
 
-    if (date == DateTime.now()) {
-      return 'Сегодня';
-    } else {
-      return '${daysOfWeek[(date.weekday - 1) % 7]} $currentDay ${months[currentMonth - 1]}';
-    }
+  if (date == DateTime.now()) {
+    return 'Сегодня';
+  } else {
+    return '${daysOfWeek[(date.weekday - 1) % 7]} $currentDay ${months[currentMonth - 1]}';
   }
+}

@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/notification_card.dart';
@@ -51,9 +52,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
     }
   }
 
+  late var stream;
+  String? uid = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   void initState() {
     super.initState();
+    stream = FirebaseFirestore.instance
+        .collection('orders')
+        .where('userId', isEqualTo: uid)
+        .snapshots();
     fetchUserData();
   }
 
@@ -62,117 +70,149 @@ class _UserProfilePageState extends State<UserProfilePage> {
     User? user = FirebaseAuth.instance.currentUser;
     return SafeArea(
       child: Scaffold(
-          backgroundColor: greyf1,
-          body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  user != null
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              onPressed: () {
-                                FirebaseAuth.instance.signOut();
-                                setState(() {});
-                              },
-                              child: Text(
-                                'Выйти',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: primaryColor,
-                                ),
+        backgroundColor: greyf1,
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                user != null
+                    ? Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed: () {
+                              FirebaseAuth.instance.signOut();
+                              setState(() {});
+                            },
+                            child: Text(
+                              'Выйти',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: primaryColor,
                               ),
                             ),
-                          ],
-                        )
-                      : SizedBox(),
-                  SizedBox(height: 30),
-                  Container(
-                    height: 70,
-                    width: 70,
+                          ),
+                        ],
+                      )
+                    : SizedBox(),
+                SizedBox(height: 30),
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(50),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color.fromARGB(255, 228, 228, 228)
+                            .withOpacity(0.5),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                      ),
+                    ],
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.person,
+                      color: Color.fromARGB(255, 241, 241, 241),
+                      size: 40,
+                    ),
+                  ),
+                ),
+                user != null ? SizedBox(height: 20) : SizedBox(),
+                user != null ? SizedBox() : SizedBox(height: 20),
+                user != null
+                    ? Text(
+                        name.substring(0, 1).toUpperCase() +
+                            name.substring(1).toLowerCase(),
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : ClassicLongButton(
+                        onTap: () {
+                          context.mounted
+                              ? context.router.push(const LoginRoute())
+                              : null;
+                        },
+                        buttonText: 'Войти'),
+                h6,
+                user != null
+                    ? Text(
+                        phoneNumber,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Color.fromARGB(255, 153, 153, 153),
+                        ),
+                      )
+                    : SizedBox(),
+                h25,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 41),
+                  child: NotificationCard(),
+                ),
+                h16,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 41),
+                  child: Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(50),
-                      boxShadow: [
-                        BoxShadow(
-                          color: const Color.fromARGB(255, 228, 228, 228)
-                              .withOpacity(0.5),
-                          spreadRadius: 2,
-                          blurRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.person,
-                        color: Color.fromARGB(255, 241, 241, 241),
-                        size: 40,
+                      borderRadius: BorderRadius.circular(26),
+                      border: Border.all(
+                        width: 1,
+                        color: const Color.fromARGB(255, 241, 241, 241),
                       ),
                     ),
+                    child: ClassicLongButton(
+                        onTap: () {
+                          context.router.push(const UserAddressesRoute());
+                        },
+                        buttonText: 'Мои адреса'),
                   ),
-                  user != null ? SizedBox(height: 20) : SizedBox(),
-                  user != null ? SizedBox() : SizedBox(height: 20),
-                  user != null
-                      ? Text(
-                          name.substring(0, 1).toUpperCase() +
-                              name.substring(1).toLowerCase(),
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      : ClassicLongButton(
-                          onTap: () {
-                            context.mounted
-                                ? context.router.push(const LoginRoute())
-                                : null;
+                ),
+                SizedBox(
+                  height: 200,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: stream,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      }
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+
+                      if (snapshot.hasData) {
+                        final List<QueryDocumentSnapshot> documents =
+                            snapshot.data!.docs;
+                        return ListView.builder(
+                          itemCount: documents.length,
+                          itemBuilder: (context, index) {
+                            final dishName =
+                                documents[index]['menuItems'][index]['name'];
+                            return ListTile(
+                              title: Text(dishName),
+                            );
                           },
-                          buttonText: 'Войти'),
-                  h6,
-                  user != null
-                      ? Text(
-                          phoneNumber,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: Color.fromARGB(255, 153, 153, 153),
-                          ),
-                        )
-                      : SizedBox(),
-                  h25,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 41),
-                    child: NotificationCard(),
+                        );
+                      }
+
+                      return Text('No orders found for this user.');
+                    },
                   ),
-                  h16,
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 41),
-                    child: Container(
-                      height: 50,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(26),
-                        border: Border.all(
-                          width: 1,
-                          color: const Color.fromARGB(255, 241, 241, 241),
-                        ),
-                      ),
-                      child: ClassicLongButton(
-                          onTap: () {
-                            context.router.push(const UserAddressesRoute());
-                          },
-                          buttonText: 'Мои адреса'),
-                    ),
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
-          )),
+          ),
+        ),
+      ),
     );
   }
 }

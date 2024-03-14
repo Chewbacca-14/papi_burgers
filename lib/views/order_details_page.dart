@@ -126,6 +126,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   }
 
   TextEditingController nameController = TextEditingController();
+  TextEditingController commentController = TextEditingController();
 
   @override
   void initState() {
@@ -184,13 +185,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                   dishPrice: dishPrice,
                   userPhone: userPhone,
                   totalPrice: totalPrice,
+                  commentController: commentController,
                   addToFirebase: () {
                     addOrdersToFirestore(
                         orders: widget.order,
                         phone: userPhone!,
                         address: orderAddressProvider.orderAddress,
                         name: nameController.text,
-                        comment: 'LATER',
+                        comment: commentController.text,
                         whenDeliveryOrTake: isChoosedAsap
                             ? 'Как можно быстрее'
                             : '$selectedDate в $selectedHour:${selectedMinute.toString().padLeft(2, '0')}',
@@ -215,6 +217,7 @@ class OrderDetailsContent extends StatefulWidget {
   final void Function()? addToFirebase;
   final TextEditingController nameController;
   final TextEditingController controller;
+  final TextEditingController commentController;
   bool isChoosedAsap;
   bool isChoosedOnlinePayment;
   String time;
@@ -233,6 +236,7 @@ class OrderDetailsContent extends StatefulWidget {
     required this.dishPrice,
     required this.totalPrice,
     this.userPhone,
+    required this.commentController,
   });
 
   @override
@@ -342,7 +346,7 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                   isDelivery ? h16 : SizedBox(),
                   LightTextField(
                     size: 88,
-                    controller: widget.controller,
+                    controller: widget.commentController,
                     prefixIcon: Icons.comment,
                     hintText: 'Примечания к заказу (код двери, доп инфо..)',
                   ),
@@ -412,10 +416,10 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                   var currentFormattedDate = formatter.format(now);
                   if (!widget.isChoosedAsap &&
                       (selectedDate.contains('$currentDay') ||
-                          selectedDate.contains('$currentFormattedDate')) &&
-                      (currentHour < selectedHour ||
+                          selectedDate.contains(currentFormattedDate)) &&
+                      (currentHour > selectedHour ||
                           (currentHour == selectedHour &&
-                              currentMinutes <= selectedMinute))) {
+                              currentMinutes >= selectedMinute))) {
                     showCustomSnackBar(context, 'Отредактируйте время заказ',
                         AnimatedSnackBarType.error);
                   } else {
@@ -430,6 +434,7 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                     showCustomSnackBar(context, 'Выберите адрес доставки',
                         AnimatedSnackBarType.error);
                   } else {
+                    context.router.replace(const OrderConfirmationRoute());
                     widget.addToFirebase?.call();
                   }
                 },

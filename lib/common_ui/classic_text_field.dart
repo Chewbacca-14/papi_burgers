@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -52,13 +53,12 @@ class LightTextField extends StatefulWidget {
   final IconData prefixIcon;
   final String hintText;
   final double size;
-  const LightTextField({
-    super.key,
-    required this.controller,
-    required this.prefixIcon,
-    required this.hintText,
-    this.size = 48
-  });
+  const LightTextField(
+      {super.key,
+      required this.controller,
+      required this.prefixIcon,
+      required this.hintText,
+      this.size = 48});
 
   @override
   State<LightTextField> createState() => _LightTextFieldState();
@@ -134,9 +134,16 @@ class _LightContainerFieldState extends State<LightContainerField> {
                   color: grey4,
                 ),
                 w12,
-                Text(
-                  widget.hintText,
-                  style: TextStyle(color: Colors.grey, fontWeight: FontWeight.w600, fontSize: 16, ),
+                Expanded(
+                  child: Text(
+                    widget.hintText,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
                 )
               ],
             ),

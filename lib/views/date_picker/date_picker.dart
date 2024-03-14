@@ -29,8 +29,8 @@ class _DatePickerState extends State<DatePicker> {
   int _currentPage = 0;
 
   DateTime currentDate = DateTime.now();
-  int selectedHour = 0;
-  int selectedMinute = 0;
+  int selectedHour = 12;
+  int selectedMinute = 00;
 
   @override
   void initState() {
