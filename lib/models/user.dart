@@ -7,7 +7,7 @@ class User {
   final String phoneNumber;
   final List<String> addresses;
   final List<MenuItem> savedMenuItem;
-  final List<Order> orders;
+  final List<OrderModel> orders;
 
   User(
       {required this.userId,

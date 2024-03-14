@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/address_info_text_field.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
@@ -124,6 +125,8 @@ class _AddressAddPageState extends State<AddressAddPage> {
 
   @override
   Widget build(BuildContext context) {
+     OrderAddressProvider orderAddressProvider =
+        Provider.of<OrderAddressProvider>(context);
     CurrentAddressProvider currentAddressProvider =
         Provider.of<CurrentAddressProvider>(context, listen: true);
     if (!currentAddressProvider.isAddressFromMap) {
@@ -350,6 +353,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                             AnimatedSnackBarType.success);
                                         context.router.push(
                                             const UserAddressesRoute());
+                                          
                                       } catch (e) {
                                         showCustomSnackBar(
                                             context,

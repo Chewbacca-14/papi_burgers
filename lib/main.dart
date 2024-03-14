@@ -1,5 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/providers/date_picker_provider.dart';
+import 'package:papi_burgers/providers/order_address_provider.dart';
+import 'package:papi_burgers/providers/order_provider.dart';
+import 'package:papi_burgers/providers/order_type_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 
 import 'package:papi_burgers/controllers/login_controller.dart';
@@ -57,5 +61,17 @@ List<SingleChildWidget> providers = [
   ),
   ChangeNotifierProvider<FirestoreDBProvider>(
     create: (_) => FirestoreDBProvider(),
+  ),
+  ChangeNotifierProvider<DateTimeProvider>(
+    create: (_) => DateTimeProvider(),
+  ),
+  ChangeNotifierProvider<OrderTypeProvider>(
+    create: (_) => OrderTypeProvider(),
+  ),
+   ChangeNotifierProvider<OrderAddressProvider>(
+    create: (_) => OrderAddressProvider(),
+  ),
+  ChangeNotifierProvider<OrderProvider>(
+    create: (_) => OrderProvider(),
   ),
 ];

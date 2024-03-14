@@ -1,7 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-
 class MenuItem {
   final String id;
   final String name;
@@ -14,6 +13,7 @@ class MenuItem {
   final int fat;
   final int proteins;
   final int weigth;
+  final int quantity;
   MenuItem({
     required this.id,
     required this.name,
@@ -26,6 +26,7 @@ class MenuItem {
     required this.fat,
     required this.proteins,
     required this.weigth,
+    this.quantity = 0,
   });
 
   MenuItem copyWith({
@@ -40,6 +41,7 @@ class MenuItem {
     int? fat,
     int? proteins,
     int? weigth,
+    int? quantity,
   }) {
     return MenuItem(
       id: id ?? this.id,
@@ -53,6 +55,7 @@ class MenuItem {
       fat: fat ?? this.fat,
       proteins: proteins ?? this.proteins,
       weigth: weigth ?? this.weigth,
+      quantity: quantity ?? this.quantity,
     );
   }
 
@@ -69,6 +72,7 @@ class MenuItem {
       'fat': fat,
       'proteins': proteins,
       'weigth': weigth,
+      'quantity': quantity,
     };
   }
 
@@ -76,7 +80,7 @@ class MenuItem {
 
   @override
   String toString() {
-    return 'MenuItem(id: $id, name: $name, price: $price, images: $images, ingredients: $ingredients, allergens: $allergens, calories: $calories, carbohydrate: $carbohydrate, fat: $fat, proteins: $proteins, weigth: $weigth)';
+    return 'MenuItem(id: $id, name: $name, price: $price, images: $images, ingredients: $ingredients, allergens: $allergens, calories: $calories, carbohydrate: $carbohydrate, fat: $fat, proteins: $proteins, weigth: $weigth,  quantity: $quantity)';
   }
 
   @override
@@ -93,7 +97,8 @@ class MenuItem {
         other.carbohydrate == carbohydrate &&
         other.fat == fat &&
         other.proteins == proteins &&
-        other.weigth == weigth;
+        other.weigth == weigth &&
+        other.quantity == quantity;
   }
 
   @override
@@ -108,6 +113,7 @@ class MenuItem {
         carbohydrate.hashCode ^
         fat.hashCode ^
         proteins.hashCode ^
-        weigth.hashCode;
+        weigth.hashCode ^
+        quantity.hashCode;
   }
 }

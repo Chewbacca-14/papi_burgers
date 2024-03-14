@@ -1,5 +1,10 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/models/menu_item.dart';
+import 'package:papi_burgers/models/order.dart';
+import 'package:papi_burgers/providers/order_provider.dart';
+import 'package:papi_burgers/providers/order_type_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/price_info_sheet.dart';
@@ -60,6 +65,8 @@ class _UserCartPageState extends State<UserCartPage> {
     });
   }
 
+  List<Map<String, dynamic>>? _snapshotData;
+
   // void checkIsEmptyCart(bool istrue) {
   //   isEmptyCart = istrue;
   // }
@@ -70,7 +77,8 @@ class _UserCartPageState extends State<UserCartPage> {
         Provider.of<NavigationIndexProvider>(context, listen: true);
     DeliveryPriceProvider deliveryPriceProvider =
         Provider.of<DeliveryPriceProvider>(context, listen: true);
-
+    bool isDelivery = Provider.of<OrderTypeProvider>(context).isDelivery;
+    OrderProvider orderProvider = Provider.of<OrderProvider>(context);
     return SafeArea(
       child: Scaffold(
           backgroundColor: background,
@@ -117,6 +125,7 @@ class _UserCartPageState extends State<UserCartPage> {
                           child: FutureBuilder<List<Map<String, dynamic>>>(
                             future: _itemsFuture,
                             builder: (context, snapshot) {
+                              _snapshotData = snapshot.data;
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const Center(
@@ -229,6 +238,68 @@ class _UserCartPageState extends State<UserCartPage> {
                             deliveryPrice: deliveryPriceProvider.deliveryPrice,
                             dishPrice: dishPrice,
                             totalPrice: totalPrice,
+                            onTap: () {
+                              orderProvider.addOrder(
+                                [
+                                  OrderModel(
+                                      id: '1',
+                                      userId: '',
+                                      isTakeAway: isDelivery,
+                                      menuItems: _snapshotData!
+                                          .map((item) => MenuItem(
+                                                id: '77',
+                                                quantity: item['quantity'],
+                                                name: item['name'],
+                                                price: item['price'],
+                                                images: item['imageurl'],
+                                                ingredients:
+                                                    item['ingredients'],
+                                                allergens: item['allergens'],
+                                                calories: item['calories'],
+                                                carbohydrate:
+                                                    item['carbohydrate'],
+                                                fat: item['fat'],
+                                                proteins: item['proteins'],
+                                                weigth: item['weight'],
+                                              ))
+                                          .toList(),
+                                      deliveryPrice:
+                                          deliveryPriceProvider.deliveryPrice,
+                                      totalPrice: totalPrice)
+                                ],
+                              );
+                              context.pushRoute(
+                                OrderDetailsRoute(
+                                  order: [
+                                    OrderModel(
+                                        id: '1',
+                                        userId: '',
+                                        isTakeAway: isDelivery,
+                                        menuItems: _snapshotData!
+                                            .map((item) => MenuItem(
+                                                  id: '77',
+                                                  quantity: item['quantity'],
+                                                  name: item['name'],
+                                                  price: item['price'],
+                                                  images: item['imageurl'],
+                                                  ingredients:
+                                                      item['ingredients'],
+                                                  allergens: item['allergens'],
+                                                  calories: item['calories'],
+                                                  carbohydrate:
+                                                      item['carbohydrate'],
+                                                  fat: item['fat'],
+                                                  proteins: item['proteins'],
+                                                  weigth: item['weight'],
+                                                ))
+                                            .toList(),
+                                        deliveryPrice:
+                                            deliveryPriceProvider.deliveryPrice,
+                                        totalPrice: totalPrice)
+                                  ],
+                                ),
+                              );
+                            },
                           ),
                         ),
                       ),

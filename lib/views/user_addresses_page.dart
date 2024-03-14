@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
@@ -10,6 +11,7 @@ import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/address_model.dart';
 import 'package:papi_burgers/views/address_add_page.dart';
+import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 @RoutePage()
@@ -56,6 +58,8 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
 
   @override
   Widget build(BuildContext context) {
+    OrderAddressProvider orderAddressProvider =
+        Provider.of<OrderAddressProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: greyf1,
@@ -92,18 +96,31 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
               itemCount: addressesList.length,
               itemBuilder: (context, index) {
                 var address = addressesList[index];
-                return ListTile(
-                  title: Text(
-                    '${address.address}',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-                  ),
-                  trailing: IconButton(
-                    onPressed: () async {
-                      databaseHelper.deleteAddress(id: address.id!);
-                      fetchAddresses();
-                    },
-                    icon: const Icon(Icons.delete_forever),
-                    color: Colors.red,
+                return GestureDetector(
+                  onTap: () {
+                    orderAddressProvider.changeOrderAddress(Address(
+                      address: address.address,
+                      frontDoorNumber: address.frontDoorNumber,
+                      numberFlat: address.numberFlat,
+                      floor: address.floor,
+                      comment: address.comment,
+                    ));
+                 
+                  },
+                  child: ListTile(
+                    title: Text(
+                      '${address.address}',
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                    ),
+                    trailing: IconButton(
+                      onPressed: () async {
+                        databaseHelper.deleteAddress(id: address.id!);
+                        fetchAddresses();
+                      },
+                      icon: const Icon(Icons.delete_forever),
+                      color: Colors.red,
+                    ),
                   ),
                 );
               }),

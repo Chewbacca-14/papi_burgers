@@ -1,23 +1,43 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 
-class Order {
+class OrderModel {
   final String id;
   final String userId;
   final List<MenuItem> menuItems;
   final int deliveryPrice;
   final int totalPrice;
+  final bool isTakeAway;
+  // final String phone;
+  // final String address;
+  // final String name;
+  // final String? comment;
+  // final String datetime;
+  // final bool isCashPayment;
+  // final String orderStatus;
+  // final DateTime orderTimestamp;
+  // final String paymentStatus;
 
-  Order(
-      {required this.id,
-      required this.userId,
-      required this.menuItems,
-      required this.deliveryPrice,
-      required this.totalPrice});
+  OrderModel({
+    required this.id,
+    required this.userId,
+    required this.menuItems,
+    required this.deliveryPrice,
+    required this.totalPrice,
+    required this.isTakeAway,
+    // required this.phone,
+    // required this.address,
+    // required this.name,
+    // required this.comment,
+    // required this.datetime,
+    // required this.isCashPayment,
+    // required this.orderStatus,
+    // required this.orderTimestamp,
+    // required this.paymentStatus,
+  });
 }
 
 enum OrderStatus { f }
