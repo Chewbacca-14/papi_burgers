@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:grouped_list/grouped_list.dart';
@@ -436,7 +437,9 @@ class _MenuMainPageState extends State<MenuMainPage>
                   ),
                 )),
           ),
-          isLoading ? Container(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, color: Colors.white, child: Center(child: CircularProgressIndicator(color: primaryColor,),),) : SizedBox(),
+          isLoading ? Container(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, color: Colors.white, child: Center(
+                  child: SvgPicture.asset('assets/pb_logo.svg'),
+                )) : const SizedBox(),
         ],
       ),
     );

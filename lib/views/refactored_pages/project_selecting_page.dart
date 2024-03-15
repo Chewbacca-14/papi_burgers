@@ -1,6 +1,8 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:papi_burgers/providers/firestore_db_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/project_selecting_box/project_box.dart';
@@ -19,7 +21,7 @@ class ProjectSelectingPage extends StatefulWidget {
 
 class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
   List projects = [];
-  bool isLoading = true;
+
 
   Future<List<Map<String, dynamic>>> getRestaurantData() async {
     FirestoreDBProvider firestoreDBProvider =
@@ -28,11 +30,7 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
   }
 
   void loadingTimer() {
-    Future.delayed(const Duration(milliseconds: 100), () {
-      setState(() {
-        isLoading = false;
-      });
-    });
+   
   }
 
   @override
@@ -47,49 +45,54 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
         Provider.of<RestaurantProvider>(context, listen: false);
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 43, 43, 43),
-      body: FutureBuilder(
-        future: getRestaurantData(),
-        builder: (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(
-                color: primaryColor,
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          } else {
-            List<Map<String, dynamic>> restaurantList = snapshot.data!;
-            return isLoading
-                ? const Center(
-                    child: CircularProgressIndicator(
-                      color: primaryColor,
-                    ),
-                  )
-                : ListView.builder(
-                    itemCount: restaurantList.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          try {
-                            restaurantProvider.changeRestaurantName(
-                                restaurantList[index]['id']);
-                            context.router.replace(HomeRoute());
-                          } catch (e) {
-                            showCustomSnackBar(
-                                context, '$e', AnimatedSnackBarType.error);
-                          }
+      body: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: SvgPicture.asset(
+              'assets/project_bg.svg',
+              fit: BoxFit.cover,
+            ),
+          ),
+          FutureBuilder(
+            future: getRestaurantData(),
+            builder:
+                (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return  Center(
+                  child: SvgPicture.asset('assets/pb_logo.svg'),
+                );
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else {
+                List<Map<String, dynamic>> restaurantList = snapshot.data!;
+                return ListView.builder(
+                        itemCount: restaurantList.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              try {
+                                restaurantProvider.changeRestaurantName(
+                                    restaurantList[index]['id']);
+                                context.router.replace(HomeRoute());
+                              } catch (e) {
+                                showCustomSnackBar(
+                                    context, '$e', AnimatedSnackBarType.error);
+                              }
+                            },
+                            child: ProjectBox(
+                              logoImage: restaurantList[index]['logoUrl'],
+                              mainImage: restaurantList[index]['mainImage'],
+                              projectName: restaurantList[index]['name'],
+                            ),
+                          );
                         },
-                        child: ProjectBox(
-                          logoImage: restaurantList[index]['logoUrl'],
-                          mainImage: restaurantList[index]['mainImage'],
-                          projectName: restaurantList[index]['name'],
-                        ),
                       );
-                    },
-                  );
-          }
-        },
+              }
+            },
+          ),
+        ],
       ),
     );
   }
