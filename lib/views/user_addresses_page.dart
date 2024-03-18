@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
@@ -16,7 +18,10 @@ import 'package:sqflite/sqflite.dart';
 
 @RoutePage()
 class UserAddressesPage extends StatefulWidget {
-  const UserAddressesPage({super.key});
+  final bool returnOrderDetails;
+  final List<OrderModel> orders;
+  const UserAddressesPage(
+      {super.key, this.returnOrderDetails = false, required this.orders});
 
   @override
   State<UserAddressesPage> createState() => _UserAddressesPageState();
@@ -86,7 +91,8 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                   h20,
                   ClassicLongButton(
                       onTap: () {
-                        context.router.push(const AddressAddRoute());
+                        context.router
+                            .push(AddressAddRoute(orders: widget.orders));
                       },
                       buttonText: 'Добавить адрес'),
                 ],
@@ -105,7 +111,10 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                       floor: address.floor,
                       comment: address.comment,
                     ));
-                 
+                    if (widget.returnOrderDetails) {
+                      context.router
+                          .replace(OrderDetailsRoute(order: widget.orders));
+                    } else {}
                   },
                   child: ListTile(
                     title: Text(
@@ -124,6 +133,16 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                   ),
                 );
               }),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: primaryColor,
+        onPressed: () {
+          context.router.push(AddressAddRoute(orders: widget.orders));
+        },
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+      ),
     );
   }
 }

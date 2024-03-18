@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/models/restaurant_model.dart';
 
@@ -38,5 +40,21 @@ class FirestoreDBProvider extends ChangeNotifier {
       debugPrint('Error fetching data: $e');
       return [];
     }
+  }
+
+  Future<void> createUserInFirestore({
+    required TextEditingController nameController,
+    required String phoneNumber,
+  }) async {
+    CollectionReference<Map<String, dynamic>> firestore =
+        FirebaseFirestore.instance.collection('users');
+
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+
+    await firestore.add({
+      'uid': uid,
+      'name': nameController.text,
+      'phone': phoneNumber,
+    });
   }
 }

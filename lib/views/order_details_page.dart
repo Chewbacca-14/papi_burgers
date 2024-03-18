@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'package:intl/intl.dart';
 import 'package:papi_burgers/common_ui/classic_text_field.dart';
@@ -310,137 +311,144 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
     }
     return Stack(
       children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-              ),
-              child: Column(
-                children: [
-                  h20,
-                  LightContainerField(
-                    controller: widget.controller,
-                    prefixIcon: Icons.phone,
-                    hintText: widget.userPhone!,
-                    onTap: () {},
+        SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
                   ),
-                  h16,
-                  LightTextField(
-                    controller: widget.nameController,
-                    prefixIcon: Icons.person,
-                    hintText: 'Имя',
+                  child: Column(
+                    children: [
+                      h20,
+                      LightContainerField(
+                        controller: widget.controller,
+                        prefixIcon: Icons.phone,
+                        hintText: widget.userPhone!,
+                        onTap: () {},
+                      ),
+                      h16,
+                      LightTextField(
+                        controller: widget.nameController,
+                        prefixIcon: Icons.person,
+                        hintText: 'Имя',
+                      ),
+                      h16,
+                      isDelivery
+                          ? LightContainerField(
+                              controller: widget.controller,
+                              prefixIcon: Icons.phone,
+                              hintText: orderAddressProvider.orderAddress.address,
+                              onTap: () {
+                                context.router.push(UserAddressesRoute(
+                                    returnOrderDetails: true,
+                                    orders: widget.orders));
+                              },
+                            )
+                          : SizedBox(),
+                      isDelivery ? h16 : SizedBox(),
+                      LightTextField(
+                        size: 88,
+                        controller: widget.commentController,
+                        prefixIcon: Icons.comment,
+                        hintText: 'Примечания к заказу (код двери, доп инфо..)',
+                      ),
+                      h16,
+                      ChoosingContainer(
+                        isTopContainer: true,
+                        isChoosed: widget.isChoosedAsap,
+                        time: 'Как можно быстрее',
+                        onChoose: () {
+                          setState(() {
+                            widget.isChoosedAsap = true;
+                          });
+                        },
+                      ),
+                      ChoosingContainer(
+                        isTopContainer: false,
+                        time: widget.time,
+                        isChoosed: !widget.isChoosedAsap,
+                        onChoose: () {
+                          setState(() {
+                            widget.isChoosedAsap = false;
+                          });
+                          dateTaxiBottomSheet(
+                              context: context, minTime: 3, maxTime: 22);
+                        },
+                      ),
+                      h16,
+                      ChoosingContainer(
+                        isPaymentMethodContainers: true,
+                        isTopContainer: true,
+                        isChoosed: !widget.isChoosedOnlinePayment,
+                        time: 'Оплата наличными',
+                        onChoose: () {
+                          setState(() {
+                            widget.isChoosedOnlinePayment = false;
+                          });
+                        },
+                      ),
+                      ChoosingContainer(
+                        isPaymentMethodContainers: true,
+                        isTopContainer: false,
+                        time: 'Онлайн оплата',
+                        isChoosed: widget.isChoosedOnlinePayment,
+                        onChoose: () {
+                          setState(() {
+                            widget.isChoosedOnlinePayment = true;
+                          });
+                        },
+                      ),
+                    ],
                   ),
-                  h16,
-                  isDelivery
-                      ? LightContainerField(
-                          controller: widget.controller,
-                          prefixIcon: Icons.phone,
-                          hintText: orderAddressProvider.orderAddress.address,
-                          onTap: () {
-                            context.router.push(const UserAddressesRoute());
-                          },
-                        )
-                      : SizedBox(),
-                  isDelivery ? h16 : SizedBox(),
-                  LightTextField(
-                    size: 88,
-                    controller: widget.commentController,
-                    prefixIcon: Icons.comment,
-                    hintText: 'Примечания к заказу (код двери, доп инфо..)',
-                  ),
-                  h16,
-                  ChoosingContainer(
-                    isTopContainer: true,
-                    isChoosed: widget.isChoosedAsap,
-                    time: 'Как можно быстрее',
-                    onChoose: () {
-                      setState(() {
-                        widget.isChoosedAsap = true;
-                      });
-                    },
-                  ),
-                  ChoosingContainer(
-                    isTopContainer: false,
-                    time: widget.time,
-                    isChoosed: !widget.isChoosedAsap,
-                    onChoose: () {
-                      setState(() {
-                        widget.isChoosedAsap = false;
-                      });
-                      dateTaxiBottomSheet(
-                          context: context, minTime: 3, maxTime: 22);
-                    },
-                  ),
-                  h16,
-                  ChoosingContainer(
-                    isPaymentMethodContainers: true,
-                    isTopContainer: true,
-                    isChoosed: !widget.isChoosedOnlinePayment,
-                    time: 'Оплата наличными',
-                    onChoose: () {
-                      setState(() {
-                        widget.isChoosedOnlinePayment = false;
-                      });
-                    },
-                  ),
-                  ChoosingContainer(
-                    isPaymentMethodContainers: true,
-                    isTopContainer: false,
-                    time: 'Онлайн оплата',
-                    isChoosed: widget.isChoosedOnlinePayment,
-                    onChoose: () {
-                      setState(() {
-                        widget.isChoosedOnlinePayment = true;
-                      });
-                    },
-                  ),
-                ],
-              ),
+                ),
+                const Spacer(),
+              ],
             ),
-            const Spacer(),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: PriceInfoSheet(
-                isOrderDetailsPage: true,
-                deliveryPrice: deliveryPriceProvider.deliveryPrice,
-                dishPrice: widget.dishPrice,
-                totalPrice: widget.totalPrice,
-                onTap: () {
-                  int currentHour = DateTime.now().hour;
-                  int currentMinutes = DateTime.now().minute;
-                  int currentDay = DateTime.now().day;
-                  var now = DateTime.now();
-                  var formatter = DateFormat('dd.MM.yyyy');
-                  var currentFormattedDate = formatter.format(now);
-                  if (!widget.isChoosedAsap &&
-                      (selectedDate.contains('$currentDay') ||
-                          selectedDate.contains(currentFormattedDate)) &&
-                      (currentHour > selectedHour ||
-                          (currentHour == selectedHour &&
-                              currentMinutes >= selectedMinute))) {
-                    showCustomSnackBar(context, 'Отредактируйте время заказ',
-                        AnimatedSnackBarType.error);
-                  } else {
-                    log('can order');
-                  }
-                  if (widget.nameController.text.isEmpty) {
-                    showCustomSnackBar(
-                        context, 'Заполните имя', AnimatedSnackBarType.error);
-                  } else if (orderAddressProvider.orderAddress.address ==
-                          'Выберите адрес' &&
-                      isDelivery) {
-                    showCustomSnackBar(context, 'Выберите адрес доставки',
-                        AnimatedSnackBarType.error);
-                  } else {
-                    context.router.replace(const OrderConfirmationRoute());
-                    widget.addToFirebase?.call();
-                  }
-                },
-              ),
-            ),
-          ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: PriceInfoSheet(
+            isOrderDetailsPage: true,
+            deliveryPrice: deliveryPriceProvider.deliveryPrice,
+            dishPrice: widget.dishPrice,
+            totalPrice: widget.totalPrice,
+            onTap: () {
+              int currentHour = DateTime.now().hour;
+              int currentMinutes = DateTime.now().minute;
+              int currentDay = DateTime.now().day;
+              var now = DateTime.now();
+              var formatter = DateFormat('dd.MM.yyyy');
+              var currentFormattedDate = formatter.format(now);
+              if (!widget.isChoosedAsap &&
+                  (selectedDate.contains('$currentDay') ||
+                      selectedDate.contains(currentFormattedDate)) &&
+                  (currentHour > selectedHour ||
+                      (currentHour == selectedHour &&
+                          currentMinutes >= selectedMinute))) {
+                showCustomSnackBar(context, 'Отредактируйте время заказ',
+                    AnimatedSnackBarType.error);
+              } else {
+                log('can order');
+              }
+              if (widget.nameController.text.isEmpty) {
+                showCustomSnackBar(
+                    context, 'Заполните имя', AnimatedSnackBarType.error);
+              } else if (orderAddressProvider.orderAddress.address ==
+                      'Выберите адрес' &&
+                  isDelivery) {
+                showCustomSnackBar(context, 'Выберите адрес доставки',
+                    AnimatedSnackBarType.error);
+              } else {
+                context.router.replace(const OrderConfirmationRoute());
+                widget.addToFirebase?.call();
+              }
+            },
+          ),
         ),
       ],
     );

@@ -185,7 +185,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         ),
                         child: ClassicLongButton(
                             onTap: () {
-                              context.router.push(const UserAddressesRoute());
+                              context.router
+                                  .push(UserAddressesRoute(orders: []));
                             },
                             buttonText: 'Мои адреса'),
                       ),
@@ -284,38 +285,52 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                 seconds * 1000);
                                         String formattedDate =
                                             DateFormat.yMMMd().format(dateTime);
+                                        int dishCountTotal =
+                                            order['menuItems'].length;
 
-                                        return Padding(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 16,
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              showOrderDetails(
-                                                  context: context,
-                                                  itemCount: orderLength,
-                                                  dishName: order['menuItems']
-                                                      [index]['name'],
-                                                  quantity: order['menuItems']
-                                                      [index]['quantity'],
-                                                  price: order['menuItems']
-                                                      [index]['price'],
-                                                  totalPrice:
-                                                      order['totalPrice'],
-                                                  status: status,
-                                                  isTakeAway:
-                                                      order['isTakeAway'] ==
-                                                              true
-                                                          ? 'Самовывоз'
-                                                          : 'Доставка',
-                                                  date: formattedDate);
-                                            },
-                                            child: UserOrdersBox(
-                                                date: '12.03.2024',
-                                                dishCount: 5,
-                                                totalPrice: 11234,
-                                                type: 'Не оплачено'),
-                                          ),
+                                        List<Widget> menuItemsWidgets = [];
+
+                                        for (var menuItem
+                                            in order['menuItems']) {
+                                          int quantity = menuItem['quantity'];
+                                          menuItemsWidgets.add(
+                                            Padding(
+                                              padding: EdgeInsets.symmetric(
+                                                horizontal: 16,
+                                              ),
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  showOrderDetails(
+                                                      context: context,
+                                                      itemCount: orderLength,
+                                                      dishName:
+                                                          menuItem['name'],
+                                                      quantity:
+                                                          menuItem['quantity'],
+                                                      price: menuItem['price'],
+                                                      totalPrice:
+                                                          order['totalPrice'],
+                                                      status: status,
+                                                      isTakeAway:
+                                                          order['isTakeAway'] ==
+                                                                  true
+                                                              ? 'Самовывоз'
+                                                              : 'Доставка',
+                                                      date: formattedDate);
+                                                },
+                                                child: UserOrdersBox(
+                                                    date: formattedDate,
+                                                    dishCount: dishCountTotal *
+                                                        quantity,
+                                                    totalPrice:
+                                                        order['totalPrice'],
+                                                    type: 'Не оплачено'),
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return Column(
+                                          children: menuItemsWidgets,
                                         );
                                       },
                                     );
@@ -354,13 +369,12 @@ class _UserProfilePageState extends State<UserProfilePage> {
           title: const Text('Детали заказа'),
           content: Container(
             width: MediaQuery.of(context).size.width - 40,
-          height: 270,
+            height: 270,
             child: Column(
               children: [
                 SizedBox(
                   height: 150,
                   child: ListView.builder(
-
                     shrinkWrap: true,
                     itemCount: itemCount,
                     itemBuilder: (BuildContext context, int index) {
@@ -376,7 +390,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     },
                   ),
                 ),
-              h10,
+                h10,
                 Container(
                   height: 1,
                   width: 200,
@@ -386,9 +400,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ParametersOrder(text: 'Дата', value: date),
                 h6,
                 ParametersOrder(text: 'Тип заказа', value: isTakeAway),
-                 h6,
+                h6,
                 ParametersOrder(text: 'Статус', value: status),
-                 h6,
+                h6,
                 ParametersOrder(
                     text: 'Полная стоимость', value: '$totalPrice ₽'),
               ],

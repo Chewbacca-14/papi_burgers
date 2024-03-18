@@ -6,7 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:papi_burgers/providers/firestore_db_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/project_selecting_box/project_box.dart';
-import 'package:papi_burgers/constants/color_palette.dart';
+
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/providers/restaurant_provider.dart';
 import 'package:provider/provider.dart';

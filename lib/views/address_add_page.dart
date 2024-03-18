@@ -10,6 +10,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:papi_burgers/common_ui/rounded_icon.dart';
+import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/address_info_text_field.dart';
@@ -28,7 +30,11 @@ import 'dart:math' show sin, cos, sqrt, atan2, pi;
 
 @RoutePage()
 class AddressAddPage extends StatefulWidget {
-  const AddressAddPage({super.key});
+  final List<OrderModel> orders;
+  const AddressAddPage({
+    super.key,
+    required this.orders,
+  });
 
   @override
   State<AddressAddPage> createState() => _AddressAddPageState();
@@ -198,6 +204,16 @@ class _AddressAddPageState extends State<AddressAddPage> {
                             strokeColor: Colors.red),
                       },
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: RoundedIcon(
+                        icon: Icons.arrow_back,
+                        onTap: () {
+                          context.router
+                              .replace(UserAddressesRoute(orders: []));
+                        },
+                      ),
+                    ),
                     Align(
                         alignment: Alignment.center,
                         child: SvgPicture.asset('assets/map_pointer.svg')),
@@ -344,8 +360,8 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                         );
                                         showCustomSnackBar(context, 'Сохранено',
                                             AnimatedSnackBarType.success);
-                                        context.router
-                                            .push(const UserAddressesRoute());
+                                        context.router.push(
+                                            UserAddressesRoute(orders: widget.orders, returnOrderDetails: true));
                                       } catch (e) {
                                         showCustomSnackBar(
                                             context,

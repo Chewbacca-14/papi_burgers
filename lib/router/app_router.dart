@@ -17,7 +17,7 @@ import 'package:papi_burgers/views/refactored_pages/project_selecting_page.dart'
 import 'package:papi_burgers/views/refactored_pages/restaurants_map.dart';
 import 'package:papi_burgers/views/user_addresses_page.dart';
 import 'package:papi_burgers/views/user_cart_page.dart';
-import 'package:papi_burgers/views/user_details_page.dart';
+import 'package:papi_burgers/views/refactored_pages/user_details_page.dart';
 import 'package:papi_burgers/views/profile_page.dart';
 part 'app_router.gr.dart';
 

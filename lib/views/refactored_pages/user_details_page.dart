@@ -1,14 +1,14 @@
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/providers/firestore_db_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/classic_text_field.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
+import 'package:provider/provider.dart';
 
 @RoutePage()
 class UserDetailsPage extends StatefulWidget {
@@ -22,21 +22,10 @@ class UserDetailsPage extends StatefulWidget {
 class _UserDetailsPageState extends State<UserDetailsPage> {
   final TextEditingController _nameController = TextEditingController();
 
-  Future<void> createUserInFirestore() async {
-    CollectionReference<Map<String, dynamic>> firestore =
-        FirebaseFirestore.instance.collection('users');
-
-    String uid = FirebaseAuth.instance.currentUser!.uid;
-
-    await firestore.add({
-      'uid': uid,
-      'name': _nameController.text,
-      'phone': widget.phoneNumber,
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    FirestoreDBProvider firestoreDBProvider =
+        Provider.of<FirestoreDBProvider>(context);
     return SafeArea(
       child: Scaffold(
         backgroundColor: darkGrey,
@@ -44,7 +33,7 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const Spacer(),
-            Text(
+            const Text(
               'Профиль',
               style: TextStyle(
                   color: Colors.white,
@@ -84,10 +73,17 @@ class _UserDetailsPageState extends State<UserDetailsPage> {
                                   'Пожалуйста введите имя',
                                   AnimatedSnackBarType.error);
                             } else {
-                              createUserInFirestore();
-                              context.mounted
-                                  ? context.router.push(HomeRoute())
-                                  : null;
+                              try {
+                                firestoreDBProvider.createUserInFirestore(
+                                    nameController: _nameController,
+                                    phoneNumber: widget.phoneNumber);
+                                context.mounted
+                                    ? context.router.push(HomeRoute())
+                                    : null;
+                              } catch (e) {
+                                showCustomSnackBar(context, 'Ошибка $e',
+                                    AnimatedSnackBarType.error);
+                              }
                             }
                           },
                           buttonText: 'Сохранить')

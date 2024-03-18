@@ -22,9 +22,13 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     AddressAddRoute.name: (routeData) {
+      final args = routeData.argsAs<AddressAddRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const AddressAddPage(),
+        child: AddressAddPage(
+          key: args.key,
+          orders: args.orders,
+        ),
       );
     },
     AddressSearchRoute.name: (routeData) {
@@ -121,9 +125,14 @@ abstract class _$AppRouter extends RootStackRouter {
       );
     },
     UserAddressesRoute.name: (routeData) {
+      final args = routeData.argsAs<UserAddressesRouteArgs>();
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: const UserAddressesPage(),
+        child: UserAddressesPage(
+          key: args.key,
+          returnOrderDetails: args.returnOrderDetails,
+          orders: args.orders,
+        ),
       );
     },
     UserCartRoute.name: (routeData) {
@@ -167,16 +176,40 @@ class AboutProjectRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [AddressAddPage]
-class AddressAddRoute extends PageRouteInfo<void> {
-  const AddressAddRoute({List<PageRouteInfo>? children})
-      : super(
+class AddressAddRoute extends PageRouteInfo<AddressAddRouteArgs> {
+  AddressAddRoute({
+    Key? key,
+    required List<OrderModel> orders,
+    List<PageRouteInfo>? children,
+  }) : super(
           AddressAddRoute.name,
+          args: AddressAddRouteArgs(
+            key: key,
+            orders: orders,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'AddressAddRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<AddressAddRouteArgs> page =
+      PageInfo<AddressAddRouteArgs>(name);
+}
+
+class AddressAddRouteArgs {
+  const AddressAddRouteArgs({
+    this.key,
+    required this.orders,
+  });
+
+  final Key? key;
+
+  final List<OrderModel> orders;
+
+  @override
+  String toString() {
+    return 'AddressAddRouteArgs{key: $key, orders: $orders}';
+  }
 }
 
 /// generated route for
@@ -480,16 +513,45 @@ class RestaurantMapRoute extends PageRouteInfo<void> {
 
 /// generated route for
 /// [UserAddressesPage]
-class UserAddressesRoute extends PageRouteInfo<void> {
-  const UserAddressesRoute({List<PageRouteInfo>? children})
-      : super(
+class UserAddressesRoute extends PageRouteInfo<UserAddressesRouteArgs> {
+  UserAddressesRoute({
+    Key? key,
+    bool returnOrderDetails = false,
+    required List<OrderModel> orders,
+    List<PageRouteInfo>? children,
+  }) : super(
           UserAddressesRoute.name,
+          args: UserAddressesRouteArgs(
+            key: key,
+            returnOrderDetails: returnOrderDetails,
+            orders: orders,
+          ),
           initialChildren: children,
         );
 
   static const String name = 'UserAddressesRoute';
 
-  static const PageInfo<void> page = PageInfo<void>(name);
+  static const PageInfo<UserAddressesRouteArgs> page =
+      PageInfo<UserAddressesRouteArgs>(name);
+}
+
+class UserAddressesRouteArgs {
+  const UserAddressesRouteArgs({
+    this.key,
+    this.returnOrderDetails = false,
+    required this.orders,
+  });
+
+  final Key? key;
+
+  final bool returnOrderDetails;
+
+  final List<OrderModel> orders;
+
+  @override
+  String toString() {
+    return 'UserAddressesRouteArgs{key: $key, returnOrderDetails: $returnOrderDetails, orders: $orders}';
+  }
 }
 
 /// generated route for
