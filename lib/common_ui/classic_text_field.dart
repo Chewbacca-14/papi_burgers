@@ -33,14 +33,14 @@ class _ClassicTextFieldState extends State<ClassicTextField> {
         decoration: InputDecoration(
           hintStyle: const TextStyle(
             fontSize: 16,
-            color: grey9,
+            color: Colors.white,
           ),
           border: InputBorder.none,
           hintText: widget.hintText,
           prefixIcon: Icon(
             widget.prefixIcon,
             size: 23,
-            color: grey4,
+            color: Colors.white,
           ),
         ),
       ),

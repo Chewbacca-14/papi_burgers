@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
@@ -8,7 +9,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 import 'package:intl/intl.dart';
 import 'package:papi_burgers/common_ui/classic_text_field.dart';
@@ -50,21 +50,22 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   int totalPrice = 0;
   String? userPhone = 'Телефон';
 
-  Map<String, dynamic> orderModelToMap({
-    required OrderModel order,
-    required String phone,
-    required Address address,
-    required String name,
-    required String comment,
-    required DateTime datetime,
-    required bool isCashPayment,
-    required String orderStatus,
-    required String paymentStatus,
-    required bool isTakeAway,
-    required String whenDeliveryOrTake,
-  }) {
+  Map<String, dynamic> orderModelToMap(
+      {required OrderModel order,
+      required String phone,
+      required Address address,
+      required String name,
+      required String comment,
+      required DateTime datetime,
+      required bool isCashPayment,
+      required String orderStatus,
+      required String paymentStatus,
+      required bool isTakeAway,
+      required String whenDeliveryOrTake,
+      required String orderID}) {
     return {
       'userId': order.userId,
+      'orderID': orderID,
       'menuItems': order.menuItems.map((menuItem) => menuItem.toMap()).toList(),
       'deliveryPrice': order.deliveryPrice,
       'totalPrice': order.totalPrice,
@@ -88,24 +89,59 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     };
   }
 
-  void addOrdersToFirestore({
-    required List<OrderModel> orders,
-    required String phone,
-    required Address address,
-    required String name,
-    required String comment,
-    required DateTime datetime,
-    required bool isCashPayment,
-    required String orderStatus,
-    required String whenDeliveryOrTake,
-    required String paymentStatus,
-    required bool isTakeAway,
-  }) {
+  Future<String> generateOrderNumber() async {
+    // Generate a random 8-digit number
+    String randomDigits =
+        Random().nextInt(100000000).toString().padLeft(8, '0');
+
+    // Concatenate 'PB' with the random digits
+    String orderNumber = 'PB$randomDigits';
+
+    // Check if the order number exists in Firestore
+    bool exists = await checkIfOrderExists(orderNumber);
+
+    // If the order number already exists, recursively generate a new one
+    if (exists) {
+      return generateOrderNumber();
+    }
+
+    return orderNumber;
+  }
+
+  Future<bool> checkIfOrderExists(String orderNumber) async {
+    final CollectionReference ordersCollection =
+        FirebaseFirestore.instance.collection('orders');
+    try {
+      var querySnapshot =
+          await ordersCollection.where('orderID', isEqualTo: orderNumber).get();
+
+      return querySnapshot.docs.isNotEmpty;
+    } catch (e) {
+      print('Error checking order existence: $e');
+      return false;
+    }
+  }
+
+  void addOrdersToFirestore(
+      {required List<OrderModel> orders,
+      required String phone,
+      required Address address,
+      required String name,
+      required String comment,
+      required DateTime datetime,
+      required bool isCashPayment,
+      required String orderStatus,
+      required String whenDeliveryOrTake,
+      required String paymentStatus,
+      required bool isTakeAway,
+      required String orderID}) {
     final firestore = FirebaseFirestore.instance;
     OrderProvider orderProvider =
         Provider.of<OrderProvider>(context, listen: false);
+
     for (final order in orderProvider.orders) {
       final orderData = orderModelToMap(
+          orderID: orderID,
           order: order,
           phone: phone,
           address: address,
@@ -188,21 +224,24 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                   userPhone: userPhone,
                   totalPrice: totalPrice,
                   commentController: commentController,
-                  addToFirebase: () {
+                  addToFirebase: () async {
+                    String orderID = await generateOrderNumber();
                     addOrdersToFirestore(
-                        orders: widget.order,
-                        phone: userPhone!,
-                        address: orderAddressProvider.orderAddress,
-                        name: nameController.text,
-                        comment: commentController.text,
-                        whenDeliveryOrTake: isChoosedAsap
-                            ? 'Как можно быстрее'
-                            : '$selectedDate в $selectedHour:${selectedMinute.toString().padLeft(2, '0')}',
-                        isCashPayment: !isChoosedOnlinePayment,
-                        orderStatus: 'LATER',
-                        paymentStatus: 'LATER',
-                        isTakeAway: true,
-                        datetime: DateTime.now());
+                      orders: widget.order,
+                      phone: userPhone!,
+                      address: orderAddressProvider.orderAddress,
+                      name: nameController.text,
+                      comment: commentController.text,
+                      whenDeliveryOrTake: isChoosedAsap
+                          ? 'Как можно быстрее'
+                          : '$selectedDate в $selectedHour:${selectedMinute.toString().padLeft(2, '0')}',
+                      isCashPayment: !isChoosedOnlinePayment,
+                      orderStatus: 'created',
+                      paymentStatus: 'LATER',
+                      isTakeAway: true,
+                      datetime: DateTime.now(),
+                      orderID: orderID,
+                    );
                   },
                 ),
               ),

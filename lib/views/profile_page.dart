@@ -99,6 +99,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                   setState(() {
                                     uid = null;
                                   });
+                                  setState(() {});
                                 },
                                 child: const Text(
                                   'Выйти',
@@ -210,9 +211,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
                 ),
               ),
               h10,
+              const Spacer(),
               Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 3,
+                  height: 320,
                   decoration: const BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.only(
@@ -301,6 +303,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                               child: GestureDetector(
                                                 onTap: () {
                                                   showOrderDetails(
+                                                      orderID: order['orderID'],
                                                       context: context,
                                                       itemCount: orderLength,
                                                       dishName:
@@ -360,16 +363,21 @@ class _UserProfilePageState extends State<UserProfilePage> {
     required int totalPrice,
     required String date,
     required String isTakeAway,
+    required String orderID,
   }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
-          title: const Text('Детали заказа'),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+          title: Text(
+            'Заказ №$orderID',
+            style: TextStyle(fontSize: 16),
+          ),
           content: Container(
-            width: MediaQuery.of(context).size.width - 40,
-            height: 270,
+            width: MediaQuery.of(context).size.width - 70,
+            height: 370,
             child: Column(
               children: [
                 SizedBox(
@@ -380,7 +388,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text(dishName),
-                        subtitle: Text('$quantity шт./$price ₽'),
+                        subtitle: Text(
+                          '$quantity шт./$price ₽',
+                        ),
                         trailing: Text(
                           '${quantity * price}₽',
                           style: TextStyle(
