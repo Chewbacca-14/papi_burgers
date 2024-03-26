@@ -15,6 +15,7 @@ import 'package:papi_burgers/common_ui/classic_text_field.dart';
 import 'package:papi_burgers/common_ui/price_info_sheet.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
+import 'package:papi_burgers/constants/statuses.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/address_model.dart';
@@ -80,7 +81,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       'comment': comment,
       'datetime': datetime,
       'isCashPayment': isCashPayment,
-      'orderStatus': orderStatus,
+      'orderStatus': getStringFromStatus(OrderStatuses.created),
       'whenDeliveryOrTakeAway': whenDeliveryOrTake,
       'paymentStatus': paymentStatus,
       'isTakeAway': isTakeAway,
@@ -122,7 +123,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
   Future<void> getUsersPhone() async {
     setState(() {
-      userPhone = FirebaseAuth.instance.currentUser!.phoneNumber;
+      userPhone = FirebaseAuth.instance.currentUser?.phoneNumber;
     });
   }
 
@@ -258,7 +259,7 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
 
   Future<void> getUsersPhone() async {
     setState(() {
-      widget.userPhone = FirebaseAuth.instance.currentUser!.phoneNumber;
+      widget.userPhone = FirebaseAuth.instance.currentUser?.phoneNumber;
     });
   }
 
@@ -341,7 +342,8 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                           ? LightContainerField(
                               controller: widget.controller,
                               prefixIcon: Icons.phone,
-                              hintText: orderAddressProvider.orderAddress.address,
+                              hintText:
+                                  orderAddressProvider.orderAddress.address,
                               onTap: () {
                                 context.router.push(UserAddressesRoute(
                                     returnOrderDetails: true,
@@ -433,19 +435,18 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                 showCustomSnackBar(context, 'Отредактируйте время заказ',
                     AnimatedSnackBarType.error);
               } else {
-                log('can order');
-              }
-              if (widget.nameController.text.isEmpty) {
-                showCustomSnackBar(
-                    context, 'Заполните имя', AnimatedSnackBarType.error);
-              } else if (orderAddressProvider.orderAddress.address ==
-                      'Выберите адрес' &&
-                  isDelivery) {
-                showCustomSnackBar(context, 'Выберите адрес доставки',
-                    AnimatedSnackBarType.error);
-              } else {
-                context.router.replace(const OrderConfirmationRoute());
-                widget.addToFirebase?.call();
+                if (widget.nameController.text.isEmpty) {
+                  showCustomSnackBar(
+                      context, 'Заполните имя', AnimatedSnackBarType.error);
+                } else if (orderAddressProvider.orderAddress.address ==
+                        'Выберите адрес' &&
+                    isDelivery) {
+                  showCustomSnackBar(context, 'Выберите адрес доставки',
+                      AnimatedSnackBarType.error);
+                } else {
+                  context.router.replace(const OrderConfirmationRoute());
+                  widget.addToFirebase?.call();
+                }
               }
             },
           ),

@@ -56,6 +56,7 @@ class _UserCartPageState extends State<UserCartPage> {
   bool isEmptyCart = true;
 
   Future<void> calculatePrice() async {
+    NavigationIndexProvider navigationIndexProvider = Provider.of<NavigationIndexProvider>(context);
     DeliveryPriceProvider deliveryPriceProvider =
         Provider.of<DeliveryPriceProvider>(context, listen: false);
     int getDishPrice = await _databaseHelper.calculatePrice();
@@ -239,7 +240,10 @@ class _UserCartPageState extends State<UserCartPage> {
                             dishPrice: dishPrice,
                             totalPrice: totalPrice,
                             onTap: () {
-                              orderProvider.addOrder(
+                              if(FirebaseAuth.instance.currentUser == null) {
+                                navigationIndexProvider.changeIndex(3);
+                              } else {
+                                orderProvider.addOrder(
                                 [
                                   OrderModel(
                                       id: '1',
@@ -268,7 +272,7 @@ class _UserCartPageState extends State<UserCartPage> {
                                           deliveryPriceProvider.deliveryPrice,
                                       totalPrice: totalPrice)
                                 ],
-                              );
+                              ); 
                               context.pushRoute(
                                 OrderDetailsRoute(
                                   order: [
@@ -300,6 +304,8 @@ class _UserCartPageState extends State<UserCartPage> {
                                   ],
                                 ),
                               );
+                              }
+                              
                             },
                           ),
                         ),
