@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -15,6 +16,7 @@ class SearchingDishBox extends StatelessWidget {
   final int fat;
   final int carbohydrates;
   final String allergens;
+  final ExtraIngredients? extraIngredients;
 
   const SearchingDishBox({
     super.key,
@@ -29,6 +31,7 @@ class SearchingDishBox extends StatelessWidget {
     required this.proteins,
     required this.weight,
     required this.allergens,
+    this.extraIngredients,
   });
 
   @override
@@ -37,18 +40,18 @@ class SearchingDishBox extends StatelessWidget {
       onTap: () {
         context.router.push(
           MenuItemDetailsRoute(
-            calories: calories,
-            carbohydrates: carbohydrates,
-            description: description,
-            fat: fat,
-            imageUrl: imageUrl,
-            ingredients: ingredients,
-            name: name,
-            price: price,
-            proteins: proteins,
-            weight: weight,
-            allergens: allergens,
-          ),
+              calories: calories,
+              carbohydrates: carbohydrates,
+              description: description,
+              fat: fat,
+              imageUrl: imageUrl,
+              ingredients: ingredients,
+              name: name,
+              price: price,
+              proteins: proteins,
+              weight: weight,
+              allergens: allergens,
+              extraIngredients: extraIngredients),
         );
       },
       child: Padding(

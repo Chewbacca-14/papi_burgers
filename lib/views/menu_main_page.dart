@@ -10,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:grouped_list/grouped_list.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
 import 'package:papi_burgers/common_ui/main_home_page/custom_tab_box.dart';
@@ -147,8 +148,10 @@ class _MenuMainPageState extends State<MenuMainPage>
     RestaurantProvider restaurantProvider =
         Provider.of<RestaurantProvider>(context, listen: false);
     // Fetch categories
-    DocumentSnapshot restaurantDoc =
-        await _firestore.collection('restaurants').doc(restaurantProvider.restaurantName).get();
+    DocumentSnapshot restaurantDoc = await _firestore
+        .collection('restaurants')
+        .doc(restaurantProvider.restaurantName)
+        .get();
 
     setState(() {
       categories = List<String>.from(restaurantDoc['categories']);
@@ -187,8 +190,6 @@ class _MenuMainPageState extends State<MenuMainPage>
   }
 
   bool isLoading = true;
-
-  
 
   @override
   Widget build(BuildContext context) {
@@ -280,8 +281,8 @@ class _MenuMainPageState extends State<MenuMainPage>
                                           'Найдите любимое блюдо...',
                                           style: TextStyle(
                                             fontSize: 14,
-                                            color:
-                                                Color.fromARGB(255, 153, 153, 153),
+                                            color: Color.fromARGB(
+                                                255, 153, 153, 153),
                                           ),
                                         ),
                                       ],
@@ -305,7 +306,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                           splashBorderRadius: BorderRadius.circular(22),
                           labelPadding: EdgeInsets.zero,
                           padding: EdgeInsets.zero,
-          
+
                           onTap: (value) {
                             _tabController.animateTo(value);
                             setState(() {});
@@ -318,7 +319,8 @@ class _MenuMainPageState extends State<MenuMainPage>
                               .map(
                                 (category) => CustomTabBox(
                                   name: category,
-                                  photo: catImages[categories.indexOf(category)],
+                                  photo:
+                                      catImages[categories.indexOf(category)],
                                   isSelected: _tabController.index ==
                                       categories.indexOf(category),
                                 ),
@@ -361,7 +363,8 @@ class _MenuMainPageState extends State<MenuMainPage>
                                         context.router.push(
                                           MenuItemDetailsRoute(
                                             calories: element['calories'],
-                                            carbohydrates: element['carbohydrates'],
+                                            carbohydrates:
+                                                element['carbohydrates'],
                                             description: element['description'],
                                             fat: element['fat'],
                                             imageUrl: element['photo'],
@@ -371,6 +374,11 @@ class _MenuMainPageState extends State<MenuMainPage>
                                             proteins: element['proteins'],
                                             weight: element['weight'],
                                             allergens: element['allergens'],
+                                            extraIngredients: ExtraIngredients(
+                                              name: element['extraIngredients'],
+                                              price:
+                                                  element['extraIngredients'],
+                                            ),
                                           ),
                                         );
                                       },
@@ -379,14 +387,15 @@ class _MenuMainPageState extends State<MenuMainPage>
                                         photo: element['photo'],
                                         price: element['price'],
                                         weight: 123,
-                                        isSaved:
-                                            savedNames.contains(element['name']),
+                                        isSaved: savedNames
+                                            .contains(element['name']),
                                         onSave: () {
                                           if (savedNames
                                               .contains(element['name'])) {
                                             removeFromSaved(element['name']);
                                             Future.delayed(
-                                                Duration(milliseconds: 100), () {
+                                                Duration(milliseconds: 100),
+                                                () {
                                               fetchNames();
                                             });
                                           } else {
@@ -395,10 +404,12 @@ class _MenuMainPageState extends State<MenuMainPage>
                                                 calories: element['calories'],
                                                 carbohydrates:
                                                     element['carbohydrates'],
-                                                description: element['description'],
+                                                description:
+                                                    element['description'],
                                                 fat: element['fat'],
                                                 imageUrl: element['photo'],
-                                                ingredients: element['ingredients'],
+                                                ingredients:
+                                                    element['ingredients'],
                                                 name: element['name'],
                                                 price: element['price'],
                                                 proteins: element['proteins'],
@@ -426,7 +437,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                               //   shrinkWrap: true,
                               //   itemBuilder: (context, index) {
                               //     final  element = items[index];
-          
+
                               //   },
                               // );
                             }).toList(),
@@ -437,9 +448,15 @@ class _MenuMainPageState extends State<MenuMainPage>
                   ),
                 )),
           ),
-          isLoading ? Container(height: MediaQuery.of(context).size.height, width: MediaQuery.of(context).size.width, color: Colors.white, child: Center(
-                  child: SvgPicture.asset('assets/pb_logo.svg'),
-                )) : const SizedBox(),
+          isLoading
+              ? Container(
+                  height: MediaQuery.of(context).size.height,
+                  width: MediaQuery.of(context).size.width,
+                  color: Colors.white,
+                  child: Center(
+                    child: SvgPicture.asset('assets/pb_logo.svg'),
+                  ))
+              : const SizedBox(),
         ],
       ),
     );

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/menu_item_card.dart';
@@ -232,6 +233,15 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
                                   proteins: menuItemData['proteins'],
                                   weight: menuItemData['weight'],
                                   allergens: menuItemData['allergens'],
+                                  extraIngredients: ExtraIngredients(
+                                    name: menuItemData['extraIngredients']
+                                        .map((e) => e['name'])
+                                        .toString(),
+                                    price: int.parse(
+                                        menuItemData['extraIngredients']
+                                            .map((e) => e['price'])
+                                            .first),
+                                  ),
                                 ),
                               );
                             },

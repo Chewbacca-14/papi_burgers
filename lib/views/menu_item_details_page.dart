@@ -5,7 +5,10 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:papi_burgers/common_ui/extra_ingredients_row.dart';
 import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/food_energy_column.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
@@ -14,6 +17,7 @@ import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/db/db_helper.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/views/refactored_pages/home_page.dart';
@@ -33,6 +37,7 @@ class MenuItemDetailsPage extends StatefulWidget {
   final int fat;
   final int carbohydrates;
   final String allergens;
+  final ExtraIngredients? extraIngredients;
 
   const MenuItemDetailsPage({
     super.key,
@@ -47,6 +52,7 @@ class MenuItemDetailsPage extends StatefulWidget {
     required this.proteins,
     required this.weight,
     required this.allergens,
+    this.extraIngredients,
   });
 
   @override
@@ -395,7 +401,48 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                                 value: widget.weight,
                                 isGrams: true),
                           ],
-                        )
+                        ),
+                        h30,
+                        //extra ingredients
+                        widget.extraIngredients != null
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Дополнительно',
+                                    style: TextStyle(
+                                        color: grey7,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w700),
+                                  ),
+                                  h10,
+                                  SizedBox(
+                                    height: 200,
+                                    child: ListView.builder(
+                                        itemCount: widget.extraIngredients!
+                                            .toMap()
+                                            .length,
+                                        itemBuilder: (context, index) {
+                                          bool isSelected = false;
+                                          return ExtraIngredientsRow(
+                                            onTap: () {
+                                              setState(() {
+                                                isSelected = !isSelected;
+                                              });
+                                            },
+                                            isSelected: isSelected,
+                                            name: widget.extraIngredients!
+                                                .name[index]['name'],
+                                            price: int.parse(
+                                              widget.extraIngredients!
+                                                  .price[index]['price'],
+                                            ),
+                                          );
+                                        }),
+                                  )
+                                ],
+                              )
+                            : SizedBox(),
                       ],
                     ),
                   ),

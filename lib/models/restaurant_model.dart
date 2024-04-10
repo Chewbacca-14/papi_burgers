@@ -20,12 +20,12 @@ class Restaurant {
   factory Restaurant.fromFirestore(DocumentSnapshot doc) {
     Map data = doc.data() as Map<String, dynamic>;
     return Restaurant(
-      name: data['restaurant']['name'],
-      address: data['restaurant']['address'],
-      logoUrl: data['restaurant']['logoUrl'],
-      latitude: double.parse(data['restaurant']['latitude']),
-      longtitude: double.parse(data['restaurant']['longtitude']),
-      schedule: data['restaurant']['schedule'],
+      name: data['name'],
+      address: data['address'],
+      logoUrl: data['logoUrl'],
+      latitude: double.parse(data['latitude']),
+      longtitude: double.parse(data['longtitude']),
+      schedule: data['schedule'],
     );
   }
 }

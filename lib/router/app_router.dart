@@ -1,5 +1,6 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/views/order_details_page.dart';
 import 'package:papi_burgers/views/refactored_pages/about_project_page.dart';

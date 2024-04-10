@@ -87,6 +87,7 @@ abstract class _$AppRouter extends RootStackRouter {
           proteins: args.proteins,
           weight: args.weight,
           allergens: args.allergens,
+          extraIngredients: args.extraIngredients,
         ),
       );
     },
@@ -345,6 +346,7 @@ class MenuItemDetailsRoute extends PageRouteInfo<MenuItemDetailsRouteArgs> {
     required int proteins,
     required int weight,
     required String allergens,
+    ExtraIngredients? extraIngredients,
     List<PageRouteInfo>? children,
   }) : super(
           MenuItemDetailsRoute.name,
@@ -361,6 +363,7 @@ class MenuItemDetailsRoute extends PageRouteInfo<MenuItemDetailsRouteArgs> {
             proteins: proteins,
             weight: weight,
             allergens: allergens,
+            extraIngredients: extraIngredients,
           ),
           initialChildren: children,
         );
@@ -385,6 +388,7 @@ class MenuItemDetailsRouteArgs {
     required this.proteins,
     required this.weight,
     required this.allergens,
+    this.extraIngredients,
   });
 
   final Key? key;
@@ -411,9 +415,11 @@ class MenuItemDetailsRouteArgs {
 
   final String allergens;
 
+  final ExtraIngredients? extraIngredients;
+
   @override
   String toString() {
-    return 'MenuItemDetailsRouteArgs{key: $key, calories: $calories, carbohydrates: $carbohydrates, description: $description, fat: $fat, imageUrl: $imageUrl, ingredients: $ingredients, name: $name, price: $price, proteins: $proteins, weight: $weight, allergens: $allergens}';
+    return 'MenuItemDetailsRouteArgs{key: $key, calories: $calories, carbohydrates: $carbohydrates, description: $description, fat: $fat, imageUrl: $imageUrl, ingredients: $ingredients, name: $name, price: $price, proteins: $proteins, weight: $weight, allergens: $allergens, extraIngredients: $extraIngredients}';
   }
 }
 
