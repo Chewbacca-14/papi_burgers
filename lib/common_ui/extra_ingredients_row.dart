@@ -18,31 +18,37 @@ class ExtraIngredientsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: Row(
-        children: [
-          Text(
-            name,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 3),
+        child: Container(
+          color: Colors.transparent,
+          child: Row(
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                '$price ₽',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              w12,
+              Icon(
+                isSelected
+                    ? Icons.check_box_rounded
+                    : Icons.check_box_outline_blank_rounded,
+                color: primaryColor,
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            '$price ₽',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          w12,
-          Icon(
-            isSelected
-                ? Icons.check_box_rounded
-                : Icons.check_box_outline_blank_rounded,
-            color: primaryColor,
-          ),
-        ],
+        ),
       ),
     );
   }

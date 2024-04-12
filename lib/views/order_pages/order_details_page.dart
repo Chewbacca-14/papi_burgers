@@ -454,6 +454,7 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
         Align(
           alignment: Alignment.bottomCenter,
           child: PriceInfoSheet(
+            extraIngredientsPrice: 0,
             isOrderDetailsPage: true,
             deliveryPrice: deliveryPriceProvider.deliveryPrice,
             dishPrice: widget.dishPrice,

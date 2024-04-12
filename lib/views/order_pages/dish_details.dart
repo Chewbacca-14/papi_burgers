@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
@@ -5,7 +6,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/common_ui/extra_ingredients_row.dart';
@@ -14,13 +14,14 @@ import 'package:papi_burgers/common_ui/main_home_page/food_energy_column.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/db_tables_names.dart';
+import 'package:papi_burgers/constants/extra_ingredients_list.dart';
+
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
-import 'package:papi_burgers/views/refactored_pages/home_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -37,7 +38,6 @@ class MenuItemDetailsPage extends StatefulWidget {
   final int fat;
   final int carbohydrates;
   final String allergens;
-  final ExtraIngredients? extraIngredients;
 
   const MenuItemDetailsPage({
     super.key,
@@ -52,7 +52,6 @@ class MenuItemDetailsPage extends StatefulWidget {
     required this.proteins,
     required this.weight,
     required this.allergens,
-    this.extraIngredients,
   });
 
   @override
@@ -134,43 +133,75 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
 
   int dishQuantity = 1;
 
-  Future<void> addToCart(String name) async {
+  // Future<void> addToCart(
+  //     String name, List<Map<String, dynamic>>? extraIngredientsList) async {
+  //   DatabaseHelper databaseHelper = DatabaseHelper.instance;
+  //   Database db = await databaseHelper.database;
+
+  //   List<Map<String, dynamic>> items = await db.query(userCartDb);
+
+  //   bool hasDish = items.any((item) => item['name'] == name);
+
+  //   if (hasDish) {
+  //     List<Map<String, dynamic>> items =
+  //         await db.query(userCartDb, where: 'name = ?', whereArgs: [name]);
+  //     int oldQuantity = items.first['quantity'];
+  //     int newQuantity = oldQuantity + dishQuantity;
+  //     _databaseHelper.changeDishQuantity(items.first['id'], newQuantity);
+  //   } else {
+  //     _databaseHelper.addDishToCart(
+  //       dish: MenuItem(
+  //           id: '',
+  //           name: widget.name,
+  //           price: widget.price,
+  //           images: widget.imageUrl,
+  //           ingredients: widget.ingredients,
+  //           allergens: '',
+  //           calories: widget.calories,
+  //           carbohydrate: widget.carbohydrates,
+  //           fat: widget.fat,
+  //           proteins: widget.proteins,
+  //           weigth: widget.weight,
+  //           quantity: dishQuantity,
+  //           extraIngredientsList: extraIngredientsList),
+  //       quantity: dishQuantity,
+  //     );
+  //   }
+  // }
+
+  Future<void> addToCart(
+      {required List<Map<String, dynamic>>? extraIngredientsList}) async {
     DatabaseHelper databaseHelper = DatabaseHelper.instance;
     Database db = await databaseHelper.database;
 
-    List<Map<String, dynamic>> items = await db.query(userCartDb);
-
-    bool hasDish = items.any((item) => item['name'] == name);
-
-    if (hasDish) {
-      List<Map<String, dynamic>> items =
-          await db.query(userCartDb, where: 'name = ?', whereArgs: [name]);
-      int oldQuantity = items.first['quantity'];
-      int newQuantity = oldQuantity + dishQuantity;
-      _databaseHelper.changeDishQuantity(items.first['id'], newQuantity);
-    } else {
-      _databaseHelper.addDishToCart(
-          dish: MenuItem(
-              id: '',
-              name: widget.name,
-              price: widget.price,
-              images: widget.imageUrl,
-              ingredients: widget.ingredients,
-              allergens: '',
-              calories: widget.calories,
-              carbohydrate: widget.carbohydrates,
-              fat: widget.fat,
-              proteins: widget.proteins,
-              weigth: widget.weight),
-          quantity: dishQuantity);
-    }
+    _databaseHelper.addDishToCart(
+      dish: MenuItem(
+          id: '',
+          name: widget.name,
+          price: widget.price,
+          images: widget.imageUrl,
+          ingredients: widget.ingredients,
+          allergens: '',
+          calories: widget.calories,
+          carbohydrate: widget.carbohydrates,
+          fat: widget.fat,
+          proteins: widget.proteins,
+          weigth: widget.weight,
+          quantity: dishQuantity,
+          extraIngredientsList: extraIngredientsList),
+      quantity: dishQuantity,
+    );
   }
+
+  List<Map<String, dynamic>> selectedItems = [];
 
   @override
   void initState() {
     fetchNames();
     super.initState();
   }
+
+  int extraIngredientsPrice = 0;
 
   var user = FirebaseAuth.instance.currentUser;
   @override
@@ -201,7 +232,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                       onTap: () {
                         if (savedNames.contains(widget.name)) {
                           removeFromSaved(widget.name);
-                          Future.delayed(Duration(milliseconds: 100), () {
+                          Future.delayed(const Duration(milliseconds: 100), () {
                             fetchNames();
                           });
                         } else {
@@ -404,11 +435,11 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                         ),
                         h30,
                         //extra ingredients
-                        widget.extraIngredients != null
+                        widget.name.contains('ургер')
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'Дополнительно',
                                     style: TextStyle(
                                         color: grey7,
@@ -417,32 +448,47 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                                   ),
                                   h10,
                                   SizedBox(
-                                    height: 200,
+                                    height: 900,
                                     child: ListView.builder(
-                                        itemCount: widget.extraIngredients!
-                                            .toMap()
-                                            .length,
-                                        itemBuilder: (context, index) {
-                                          bool isSelected = false;
-                                          return ExtraIngredientsRow(
-                                            onTap: () {
-                                              setState(() {
-                                                isSelected = !isSelected;
-                                              });
-                                            },
-                                            isSelected: isSelected,
-                                            name: widget.extraIngredients!
-                                                .name[index]['name'],
-                                            price: int.parse(
-                                              widget.extraIngredients!
-                                                  .price[index]['price'],
-                                            ),
-                                          );
-                                        }),
-                                  )
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      itemCount: extraIngredientsList.length,
+                                      itemBuilder: (context, index) {
+                                        final item =
+                                            extraIngredientsList[index];
+                                        return ExtraIngredientsRow(
+                                          isSelected:
+                                              selectedItems.contains(item),
+                                          name: item['name'],
+                                          price: int.parse('${item['price']}'),
+                                          onTap: () {
+                                            log('BEFORE: $selectedItems');
+                                            setState(() {
+                                              if (selectedItems.contains(
+                                                item,
+                                              )) {
+                                                selectedItems.remove(item);
+                                                log('AFTER REMOVE: ${ExtraIngredients(name: item['name'], price: item['price']).toMap()}');
+                                                extraIngredientsPrice -=
+                                                    int.parse(item['price']
+                                                        .toString());
+                                              } else {
+                                                selectedItems.add(item);
+                                                log('AFTER REMOVE: ${ExtraIngredients(name: item['name'], price: item['price']).toMap()}');
+
+                                                extraIngredientsPrice +=
+                                                    int.parse(item['price']
+                                                        .toString());
+                                              }
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
                                 ],
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                       ],
                     ),
                   ),
@@ -481,7 +527,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                                 ),
                                 Text(
                                   '$dishQuantity',
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                       fontSize: 16,
                                       color: Colors.white,
                                       fontWeight: FontWeight.w700),
@@ -507,7 +553,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                       flex: 3,
                       child: GestureDetector(
                         onTap: () {
-                          addToCart(widget.name);
+                          addToCart(extraIngredientsList: selectedItems);
                           navigationIndexProvider.changeIndex(2);
                           Navigator.pop(context);
                         },
@@ -524,7 +570,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '${widget.price * dishQuantity} ₽',
+                                    '${(widget.price + extraIngredientsPrice) * dishQuantity} ₽',
                                     style: const TextStyle(
                                         fontSize: 16,
                                         color: Colors.white,

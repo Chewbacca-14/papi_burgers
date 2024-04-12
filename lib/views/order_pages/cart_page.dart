@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +10,7 @@ import 'package:papi_burgers/providers/order_type_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/price_info_sheet.dart';
-import 'package:papi_burgers/common_ui/rounded_icon.dart';
+
 import 'package:papi_burgers/common_ui/user_cart_card.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/db_tables_names.dart';
@@ -28,24 +30,42 @@ class UserCartPage extends StatefulWidget {
 }
 
 class _UserCartPageState extends State<UserCartPage> {
-  late Future<List<Map<String, dynamic>>> _itemsFuture;
+  late Stream<List<Map<String, dynamic>>> _itemsStream;
 
   @override
   void initState() {
     super.initState();
-    _itemsFuture = _getItemsFromDatabase();
+
+    _itemsStream = _getItemsFromDatabase();
   }
 
-  Future<List<Map<String, dynamic>>> _getItemsFromDatabase() async {
+  Stream<List<Map<String, dynamic>>> _getItemsFromDatabase() async* {
     DatabaseHelper databaseHelper = DatabaseHelper.instance;
     Database db = await databaseHelper.database;
-    return await db.query(userCartDb);
+    yield* db.query(userCartDb).asStream();
   }
 
   void updateList() {
     setState(() {
-      _itemsFuture = _getItemsFromDatabase();
+      _itemsStream = _getItemsFromDatabase();
     });
+  }
+
+  int extraIngredientsPrice = 0;
+  int totalExtraIngredientsPrice = 0;
+
+  void calculateTotalExtraIngredientsPrice(
+      List<Map<String, dynamic>>? itemList) {
+    double totalPrice = 0.0;
+    if (itemList != null) {
+      for (var item in itemList) {
+        double price = double.parse(item['price'].toString());
+
+        totalPrice += price;
+      }
+    }
+
+    totalExtraIngredientsPrice = totalPrice.toInt();
   }
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
@@ -56,7 +76,8 @@ class _UserCartPageState extends State<UserCartPage> {
   bool isEmptyCart = true;
 
   Future<void> calculatePrice() async {
-    NavigationIndexProvider navigationIndexProvider = Provider.of<NavigationIndexProvider>(context);
+    NavigationIndexProvider navigationIndexProvider =
+        Provider.of<NavigationIndexProvider>(context);
     DeliveryPriceProvider deliveryPriceProvider =
         Provider.of<DeliveryPriceProvider>(context, listen: false);
     int getDishPrice = await _databaseHelper.calculatePrice();
@@ -123,14 +144,16 @@ class _UserCartPageState extends State<UserCartPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                         child: SizedBox(
                           height: MediaQuery.of(context).size.height - 300,
-                          child: FutureBuilder<List<Map<String, dynamic>>>(
-                            future: _itemsFuture,
+                          child: StreamBuilder<List<Map<String, dynamic>>>(
+                            stream: _itemsStream,
                             builder: (context, snapshot) {
                               _snapshotData = snapshot.data;
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
                                 return const Center(
-                                    child: CircularProgressIndicator());
+                                    child: CircularProgressIndicator(
+                                  color: Colors.red,
+                                ));
                               } else if (snapshot.hasError) {
                                 return Center(
                                     child: Text('Error: ${snapshot.error}'));
@@ -209,19 +232,34 @@ class _UserCartPageState extends State<UserCartPage> {
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     final item = snapshot.data![index];
-
+                                    // Декодирование JSON и преобразование в список карт
+                                    List<dynamic> decodedExtraIngredients =
+                                        jsonDecode(item['extraIngredients']);
+                                    List<Map<String, dynamic>>
+                                        extraIngredients =
+                                        decodedExtraIngredients
+                                            .cast<Map<String, dynamic>>();
+                                    double extraIngredientsPriceSum =
+                                        extraIngredients.fold(
+                                            0,
+                                            (sum, item) =>
+                                                sum + (item['price'] ?? 0));
+                                    extraIngredientsPrice =
+                                        extraIngredientsPriceSum.toInt();
+                                    calculateTotalExtraIngredientsPrice(
+                                        extraIngredients);
                                     return UserCartCard(
+                                      extraIngredients: extraIngredients,
                                       id: item['id'],
                                       imageUrl: item['imageurl'],
                                       name: item['name'],
                                       price: item['price'],
                                       quantity: item['quantity'],
+                                      extraIngredientsPrice:
+                                          extraIngredientsPrice.toInt(),
                                       weight: item['weight'],
                                       updatestatep: () {
-                                        setState(() {
-                                          _itemsFuture =
-                                              _getItemsFromDatabase();
-                                        });
+                                        _itemsStream = _getItemsFromDatabase();
                                       },
                                     );
                                   },
@@ -239,46 +277,17 @@ class _UserCartPageState extends State<UserCartPage> {
                             deliveryPrice: deliveryPriceProvider.deliveryPrice,
                             dishPrice: dishPrice,
                             totalPrice: totalPrice,
+                            extraIngredientsPrice: totalExtraIngredientsPrice,
                             onTap: () {
-                              if(FirebaseAuth.instance.currentUser == null) {
+                              if (FirebaseAuth.instance.currentUser == null) {
                                 navigationIndexProvider.changeIndex(3);
                               } else {
                                 orderProvider.addOrder(
-                                [
-                                  OrderModel(
-                                      id: '1',
-                                      userId: FirebaseAuth
-                                          .instance.currentUser!.uid,
-                                      isTakeAway: isDelivery,
-                                      menuItems: _snapshotData!
-                                          .map((item) => MenuItem(
-                                                id: '77',
-                                                quantity: item['quantity'],
-                                                name: item['name'],
-                                                price: item['price'],
-                                                images: item['imageurl'],
-                                                ingredients:
-                                                    item['ingredients'],
-                                                allergens: item['allergens'],
-                                                calories: item['calories'],
-                                                carbohydrate:
-                                                    item['carbohydrate'],
-                                                fat: item['fat'],
-                                                proteins: item['proteins'],
-                                                weigth: item['weight'],
-                                              ))
-                                          .toList(),
-                                      deliveryPrice:
-                                          deliveryPriceProvider.deliveryPrice,
-                                      totalPrice: totalPrice)
-                                ],
-                              ); 
-                              context.pushRoute(
-                                OrderDetailsRoute(
-                                  order: [
+                                  [
                                     OrderModel(
                                         id: '1',
-                                        userId: '',
+                                        userId: FirebaseAuth
+                                            .instance.currentUser!.uid,
                                         isTakeAway: isDelivery,
                                         menuItems: _snapshotData!
                                             .map((item) => MenuItem(
@@ -302,10 +311,40 @@ class _UserCartPageState extends State<UserCartPage> {
                                             deliveryPriceProvider.deliveryPrice,
                                         totalPrice: totalPrice)
                                   ],
-                                ),
-                              );
+                                );
+                                context.pushRoute(
+                                  OrderDetailsRoute(
+                                    order: [
+                                      OrderModel(
+                                          id: '1',
+                                          userId: '',
+                                          isTakeAway: isDelivery,
+                                          menuItems: _snapshotData!
+                                              .map((item) => MenuItem(
+                                                    id: '77',
+                                                    quantity: item['quantity'],
+                                                    name: item['name'],
+                                                    price: item['price'],
+                                                    images: item['imageurl'],
+                                                    ingredients:
+                                                        item['ingredients'],
+                                                    allergens:
+                                                        item['allergens'],
+                                                    calories: item['calories'],
+                                                    carbohydrate:
+                                                        item['carbohydrate'],
+                                                    fat: item['fat'],
+                                                    proteins: item['proteins'],
+                                                    weigth: item['weight'],
+                                                  ))
+                                              .toList(),
+                                          deliveryPrice: deliveryPriceProvider
+                                              .deliveryPrice,
+                                          totalPrice: totalPrice)
+                                    ],
+                                  ),
+                                );
                               }
-                              
                             },
                           ),
                         ),

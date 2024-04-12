@@ -1,6 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
+
 class MenuItem {
   final String id;
   final String name;
@@ -14,6 +17,7 @@ class MenuItem {
   final int proteins;
   final int weigth;
   final int quantity;
+  final List<Map<String, dynamic>>? extraIngredientsList;
   MenuItem({
     required this.id,
     required this.name,
@@ -26,7 +30,8 @@ class MenuItem {
     required this.fat,
     required this.proteins,
     required this.weigth,
-    this.quantity = 0,
+    required this.quantity,
+    this.extraIngredientsList,
   });
 
   MenuItem copyWith({
@@ -42,21 +47,23 @@ class MenuItem {
     int? proteins,
     int? weigth,
     int? quantity,
+    List<Map<String, dynamic>>? extraIngredientsList,
   }) {
     return MenuItem(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      price: price ?? this.price,
-      images: images ?? this.images,
-      ingredients: ingredients ?? this.ingredients,
-      allergens: allergens ?? this.allergens,
-      calories: calories ?? this.calories,
-      carbohydrate: carbohydrate ?? this.carbohydrate,
-      fat: fat ?? this.fat,
-      proteins: proteins ?? this.proteins,
-      weigth: weigth ?? this.weigth,
-      quantity: quantity ?? this.quantity,
-    );
+        id: id ?? this.id,
+        name: name ?? this.name,
+        price: price ?? this.price,
+        images: images ?? this.images,
+        ingredients: ingredients ?? this.ingredients,
+        allergens: allergens ?? this.allergens,
+        calories: calories ?? this.calories,
+        carbohydrate: carbohydrate ?? this.carbohydrate,
+        fat: fat ?? this.fat,
+        proteins: proteins ?? this.proteins,
+        weigth: weigth ?? this.weigth,
+        quantity: quantity ?? this.quantity,
+        extraIngredientsList:
+            extraIngredientsList ?? this.extraIngredientsList);
   }
 
   Map<String, dynamic> toMap() {
@@ -73,14 +80,36 @@ class MenuItem {
       'proteins': proteins,
       'weigth': weigth,
       'quantity': quantity,
+      'extraIngredientsList': extraIngredientsList,
     };
+  }
+
+  factory MenuItem.fromMap(Map<String, dynamic> map) {
+    return MenuItem(
+      id: map['id'] as String,
+      name: map['name'] as String,
+      price: map['price'] as int,
+      images: map['images'] as String,
+      ingredients: map['ingredients'] as String,
+      allergens: map['allergens'] as String,
+      calories: map['calories'] as int,
+      carbohydrate: map['carbohydrate'] as int,
+      fat: map['fat'] as int,
+      proteins: map['proteins'] as int,
+      weigth: map['weigth'] as int,
+      quantity: map['quantity'] as int,
+      extraIngredientsList: map['extraIngredientsList'],
+    );
   }
 
   String toJson() => json.encode(toMap());
 
+  factory MenuItem.fromJson(String source) =>
+      MenuItem.fromMap(json.decode(source) as Map<String, dynamic>);
+
   @override
   String toString() {
-    return 'MenuItem(id: $id, name: $name, price: $price, images: $images, ingredients: $ingredients, allergens: $allergens, calories: $calories, carbohydrate: $carbohydrate, fat: $fat, proteins: $proteins, weigth: $weigth,  quantity: $quantity)';
+    return 'MenuItem(id: $id, name: $name, price: $price, images: $images, ingredients: $ingredients, allergens: $allergens, calories: $calories, carbohydrate: $carbohydrate, fat: $fat, proteins: $proteins, weigth: $weigth, quantity: $quantity, extraIngredientsList: $extraIngredientsList)';
   }
 
   @override
@@ -98,7 +127,8 @@ class MenuItem {
         other.fat == fat &&
         other.proteins == proteins &&
         other.weigth == weigth &&
-        other.quantity == quantity;
+        other.quantity == quantity &&
+        listEquals(other.extraIngredientsList, extraIngredientsList);
   }
 
   @override
@@ -114,6 +144,7 @@ class MenuItem {
         fat.hashCode ^
         proteins.hashCode ^
         weigth.hashCode ^
-        quantity.hashCode;
+        quantity.hashCode ^
+        extraIngredientsList.hashCode;
   }
 }

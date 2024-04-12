@@ -6,6 +6,7 @@ import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
+import 'package:papi_burgers/models/extra_ingredients.dart';
 
 // ignore: must_be_immutable
 class UserCartCard extends StatefulWidget {
@@ -14,8 +15,10 @@ class UserCartCard extends StatefulWidget {
   final String name;
   final int price;
   int quantity;
+  final int extraIngredientsPrice;
   final int weight;
   final updatestatep;
+  final List<Map<String, dynamic>>? extraIngredients;
 
   UserCartCard(
       {super.key,
@@ -25,7 +28,9 @@ class UserCartCard extends StatefulWidget {
       required this.quantity,
       required this.weight,
       required this.id,
-      required this.updatestatep});
+      required this.updatestatep,
+      required this.extraIngredientsPrice,
+      this.extraIngredients});
 
   @override
   State<UserCartCard> createState() => _UserCartCardState();
@@ -38,6 +43,8 @@ class _UserCartCardState extends State<UserCartCard> {
         .updatestatep(); // Call the updatestatep callback to trigger a state update
   }
 
+  String extraIngredientsList = '';
+
   Future<void> updateQuantity(int quantity) async {
     await _databaseHelper.changeDishQuantity(widget.id, quantity);
 
@@ -46,12 +53,23 @@ class _UserCartCardState extends State<UserCartCard> {
 
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
   bool isLastDish = false;
+  String concatenateItems(List<Map<String, dynamic>> items) {
+    return items.map((item) => '${item['name']} - ${item['price']}₽').join(' ');
+  }
+
+  @override
+  void initState() {
+    if (widget.extraIngredients != null) {
+      extraIngredientsList = concatenateItems(widget.extraIngredients!);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Container(
-        height: 72,
         width: 250,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -67,116 +85,134 @@ class _UserCartCardState extends State<UserCartCard> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                width: 60,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    image: DecorationImage(
-                        image: NetworkImage(widget.imageUrl),
-                        fit: BoxFit.fill)),
-              ),
-              w12,
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.name,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 14,
-                    ),
+                  Container(
+                    width: 60,
+                    height: 60,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        image: DecorationImage(
+                            image: NetworkImage(widget.imageUrl),
+                            fit: BoxFit.fill)),
                   ),
-                  h6,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                  w12,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${widget.weight} г',
+                        widget.extraIngredientsPrice == 0
+                            ? widget.name
+                            : '${widget.name} + Доп.',
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                            color: Color.fromARGB(255, 68, 68, 68),
-                            fontSize: 12),
-                      ),
-                      Text(
-                        ' / ${widget.price} ₽',
-                        style: const TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Row(
-                    children: [
-                      CounterButton(
-                        onTap: () async {
-                          if (widget.quantity != 1) {
-                            int newQuantity = widget.quantity - 1;
-                            // Call updateQuantity with the new quantity
-                            updateQuantity(newQuantity);
-                          } else if (widget.quantity == 1) {
-                            setState(() {
-                              isLastDish = true;
-                            });
-
-                            showConfirmationDialog(
-                                context: context,
-                                onTapYes: () {
-                                  _deleteItemAndUpdateList();
-                                  Navigator.pop(context);
-                                });
-                          } else {
-                            setState(() {
-                              isLastDish = false;
-                            });
-                          }
-                        },
-                        isPlus: false,
-                        isRedButton: isLastDish,
-                      ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      Text(
-                        '${widget.quantity}',
-                        style: const TextStyle(
-                          fontSize: 16,
                           fontWeight: FontWeight.w700,
+                          fontSize: 14,
                         ),
                       ),
-                      const SizedBox(
-                        width: 3,
-                      ),
-                      CounterButton(
-                        onTap: () {
-                          int newQuantity = widget.quantity + 1;
-                          // Call updateQuantity with the new quantity
-                          updateQuantity(newQuantity);
-                          setState(() {
-                            isLastDish = false;
-                            widget.quantity = 5;
-                          });
-                        },
-                        isPlus: true,
+                      h6,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${widget.weight} г',
+                            style: const TextStyle(
+                                color: Color.fromARGB(255, 68, 68, 68),
+                                fontSize: 12),
+                          ),
+                          Text(
+                            ' / ${widget.price} ₽',
+                            style: const TextStyle(
+                                fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  h6,
-                  Text(
-                    '${widget.price * widget.quantity} ₽',
-                    style: const TextStyle(
-                      fontSize: 12,
-                    ),
+                  const Spacer(),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: [
+                          CounterButton(
+                            onTap: () async {
+                              if (widget.quantity != 1) {
+                                int newQuantity = widget.quantity - 1;
+                                // Call updateQuantity with the new quantity
+                                updateQuantity(newQuantity);
+                              } else if (widget.quantity == 1) {
+                                setState(() {
+                                  isLastDish = true;
+                                });
+
+                                showConfirmationDialog(
+                                    context: context,
+                                    onTapYes: () {
+                                      _deleteItemAndUpdateList();
+                                      Navigator.pop(context);
+                                    });
+                              } else {
+                                setState(() {
+                                  isLastDish = false;
+                                });
+                              }
+                            },
+                            isPlus: false,
+                            isRedButton: isLastDish,
+                          ),
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          Text(
+                            '${widget.quantity}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 3,
+                          ),
+                          CounterButton(
+                            onTap: () {
+                              int newQuantity = widget.quantity + 1;
+                              // Call updateQuantity with the new quantity
+                              updateQuantity(newQuantity);
+                              setState(() {
+                                isLastDish = false;
+                                widget.quantity = 5;
+                              });
+                            },
+                            isPlus: true,
+                          ),
+                        ],
+                      ),
+                      h6,
+                      Text(
+                        '${(widget.extraIngredientsPrice + widget.price) * widget.quantity} ₽',
+                        style: const TextStyle(
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
+              h10,
+              widget.extraIngredients != null
+                  ? Text(
+                      extraIngredientsList,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),

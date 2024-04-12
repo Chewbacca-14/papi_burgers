@@ -233,15 +233,6 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
                                   proteins: menuItemData['proteins'],
                                   weight: menuItemData['weight'],
                                   allergens: menuItemData['allergens'],
-                                  extraIngredients: ExtraIngredients(
-                                    name: menuItemData['extraIngredients']
-                                        .map((e) => e['name'])
-                                        .toString(),
-                                    price: int.parse(
-                                        menuItemData['extraIngredients']
-                                            .map((e) => e['price'])
-                                            .first),
-                                  ),
                                 ),
                               );
                             },

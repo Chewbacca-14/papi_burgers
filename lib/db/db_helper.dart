@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:papi_burgers/constants/db_tables_names.dart';
@@ -41,7 +42,9 @@ class DatabaseHelper {
     fat INTEGER,
     proteins INTEGER,
     weight INTEGER,
-    quantity INTEGER
+    quantity INTEGER,
+    extraIngredients TEXT
+
     
     )
   ''');
@@ -73,7 +76,8 @@ class DatabaseHelper {
     fat INTEGER,
     proteins INTEGER,
     weight INTEGER,
-    quantity INTEGER
+    quantity INTEGER,
+        extraIngredients TEXT
    
     ''',
         instance: instance);
@@ -130,6 +134,7 @@ class DatabaseHelper {
       'proteins': dish.proteins,
       'weight': dish.weigth,
       'quantity': quantity,
+      'extraIngredients': jsonEncode(dish.extraIngredientsList)
     });
   }
 

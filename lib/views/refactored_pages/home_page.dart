@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/views/liked_dishes_page.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
-import 'package:papi_burgers/views/menu_main_page.dart';
-import 'package:papi_burgers/views/user_cart_page.dart';
+import 'package:papi_burgers/views/order_pages/menu_page.dart';
+import 'package:papi_burgers/views/order_pages/cart_page.dart';
 import 'package:papi_burgers/views/profile_page.dart';
 import 'package:provider/provider.dart';
 

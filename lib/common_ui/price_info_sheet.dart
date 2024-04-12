@@ -16,14 +16,15 @@ class PriceInfoSheet extends StatefulWidget {
   final int totalPrice;
   final bool isOrderDetailsPage;
   final void Function()? onTap;
-  const PriceInfoSheet({
-    super.key,
-    required this.deliveryPrice,
-    required this.dishPrice,
-    required this.totalPrice,
-    this.isOrderDetailsPage = false,
-    this.onTap,
-  });
+  final int extraIngredientsPrice;
+  const PriceInfoSheet(
+      {super.key,
+      required this.deliveryPrice,
+      required this.dishPrice,
+      required this.totalPrice,
+      this.isOrderDetailsPage = false,
+      this.onTap,
+      required this.extraIngredientsPrice});
 
   @override
   State<PriceInfoSheet> createState() => _PriceInfoSheetState();
@@ -60,7 +61,7 @@ class _PriceInfoSheetState extends State<PriceInfoSheet> {
           PriceInfoRow(
               isTotalPrice: false,
               name: 'Сумма заказа',
-              value: widget.dishPrice),
+              value: widget.dishPrice + widget.extraIngredientsPrice),
           h10,
           buildDividingLine(),
           h10,
@@ -90,7 +91,9 @@ class _PriceInfoSheetState extends State<PriceInfoSheet> {
           buildDividingLine(),
           h10,
           PriceInfoRow(
-              isTotalPrice: true, name: 'Итого', value: widget.totalPrice),
+              isTotalPrice: true,
+              name: 'Итого',
+              value: widget.totalPrice + widget.extraIngredientsPrice),
           h10,
           Padding(
             padding: const EdgeInsets.symmetric(

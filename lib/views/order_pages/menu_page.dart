@@ -374,11 +374,6 @@ class _MenuMainPageState extends State<MenuMainPage>
                                             proteins: element['proteins'],
                                             weight: element['weight'],
                                             allergens: element['allergens'],
-                                            extraIngredients: ExtraIngredients(
-                                              name: element['extraIngredients'],
-                                              price:
-                                                  element['extraIngredients'],
-                                            ),
                                           ),
                                         );
                                       },
@@ -386,7 +381,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                                         name: element['name'],
                                         photo: element['photo'],
                                         price: element['price'],
-                                        weight: 123,
+                                        weight: element['weight'],
                                         isSaved: savedNames
                                             .contains(element['name']),
                                         onSave: () {

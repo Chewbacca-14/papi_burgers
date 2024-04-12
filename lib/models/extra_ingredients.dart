@@ -2,8 +2,8 @@
 import 'dart:convert';
 
 class ExtraIngredients {
-  final name;
-  final price;
+  final String name;
+  final int price;
   ExtraIngredients({
     required this.name,
     required this.price,
@@ -42,10 +42,12 @@ class ExtraIngredients {
   String toString() => 'ExtraIngredients(name: $name, price: $price)';
 
   @override
-  bool operator ==(covariant ExtraIngredients other) {
+  bool operator ==(covariant Object other) {
     if (identical(this, other)) return true;
 
-    return other.name == name && other.price == price;
+    return other is ExtraIngredients &&
+        other.name == name &&
+        other.price == price;
   }
 
   @override
