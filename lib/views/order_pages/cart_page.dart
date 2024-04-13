@@ -222,6 +222,7 @@ class _UserCartPageState extends State<UserCartPage> {
                                 );
                               } else {
                                 calculatePrice();
+
                                 Future.delayed(Duration.zero, () {
                                   setState(() {
                                     isEmptyCart = false;
@@ -231,6 +232,7 @@ class _UserCartPageState extends State<UserCartPage> {
                                   shrinkWrap: true,
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
+                                    // totalPriceCalc(snapshot);
                                     final item = snapshot.data![index];
                                     // Декодирование JSON и преобразование в список карт
                                     List<dynamic> decodedExtraIngredients =
@@ -357,4 +359,45 @@ class _UserCartPageState extends State<UserCartPage> {
           )),
     );
   }
+
+  // void totalPriceCalc(var snapshot) {
+  //   // Calculate total price
+  //   double cartTotalPrice = 0.0;
+  //   for (var item in snapshot.data!) {
+  //     // Calculate the price of the item including quantity
+  //     double itemPrice = (double.parse(item['price'].toString()) ?? 0) *
+  //         (double.parse(item['quantity'].toString()) ?? 0);
+
+  //     // Check if the item has extra ingredients
+  //     if (item['extraIngredients'] != null) {
+  //       // Decode extra ingredients from JSON string
+  //       List<dynamic> decodedExtraIngredients =
+  //           jsonDecode(item['extraIngredients']);
+
+  //       // Cast extra ingredients to list of maps
+  //       List<Map<String, dynamic>> extraIngredients =
+  //           decodedExtraIngredients.cast<Map<String, dynamic>>();
+
+  //       // Calculate the total price of extra ingredients
+  //       double extraIngredientsPriceSum =
+  //           extraIngredients.fold(0, (sum, item) => sum + (item['price'] ?? 0));
+
+  //       // Add the price of extra ingredients to the item's price
+  //       itemPrice += extraIngredientsPriceSum;
+  //     }
+
+  //     // Add the item's total price to the cart's total price
+  //     cartTotalPrice += itemPrice;
+  //   }
+
+  //   // Print total price
+  //   print('Total Price: $cartTotalPrice');
+  // }
+
+  // Update the total price state
+  // setState(() {
+  //   totalPrice = cartTotalPrice;
+  // });
+
+  // Print total price
 }

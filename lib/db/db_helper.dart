@@ -169,9 +169,17 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.query(userCartDb);
     int summ = 0;
     for (Map<String, dynamic> map in maps) {
+      List<dynamic> decodedExtraIngredients =
+          jsonDecode(map['extraIngredients']);
+      List<Map<String, dynamic>> extraIngredients =
+          decodedExtraIngredients.cast<Map<String, dynamic>>();
+      double extraIngredientsPriceSum =
+          extraIngredients.fold(0, (sum, item) => sum + (item['price'] ?? 0));
+      int extraIngredientsPrice = extraIngredientsPriceSum.toInt();
       int price = map['price'];
       int quantity = map['quantity'];
-      int totalDishPrice = price * quantity;
+
+      int totalDishPrice = (price + extraIngredientsPrice) * quantity;
       summ += totalDishPrice;
     }
 

@@ -61,7 +61,7 @@ class _PriceInfoSheetState extends State<PriceInfoSheet> {
           PriceInfoRow(
               isTotalPrice: false,
               name: 'Сумма заказа',
-              value: widget.dishPrice + widget.extraIngredientsPrice),
+              value: widget.dishPrice),
           h10,
           buildDividingLine(),
           h10,
@@ -91,9 +91,7 @@ class _PriceInfoSheetState extends State<PriceInfoSheet> {
           buildDividingLine(),
           h10,
           PriceInfoRow(
-              isTotalPrice: true,
-              name: 'Итого',
-              value: widget.totalPrice + widget.extraIngredientsPrice),
+              isTotalPrice: true, name: 'Итого', value: widget.totalPrice),
           h10,
           Padding(
             padding: const EdgeInsets.symmetric(

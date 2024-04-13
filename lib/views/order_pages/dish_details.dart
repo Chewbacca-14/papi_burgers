@@ -169,6 +169,20 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
   //   }
   // }
 
+  int calculateTotalExtraIngredientsPrice(
+      List<Map<String, dynamic>>? itemList) {
+    double totalPrice = 0.0;
+    if (itemList != null) {
+      for (var item in itemList) {
+        double price = double.parse(item['price'].toString());
+
+        totalPrice += price;
+      }
+    }
+
+    return totalPrice.toInt();
+  }
+
   Future<void> addToCart(
       {required List<Map<String, dynamic>>? extraIngredientsList}) async {
     DatabaseHelper databaseHelper = DatabaseHelper.instance;
