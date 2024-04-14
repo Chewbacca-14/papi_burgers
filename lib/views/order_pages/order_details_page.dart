@@ -122,19 +122,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     }
   }
 
-  void addOrdersToFirestore(
-      {required List<OrderModel> orders,
-      required String phone,
-      required Address address,
-      required String name,
-      required String comment,
-      required DateTime datetime,
-      required bool isCashPayment,
-      required String orderStatus,
-      required String whenDeliveryOrTake,
-      required String paymentStatus,
-      required bool isTakeAway,
-      required String orderID}) {
+  void addOrdersToFirestore({
+    required List<OrderModel> orders,
+    required String phone,
+    required Address address,
+    required String name,
+    required String comment,
+    required DateTime datetime,
+    required bool isCashPayment,
+    required String orderStatus,
+    required String whenDeliveryOrTake,
+    required String paymentStatus,
+    required bool isTakeAway,
+    required String orderID,
+  }) {
     final firestore = FirebaseFirestore.instance;
     OrderProvider orderProvider =
         Provider.of<OrderProvider>(context, listen: false);

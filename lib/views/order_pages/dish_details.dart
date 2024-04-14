@@ -184,7 +184,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
   }
 
   Future<void> addToCart(
-      {required List<Map<String, dynamic>>? extraIngredientsList}) async {
+      {required List<Map<String, dynamic>> extraIngredientsList}) async {
     DatabaseHelper databaseHelper = DatabaseHelper.instance;
     Database db = await databaseHelper.database;
 

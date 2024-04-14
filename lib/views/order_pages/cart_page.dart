@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:papi_burgers/constants/extra_ingredients_list.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/providers/order_provider.dart';
@@ -130,7 +131,7 @@ class _UserCartPageState extends State<UserCartPage> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height - 190,
+                  height: MediaQuery.of(context).size.height - 150,
                   decoration: const BoxDecoration(
                     color: greyf1,
                     borderRadius: BorderRadius.only(
@@ -291,24 +292,32 @@ class _UserCartPageState extends State<UserCartPage> {
                                         userId: FirebaseAuth
                                             .instance.currentUser!.uid,
                                         isTakeAway: isDelivery,
-                                        menuItems: _snapshotData!
-                                            .map((item) => MenuItem(
-                                                  id: '77',
-                                                  quantity: item['quantity'],
-                                                  name: item['name'],
-                                                  price: item['price'],
-                                                  images: item['imageurl'],
-                                                  ingredients:
-                                                      item['ingredients'],
-                                                  allergens: item['allergens'],
-                                                  calories: item['calories'],
-                                                  carbohydrate:
-                                                      item['carbohydrate'],
-                                                  fat: item['fat'],
-                                                  proteins: item['proteins'],
-                                                  weigth: item['weight'],
-                                                ))
-                                            .toList(),
+                                        menuItems: _snapshotData!.map((item) {
+                                          List<dynamic>
+                                              decodedExtraIngredients =
+                                              jsonDecode(
+                                                  item['extraIngredients']);
+                                          List<Map<String, dynamic>>
+                                              extraIngredients =
+                                              decodedExtraIngredients
+                                                  .cast<Map<String, dynamic>>();
+                                          return MenuItem(
+                                            id: '77',
+                                            quantity: item['quantity'],
+                                            extraIngredientsList:
+                                                extraIngredients,
+                                            name: item['name'],
+                                            price: item['price'],
+                                            images: item['imageurl'],
+                                            ingredients: item['ingredients'],
+                                            allergens: item['allergens'],
+                                            calories: item['calories'],
+                                            carbohydrate: item['carbohydrate'],
+                                            fat: item['fat'],
+                                            proteins: item['proteins'],
+                                            weigth: item['weight'],
+                                          );
+                                        }).toList(),
                                         deliveryPrice:
                                             deliveryPriceProvider.deliveryPrice,
                                         totalPrice: totalPrice)
@@ -321,25 +330,33 @@ class _UserCartPageState extends State<UserCartPage> {
                                           id: '1',
                                           userId: '',
                                           isTakeAway: isDelivery,
-                                          menuItems: _snapshotData!
-                                              .map((item) => MenuItem(
-                                                    id: '77',
-                                                    quantity: item['quantity'],
-                                                    name: item['name'],
-                                                    price: item['price'],
-                                                    images: item['imageurl'],
-                                                    ingredients:
-                                                        item['ingredients'],
-                                                    allergens:
-                                                        item['allergens'],
-                                                    calories: item['calories'],
-                                                    carbohydrate:
-                                                        item['carbohydrate'],
-                                                    fat: item['fat'],
-                                                    proteins: item['proteins'],
-                                                    weigth: item['weight'],
-                                                  ))
-                                              .toList(),
+                                          menuItems: _snapshotData!.map((item) {
+                                            List<dynamic>
+                                                decodedExtraIngredients =
+                                                jsonDecode(
+                                                    item['extraIngredients']);
+                                            List<Map<String, dynamic>>
+                                                extraIngredients =
+                                                decodedExtraIngredients.cast<
+                                                    Map<String, dynamic>>();
+                                            return MenuItem(
+                                              id: '77',
+                                              quantity: item['quantity'],
+                                              extraIngredientsList:
+                                                  extraIngredients,
+                                              name: item['name'],
+                                              price: item['price'],
+                                              images: item['imageurl'],
+                                              ingredients: item['ingredients'],
+                                              allergens: item['allergens'],
+                                              calories: item['calories'],
+                                              carbohydrate:
+                                                  item['carbohydrate'],
+                                              fat: item['fat'],
+                                              proteins: item['proteins'],
+                                              weigth: item['weight'],
+                                            );
+                                          }).toList(),
                                           deliveryPrice: deliveryPriceProvider
                                               .deliveryPrice,
                                           totalPrice: totalPrice)

@@ -17,7 +17,7 @@ class MenuItem {
   final int proteins;
   final int weigth;
   final int quantity;
-  final List<Map<String, dynamic>>? extraIngredientsList;
+  final List<Map<String, dynamic>> extraIngredientsList;
   MenuItem({
     required this.id,
     required this.name,
@@ -31,7 +31,7 @@ class MenuItem {
     required this.proteins,
     required this.weigth,
     required this.quantity,
-    this.extraIngredientsList,
+    required this.extraIngredientsList,
   });
 
   MenuItem copyWith({

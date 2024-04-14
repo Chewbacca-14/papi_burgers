@@ -235,7 +235,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       ),
                       uid != null
                           ? SizedBox(
-                              height: 200,
+                              height: 309,
                               child: StreamBuilder<QuerySnapshot>(
                                 stream: stream,
                                 builder: (context, snapshot) {
@@ -302,7 +302,24 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                               ),
                                               child: GestureDetector(
                                                 onTap: () {
+                                                  List<dynamic>
+                                                      extraIngredientsList =
+                                                      menuItem[
+                                                          'extraIngredientsList'];
+                                                  double totalPrice =
+                                                      extraIngredientsList.fold(
+                                                          0,
+                                                          (previousValue,
+                                                                  element) =>
+                                                              previousValue +
+                                                              element["price"]);
+
                                                   showOrderDetails(
+                                                      extraIngredientsList:
+                                                          extraIngredientsList
+                                                              .cast(),
+                                                      extraIngredientsPrice:
+                                                          totalPrice.toInt(),
                                                       orderID: order['orderID'],
                                                       context: context,
                                                       itemCount: orderLength,
@@ -358,16 +375,19 @@ class _UserProfilePageState extends State<UserProfilePage> {
     required int itemCount,
     required String dishName,
     required int quantity,
+    required int extraIngredientsPrice,
     required int price,
     required String status,
     required int totalPrice,
     required String date,
     required String isTakeAway,
     required String orderID,
+    required List<Map<String, dynamic>> extraIngredientsList,
   }) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
+        String extraIngredientsString = concatenateItems(extraIngredientsList);
         return AlertDialog(
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
@@ -388,12 +408,13 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     itemBuilder: (BuildContext context, int index) {
                       return ListTile(
                         title: Text(dishName),
-                        subtitle: Text(
-                          '$quantity шт./$price ₽',
-                        ),
+                        subtitle: Text(extraIngredientsString),
+                        // subtitle: Text(
+                        //   '$quantity шт./$price ₽',
+                        // ),
                         trailing: Text(
-                          '${quantity * price}₽',
-                          style: TextStyle(
+                          '${quantity * (price + extraIngredientsPrice)}₽',
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold, fontSize: 16),
                         ),
                       );
@@ -457,4 +478,8 @@ class ParametersOrder extends StatelessWidget {
       ],
     );
   }
+}
+
+String concatenateItems(List<dynamic> items) {
+  return items.map((item) => '${item['name']} - ${item['price']}₽').join(' ');
 }
