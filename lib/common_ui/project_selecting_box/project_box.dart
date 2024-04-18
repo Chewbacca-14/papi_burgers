@@ -59,8 +59,8 @@ class ProjectBox extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Container(
-                           height: 60,
-                           width: 60,
+                            height: 60,
+                            width: 60,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
                               image: DecorationImage(
@@ -68,7 +68,7 @@ class ProjectBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                         w12,
+                          w12,
                           Container(
                             width: 1,
                             color: const Color.fromARGB(132, 158, 158, 158),
@@ -81,7 +81,7 @@ class ProjectBox extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Color.fromARGB(255, 17, 17, 17),
-                                fontSize: 28,
+                                fontSize: 20,
                                 fontWeight: FontWeight.w800,
                               ),
                             ),
