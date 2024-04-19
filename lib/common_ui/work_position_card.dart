@@ -18,13 +18,12 @@ class WorkPositionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 153,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: Colors.white,
         ),
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10).copyWith(bottom: 30),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,

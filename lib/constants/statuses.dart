@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 String getStatusText(OrderStatuses status) {
   switch (status) {
     case OrderStatuses.created:
@@ -22,6 +24,60 @@ String getStatusText(OrderStatuses status) {
       return 'Ошибка';
     default:
       return '';
+  }
+}
+
+Color getColorFromStatusText(OrderStatuses status) {
+  switch (status) {
+    case OrderStatuses.created:
+      return Colors.red.shade300;
+    case OrderStatuses.accepted:
+      return Colors.green.shade300;
+    case OrderStatuses.preparing:
+      return Colors.blue.shade300;
+    case OrderStatuses.readyPickup:
+      return Colors.red.shade500;
+    case OrderStatuses.readyDelivery:
+      return Colors.green.shade500;
+    case OrderStatuses.delivering:
+      return Colors.blue.shade500;
+    case OrderStatuses.delivered:
+      return Colors.red.shade700;
+    case OrderStatuses.completed:
+      return Colors.green.shade700;
+    case OrderStatuses.cancelled:
+      return Colors.blue.shade700;
+    case OrderStatuses.error:
+      return Colors.grey;
+    default:
+      return Colors.transparent;
+  }
+}
+
+IconData getIconDataFromStatusText(OrderStatuses status) {
+  switch (status) {
+    case OrderStatuses.created:
+      return Icons.timer;
+    case OrderStatuses.accepted:
+      return Icons.check;
+    case OrderStatuses.preparing:
+      return Icons.precision_manufacturing;
+    case OrderStatuses.readyPickup:
+      return Icons.takeout_dining_rounded;
+    case OrderStatuses.readyDelivery:
+      return Icons.delivery_dining_outlined;
+    case OrderStatuses.delivering:
+      return Icons.delivery_dining_outlined;
+    case OrderStatuses.delivered:
+      return Icons.check;
+    case OrderStatuses.completed:
+      return Icons.check;
+    case OrderStatuses.cancelled:
+      return Icons.close;
+    case OrderStatuses.error:
+      return Icons.error;
+    default:
+      return Icons.check;
   }
 }
 

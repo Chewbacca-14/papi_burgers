@@ -8,12 +8,18 @@ class UserOrdersBox extends StatelessWidget {
   final int dishCount;
   final int totalPrice;
   final String date;
+  final Color? color;
+  final String orderStatus;
+  final IconData statusIcon;
   const UserOrdersBox({
     super.key,
     required this.date,
     required this.dishCount,
     required this.totalPrice,
     required this.type,
+    required this.color,
+    required this.orderStatus,
+    required this.statusIcon,
   });
 
   @override
@@ -66,7 +72,11 @@ class UserOrdersBox extends StatelessWidget {
                 h10,
                 Row(
                   children: [
-                     const OrderStatusBox(orderStatus: 'confirmed'),
+                    OrderStatusBox(
+                      orderStatus: orderStatus,
+                      color: color,
+                      statusIcon: statusIcon,
+                    ),
                     const Spacer(),
                     Text(
                       date,
@@ -132,50 +142,21 @@ class UserOrdersBox extends StatelessWidget {
 
 class OrderStatusBox extends StatelessWidget {
   final String orderStatus;
-  const OrderStatusBox({
-    super.key,
-    required this.orderStatus,
-  });
+  final Color? color;
+  final IconData statusIcon;
+  const OrderStatusBox(
+      {super.key,
+      required this.orderStatus,
+      required this.color,
+      required this.statusIcon});
 
   @override
   Widget build(BuildContext context) {
-    Color color;
-    String status;
-    IconData icon;
-    switch (orderStatus) {
-      case 'waiting':
-        color = Colors.orange;
-        status = 'Ожидание';
-        icon = Icons.timer;
-        break;
-      case 'confirmed':
-        color = Colors.green;
-        status = 'Подтверждено';
-        icon = Icons.check;
-        break;
-      case 'payed':
-        color = Colors.blue;
-        status = 'Оплачено';
-        icon = Icons.monetization_on;
-        break;
-      case 'notPayed':
-      case 'canceled':
-        color = Colors.red;
-        status = 'Отменено';
-        icon = Icons.close;
-        break;
-      default:
-        color = Colors.blue;
-        status = 'Ошибка статуса';
-        icon = Icons.question_mark_rounded;
-        break;
-    }
-
     return Container(
       height: 26,
       width: 116,
       decoration: BoxDecoration(
-        color: color.withOpacity(0.3),
+        color: color,
         borderRadius: BorderRadius.circular(50),
       ),
       child: Row(
@@ -190,7 +171,7 @@ class OrderStatusBox extends StatelessWidget {
             ),
             child: Center(
               child: Icon(
-                icon,
+                statusIcon,
                 color: Colors.white,
                 size: 15,
               ),
@@ -200,7 +181,7 @@ class OrderStatusBox extends StatelessWidget {
           Expanded(
             flex: 10,
             child: Text(
-              status,
+              orderStatus,
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(
                 fontWeight: FontWeight.w700,

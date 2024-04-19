@@ -5,12 +5,13 @@ class ClassicLongButton extends StatelessWidget {
   final void Function()? onTap;
   final String buttonText;
   final bool showRightArrow;
-  const ClassicLongButton({
-    super.key,
-    required this.onTap,
-    required this.buttonText,
-    this.showRightArrow = false,
-  });
+  final double height;
+  const ClassicLongButton(
+      {super.key,
+      required this.onTap,
+      required this.buttonText,
+      this.showRightArrow = false,
+      this.height = 40});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class ClassicLongButton extends StatelessWidget {
         onTap: onTap,
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: 40,
+          height: height,
           decoration: BoxDecoration(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(16),

@@ -40,14 +40,42 @@ class ExtraIngredientsRow extends StatelessWidget {
                 ),
               ),
               w12,
-              Icon(
-                isSelected
-                    ? Icons.check_box_rounded
-                    : Icons.check_box_outline_blank_rounded,
-                color: primaryColor,
-              ),
+              isSelected
+                  ? const CustomCheckBox(
+                      isSelected: true,
+                    )
+                  : const CustomCheckBox(
+                      isSelected: false,
+                    ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomCheckBox extends StatelessWidget {
+  final bool isSelected;
+  const CustomCheckBox({super.key, required this.isSelected});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 21,
+      width: 21,
+      decoration: BoxDecoration(
+        color: isSelected ? primaryColor : null,
+        borderRadius: BorderRadius.circular(50),
+        border: Border.all(
+            color: isSelected ? Colors.black : Colors.grey.shade300,
+            width: 1.8),
+      ),
+      child: Center(
+        child: Icon(
+          Icons.check,
+          color: isSelected ? Colors.white : Colors.grey.shade300,
+          size: 12,
         ),
       ),
     );

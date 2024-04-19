@@ -203,14 +203,18 @@ class _UserCartCardState extends State<UserCartCard> {
                   ),
                 ],
               ),
-              h10,
-              widget.extraIngredients != null
-                  ? Text(
-                      extraIngredientsList,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+              widget.extraIngredients!.isNotEmpty
+                  ? Column(
+                      children: [
+                        h10,
+                        Text(
+                          extraIngredientsList,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     )
                   : const SizedBox(),
             ],

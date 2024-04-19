@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:papi_burgers/common_ui/user_orders_box.dart';
+import 'package:papi_burgers/constants/statuses.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/notification_card.dart';
@@ -185,6 +186,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ),
                         ),
                         child: ClassicLongButton(
+                            height: 25,
                             onTap: () {
                               context.router
                                   .push(UserAddressesRoute(orders: []));
@@ -193,176 +195,185 @@ class _UserProfilePageState extends State<UserProfilePage> {
                       ),
                     ),
                     h20,
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Icons.receipt_long),
-                        w12,
-                        Text(
-                          'История заказов',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ],
-                    ),
+                    user != null
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(Icons.receipt_long),
+                              w12,
+                              Text(
+                                'История заказов',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          )
+                        : SizedBox(),
                   ],
                 ),
               ),
               h10,
               const Spacer(),
-              Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: 320,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(25),
-                      topRight: Radius.circular(25),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 7),
-                      Container(
-                        height: 4,
-                        width: 40,
-                        decoration: BoxDecoration(
-                          color: Color.fromARGB(255, 231, 231, 231),
-                          borderRadius: BorderRadius.circular(50),
+              user != null
+                  ? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 320,
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(25),
+                          topRight: Radius.circular(25),
                         ),
                       ),
-                      uid != null
-                          ? SizedBox(
-                              height: 309,
-                              child: StreamBuilder<QuerySnapshot>(
-                                stream: stream,
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return CircularProgressIndicator();
-                                  }
-                                  if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  }
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 7),
+                          Container(
+                            height: 4,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(255, 231, 231, 231),
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          uid != null
+                              ? SizedBox(
+                                  height: 309,
+                                  child: StreamBuilder<QuerySnapshot>(
+                                    stream: stream,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return CircularProgressIndicator();
+                                      }
+                                      if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      }
 
-                                  if (snapshot.hasData) {
-                                    final List<QueryDocumentSnapshot>
-                                        documents = snapshot.data!.docs;
-                                    return ListView.builder(
-                                      itemCount: documents.length,
-                                      itemBuilder: (context, index) {
-                                        var order = documents[index];
-                                        int orderLength =
-                                            order['menuItems'].length;
-                                        String status;
-                                        switch (order['orderStatus']) {
-                                          case 'waiting':
-                                            status = 'Ожидание';
+                                      if (snapshot.hasData) {
+                                        final List<QueryDocumentSnapshot>
+                                            documents = snapshot.data!.docs;
+                                        return ListView.builder(
+                                          itemCount: documents.length,
+                                          itemBuilder: (context, index) {
+                                            var order = documents[index];
+                                            int orderLength =
+                                                order['menuItems'].length;
+                                            String status;
+                                            Color statusColor;
+                                            IconData statusIcon;
 
-                                            break;
-                                          case 'confirmed':
-                                            status = 'Подтверждено';
+                                            OrderStatuses orderStatuses;
 
-                                            break;
-                                          case 'payed':
-                                            status = 'Оплачено';
+                                            orderStatuses = getStatusFromString(
+                                                order['orderStatus']);
+                                            status =
+                                                getStatusText(orderStatuses);
+                                            statusColor =
+                                                getColorFromStatusText(
+                                                    orderStatuses);
+                                            statusIcon =
+                                                getIconDataFromStatusText(
+                                                    orderStatuses);
 
-                                            break;
-                                          case 'notPayed':
-                                          case 'canceled':
-                                            status = 'Отменено';
+                                            Timestamp timestamp =
+                                                order['datetime'];
+                                            int seconds = timestamp.seconds;
+                                            DateTime dateTime = DateTime
+                                                .fromMillisecondsSinceEpoch(
+                                                    seconds * 1000);
+                                            String formattedDate =
+                                                DateFormat.yMMMd()
+                                                    .format(dateTime);
+                                            int dishCountTotal =
+                                                order['menuItems'].length;
 
-                                            break;
-                                          default:
-                                            status = 'Ошибка статуса';
+                                            List<Widget> menuItemsWidgets = [];
 
-                                            break;
-                                        }
-                                        Timestamp timestamp = order['datetime'];
-                                        int seconds = timestamp.seconds;
-                                        DateTime dateTime =
-                                            DateTime.fromMillisecondsSinceEpoch(
-                                                seconds * 1000);
-                                        String formattedDate =
-                                            DateFormat.yMMMd().format(dateTime);
-                                        int dishCountTotal =
-                                            order['menuItems'].length;
+                                            for (var menuItem
+                                                in order['menuItems']) {
+                                              int quantity =
+                                                  menuItem['quantity'];
+                                              menuItemsWidgets.add(
+                                                Padding(
+                                                  padding: EdgeInsets.symmetric(
+                                                    horizontal: 16,
+                                                  ),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                      List<dynamic>
+                                                          extraIngredientsList =
+                                                          menuItem[
+                                                              'extraIngredientsList'];
+                                                      double totalPrice =
+                                                          extraIngredientsList.fold(
+                                                              0,
+                                                              (previousValue,
+                                                                      element) =>
+                                                                  previousValue +
+                                                                  element[
+                                                                      "price"]);
 
-                                        List<Widget> menuItemsWidgets = [];
-
-                                        for (var menuItem
-                                            in order['menuItems']) {
-                                          int quantity = menuItem['quantity'];
-                                          menuItemsWidgets.add(
-                                            Padding(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 16,
-                                              ),
-                                              child: GestureDetector(
-                                                onTap: () {
-                                                  List<dynamic>
-                                                      extraIngredientsList =
-                                                      menuItem[
-                                                          'extraIngredientsList'];
-                                                  double totalPrice =
-                                                      extraIngredientsList.fold(
-                                                          0,
-                                                          (previousValue,
-                                                                  element) =>
-                                                              previousValue +
-                                                              element["price"]);
-
-                                                  showOrderDetails(
-                                                      extraIngredientsList:
-                                                          extraIngredientsList
-                                                              .cast(),
-                                                      extraIngredientsPrice:
-                                                          totalPrice.toInt(),
-                                                      orderID: order['orderID'],
-                                                      context: context,
-                                                      itemCount: orderLength,
-                                                      dishName:
-                                                          menuItem['name'],
-                                                      quantity:
-                                                          menuItem['quantity'],
-                                                      price: menuItem['price'],
-                                                      totalPrice:
-                                                          order['totalPrice'],
-                                                      status: status,
-                                                      isTakeAway:
-                                                          order['isTakeAway'] ==
-                                                                  true
-                                                              ? 'Самовывоз'
-                                                              : 'Доставка',
-                                                      date: formattedDate);
-                                                },
-                                                child: UserOrdersBox(
-                                                    date: formattedDate,
-                                                    dishCount: dishCountTotal *
-                                                        quantity,
-                                                    totalPrice:
-                                                        order['totalPrice'],
-                                                    type: 'Не оплачено'),
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        return Column(
-                                          children: menuItemsWidgets,
+                                                      showOrderDetails(
+                                                          extraIngredientsList:
+                                                              extraIngredientsList
+                                                                  .cast(),
+                                                          extraIngredientsPrice:
+                                                              totalPrice
+                                                                  .toInt(),
+                                                          orderID:
+                                                              order['orderID'],
+                                                          context: context,
+                                                          itemCount:
+                                                              orderLength,
+                                                          dishName:
+                                                              menuItem['name'],
+                                                          quantity: menuItem[
+                                                              'quantity'],
+                                                          price:
+                                                              menuItem['price'],
+                                                          totalPrice: order[
+                                                              'totalPrice'],
+                                                          status: status,
+                                                          isTakeAway:
+                                                              order['isTakeAway'] ==
+                                                                      true
+                                                                  ? 'Самовывоз'
+                                                                  : 'Доставка',
+                                                          date: formattedDate);
+                                                    },
+                                                    child: UserOrdersBox(
+                                                        statusIcon: statusIcon,
+                                                        orderStatus: status,
+                                                        color: statusColor,
+                                                        date: formattedDate,
+                                                        dishCount:
+                                                            dishCountTotal *
+                                                                quantity,
+                                                        totalPrice:
+                                                            order['totalPrice'],
+                                                        type: 'Не оплачено'),
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                            return Column(
+                                              children: menuItemsWidgets,
+                                            );
+                                          },
                                         );
-                                      },
-                                    );
-                                  }
+                                      }
 
-                                  return Text('not found');
-                                },
-                              ),
-                            )
-                          : const SizedBox(),
-                    ],
-                  )),
+                                      return Text('not found');
+                                    },
+                                  ),
+                                )
+                              : const SizedBox(),
+                        ],
+                      ))
+                  : const SizedBox(),
             ],
           ),
         ),
