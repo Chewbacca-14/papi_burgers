@@ -22,16 +22,13 @@ class ProjectSelectingPage extends StatefulWidget {
 class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
   List projects = [];
 
-
   Future<List<Map<String, dynamic>>> getRestaurantData() async {
     FirestoreDBProvider firestoreDBProvider =
         Provider.of<FirestoreDBProvider>(context, listen: false);
     return await firestoreDBProvider.getRestaurantsList();
   }
 
-  void loadingTimer() {
-   
-  }
+  void loadingTimer() {}
 
   @override
   void initState() {
@@ -47,7 +44,7 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
       backgroundColor: const Color.fromARGB(255, 43, 43, 43),
       body: Stack(
         children: [
-          Container(
+          SizedBox(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
             child: SvgPicture.asset(
@@ -60,35 +57,37 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
             builder:
                 (context, AsyncSnapshot<List<Map<String, dynamic>>> snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return  Center(
+                return Center(
                   child: SvgPicture.asset('assets/pb_logo.svg'),
                 );
               } else if (snapshot.hasError) {
                 return Center(child: Text('Error: ${snapshot.error}'));
-              } else {
+              } else if (snapshot.connectionState == ConnectionState.done) {
                 List<Map<String, dynamic>> restaurantList = snapshot.data!;
                 return ListView.builder(
-                        itemCount: restaurantList.length,
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              try {
-                                restaurantProvider.changeRestaurantName(
-                                    restaurantList[index]['id']);
-                                context.router.replace(HomeRoute());
-                              } catch (e) {
-                                showCustomSnackBar(
-                                    context, '$e', AnimatedSnackBarType.error);
-                              }
-                            },
-                            child: ProjectBox(
-                              logoImage: restaurantList[index]['logoUrl'],
-                              mainImage: restaurantList[index]['mainImage'],
-                              projectName: restaurantList[index]['name'],
-                            ),
-                          );
-                        },
-                      );
+                  itemCount: restaurantList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        try {
+                          restaurantProvider.changeRestaurantName(
+                              restaurantList[index]['id']);
+                          context.router.replace(HomeRoute());
+                        } catch (e) {
+                          showCustomSnackBar(
+                              context, '$e', AnimatedSnackBarType.error);
+                        }
+                      },
+                      child: ProjectBox(
+                        logoImage: restaurantList[index]['logoUrl'],
+                        mainImage: restaurantList[index]['mainImage'],
+                        projectName: restaurantList[index]['name'],
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return Center(child: Text('Error: ${snapshot.error}'));
               }
             },
           ),

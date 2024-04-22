@@ -8,12 +8,13 @@ class ProjectBox extends StatelessWidget {
   final String mainImage;
   final String projectName;
   final String logoImage;
+
   const ProjectBox({
-    super.key,
+    Key? key,
     required this.logoImage,
     required this.mainImage,
     required this.projectName,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +32,9 @@ class ProjectBox extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  mainImage,
+                child: FadeInImage.assetNetwork(
+                  placeholder: 'assets/bg.png',
+                  image: mainImage,
                   width: double.infinity,
                   fit: BoxFit.fill,
                 ),
@@ -68,12 +70,12 @@ class ProjectBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          w12,
+                          SizedBox(width: 12),
                           Container(
                             width: 1,
                             color: const Color.fromARGB(132, 158, 158, 158),
                           ),
-                          w20,
+                          SizedBox(width: 20),
                           Expanded(
                             flex: 8,
                             child: Text(
@@ -86,7 +88,7 @@ class ProjectBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const Spacer(),
+                          Spacer(),
                           Container(
                             width: 24,
                             height: 24,
@@ -99,7 +101,7 @@ class ProjectBox extends StatelessWidget {
                               color: Colors.white,
                               size: 18,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
