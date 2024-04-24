@@ -4,13 +4,11 @@ import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:grouped_list/grouped_list.dart';
-import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/main_home_page/app_bar_restaurant_selection.dart';
 import 'package:papi_burgers/common_ui/main_home_page/custom_tab_box.dart';
@@ -21,7 +19,7 @@ import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
-import 'package:papi_burgers/models/user.dart';
+
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/providers/restaurant_provider.dart';
 import 'package:provider/provider.dart';
@@ -58,14 +56,14 @@ class _MenuMainPageState extends State<MenuMainPage>
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('liked').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       if (doc.exists) {
         Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
         if (data != null) {
           names.add(data['name']);
         }
       }
-    });
+    }
 
     return names;
   }
@@ -107,6 +105,7 @@ class _MenuMainPageState extends State<MenuMainPage>
     required int price,
     required int proteins,
     required int weight,
+    required String allergens,
   }) async {
     CollectionReference<Map<String, dynamic>> firestoreCollection =
         FirebaseFirestore.instance.collection('liked');
@@ -122,6 +121,7 @@ class _MenuMainPageState extends State<MenuMainPage>
       'price': price,
       'proteins': proteins,
       'weight': weight,
+      'allergens': allergens,
     });
   }
 
@@ -133,7 +133,7 @@ class _MenuMainPageState extends State<MenuMainPage>
     _tabController = TabController(length: categories.length, vsync: this);
     fetchNames();
     request();
-    Future.delayed(Duration(milliseconds: 900), () {
+    Future.delayed(const Duration(milliseconds: 900), () {
       setState(() {
         isLoading = false;
       });
@@ -204,8 +204,8 @@ class _MenuMainPageState extends State<MenuMainPage>
         backgroundColor: greyf1,
         title: Row(
           children: [
-            Expanded(
-              child: const AppBarRestaurantSelection(
+            const Expanded(
+              child: AppBarRestaurantSelection(
                   logoImageUrl:
                       'https://firebasestorage.googleapis.com/v0/b/papi-burgers-project.appspot.com/o/restaurants_images%2FGroup%202549.png?alt=media&token=a41aa87f-1395-4d0a-a081-9a8545a779eb'),
             ),
@@ -243,7 +243,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         h20,
-                        Text(
+                        const Text(
                           // projectName,
                           'Papi Burgers',
                           style: TextStyle(
@@ -251,7 +251,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                             fontWeight: FontWeight.w900,
                           ),
                         ),
-                        Text(
+                        const Text(
                           'Доставка еды и напитков',
                           style: TextStyle(
                             fontSize: 16,
@@ -269,10 +269,10 @@ class _MenuMainPageState extends State<MenuMainPage>
                                   height: 48,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
-                                    color: Color.fromARGB(255, 246, 246, 246),
+                                    color: const Color.fromARGB(255, 246, 246, 246),
                                   ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(14),
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(14),
                                     child: Row(
                                       children: [
                                         Icon(Icons.search),
@@ -337,7 +337,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                                   .where((item) => item['cat'] == category)
                                   .toList();
                               return GroupedListView(
-                                physics: NeverScrollableScrollPhysics(),
+                                physics: const NeverScrollableScrollPhysics(),
                                 elements: items,
                                 groupBy: (element) {
                                   return element['subcat'];
@@ -347,7 +347,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                                     padding: const EdgeInsets.only(top: 20),
                                     child: Text(
                                       '$value',
-                                      style: TextStyle(
+                                      style: const TextStyle(
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -389,7 +389,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                                               .contains(element['name'])) {
                                             removeFromSaved(element['name']);
                                             Future.delayed(
-                                                Duration(milliseconds: 100),
+                                                const Duration(milliseconds: 100),
                                                 () {
                                               fetchNames();
                                             });
@@ -409,6 +409,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                                                 price: element['price'],
                                                 proteins: element['proteins'],
                                                 weight: element['weight'],
+                                                allergens: element['allergens'],
                                               );
                                               fetchNames();
                                             } else {
@@ -461,13 +462,13 @@ class _MenuMainPageState extends State<MenuMainPage>
 class CustomTab extends StatelessWidget {
   final String text;
 
-  CustomTab({required this.text});
+  const CustomTab({super.key, required this.text});
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.red,
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
       child: Text(
         text,
         style: const TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),

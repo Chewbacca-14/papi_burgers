@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:papi_burgers/models/extra_ingredients.dart';
 
 class MenuItem {
   final String id;

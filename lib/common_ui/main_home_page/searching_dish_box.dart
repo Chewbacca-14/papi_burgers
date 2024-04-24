@@ -1,6 +1,5 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/models/extra_ingredients.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -91,7 +90,7 @@ class SearchingDishBox extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w700,
                         ),

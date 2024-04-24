@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:math';
 
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
 
@@ -390,8 +388,8 @@ class _OrderDetailsContentState extends State<OrderDetailsContent> {
                                     orders: widget.orders));
                               },
                             )
-                          : SizedBox(),
-                      isDelivery ? h16 : SizedBox(),
+                          : const SizedBox(),
+                      isDelivery ? h16 : const SizedBox(),
                       LightTextField(
                         size: 88,
                         controller: widget.commentController,
@@ -589,11 +587,11 @@ class ChoosingContainer extends StatelessWidget {
               ),
               const Spacer(),
               isChoosed
-                  ? Icon(
+                  ? const Icon(
                       Icons.check_circle,
                       color: Colors.green,
                     )
-                  : Icon(Icons.circle_outlined, color: Colors.grey),
+                  : const Icon(Icons.circle_outlined, color: Colors.grey),
             ],
           ),
         ),

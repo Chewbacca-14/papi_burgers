@@ -90,10 +90,10 @@ class _SearchBottomSheetState extends State<SearchBottomSheet> {
                   }
                   final restaurants = snapshot.data!.docs;
                   List<Map<String, dynamic>> menuItems = [];
-                  restaurants.forEach((restaurantDoc) {
+                  for (var restaurantDoc in restaurants) {
                     final menu = restaurantDoc['menu'] as List<dynamic>;
                     menuItems.addAll(menu.cast<Map<String, dynamic>>());
-                  });
+                  }
                   final filteredMenuItems = menuItems
                       .where((menuItem) => menuItem['name']
                           .toString()

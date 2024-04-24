@@ -42,13 +42,13 @@ class RestaurantInfoPage extends StatelessWidget {
               ),
             ),
             h20,
-            Row(
+            const Row(
               children: [
                 Icon(Icons.watch_later_outlined),
-                const SizedBox(width: 5),
+                SizedBox(width: 5),
                 Text(
                   'Время работы',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     color: grey7,
                   ),

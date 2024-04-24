@@ -225,7 +225,7 @@ class _DatePickerState extends State<DatePicker> {
             ),
           ),
           const SizedBox(width: 19.5),
-          Text(
+          const Text(
             ':',
             style: TextStyle(
                 fontSize: 20, fontWeight: FontWeight.w700, color: Colors.white),

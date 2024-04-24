@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/providers/order_address_provider.dart';
@@ -12,7 +11,6 @@ import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
 import 'package:papi_burgers/models/address_model.dart';
-import 'package:papi_burgers/views/address_add_page.dart';
 import 'package:provider/provider.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -118,9 +116,9 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                   },
                   child: ListTile(
                     title: Text(
-                      '${address.address}',
+                      address.address,
                       style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
                     ),
                     trailing: IconButton(
                       onPressed: () async {

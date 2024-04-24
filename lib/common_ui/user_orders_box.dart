@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -80,7 +79,7 @@ class UserOrdersBox extends StatelessWidget {
                     const Spacer(),
                     Text(
                       date,
-                      style: TextStyle(color: grey7, fontSize: 12),
+                      style: const TextStyle(color: grey7, fontSize: 12),
                     ),
                   ],
                 )

@@ -1,8 +1,6 @@
-import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:papi_burgers/common_ui/main_home_page/cart_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
@@ -74,7 +72,7 @@ class MenuItemCard extends StatelessWidget {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Color.fromARGB(60, 255, 255, 255),
+                      color: const Color.fromARGB(60, 255, 255, 255),
                       borderRadius: BorderRadius.circular(16),
                     ),
                   ),
@@ -152,7 +150,7 @@ class MenuItemCard extends StatelessWidget {
                     children: [
                       Text(
                         name,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w700,
                         ),

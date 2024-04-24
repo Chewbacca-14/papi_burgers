@@ -1,10 +1,9 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
+import 'package:papi_burgers/common_ui/order_info.dart';
 import 'package:papi_burgers/common_ui/user_orders_box.dart';
 import 'package:papi_burgers/constants/statuses.dart';
 import 'package:papi_burgers/router/app_router.dart';
@@ -113,8 +112,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               ),
                             ],
                           )
-                        : SizedBox(),
-                    SizedBox(height: 30),
+                        : const SizedBox(),
+                    const SizedBox(height: 30),
                     Container(
                       height: 70,
                       width: 70,
@@ -130,7 +129,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                           ),
                         ],
                       ),
-                      child: Center(
+                      child: const Center(
                         child: Icon(
                           Icons.person,
                           color: Color.fromARGB(255, 241, 241, 241),
@@ -138,13 +137,17 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         ),
                       ),
                     ),
-                    user != null ? SizedBox(height: 20) : SizedBox(),
-                    user != null ? SizedBox() : SizedBox(height: 20),
+                    user != null
+                        ? const SizedBox(height: 20)
+                        : const SizedBox(),
+                    user != null
+                        ? const SizedBox()
+                        : const SizedBox(height: 20),
                     user != null
                         ? Text(
                             name.substring(0, 1).toUpperCase() +
                                 name.substring(1).toLowerCase(),
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
                             ),
@@ -160,16 +163,16 @@ class _UserProfilePageState extends State<UserProfilePage> {
                     user != null
                         ? Text(
                             phoneNumber,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                               color: Color.fromARGB(255, 153, 153, 153),
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     h25,
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 41),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 41),
                       child: NotificationCard(),
                     ),
                     h16,
@@ -189,7 +192,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             height: 25,
                             onTap: () {
                               context.router
-                                  .push(UserAddressesRoute(orders: []));
+                                  .push(UserAddressesRoute(orders: const []));
                             },
                             buttonText: 'Мои адреса'),
                       ),
@@ -210,7 +213,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                               ),
                             ],
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                   ],
                 ),
               ),
@@ -234,7 +237,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                             height: 4,
                             width: 40,
                             decoration: BoxDecoration(
-                              color: Color.fromARGB(255, 231, 231, 231),
+                              color: const Color.fromARGB(255, 231, 231, 231),
                               borderRadius: BorderRadius.circular(50),
                             ),
                           ),
@@ -246,7 +249,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                     builder: (context, snapshot) {
                                       if (snapshot.connectionState ==
                                           ConnectionState.waiting) {
-                                        return CircularProgressIndicator();
+                                        return const CircularProgressIndicator();
                                       }
                                       if (snapshot.hasError) {
                                         return Text('Error: ${snapshot.error}');
@@ -298,7 +301,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                   menuItem['quantity'];
                                               menuItemsWidgets.add(
                                                 Padding(
-                                                  padding: EdgeInsets.symmetric(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
                                                     horizontal: 16,
                                                   ),
                                                   child: GestureDetector(
@@ -306,7 +310,8 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                       List<dynamic>
                                                           extraIngredientsList =
                                                           menuItem[
-                                                              'extraIngredientsList'];
+                                                                  'extraIngredientsList'] ??
+                                                              [];
                                                       double totalPrice =
                                                           extraIngredientsList.fold(
                                                               0,
@@ -316,33 +321,66 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                                                   element[
                                                                       "price"]);
 
-                                                      showOrderDetails(
-                                                          extraIngredientsList:
-                                                              extraIngredientsList
-                                                                  .cast(),
-                                                          extraIngredientsPrice:
-                                                              totalPrice
-                                                                  .toInt(),
-                                                          orderID:
-                                                              order['orderID'],
-                                                          context: context,
-                                                          itemCount:
-                                                              orderLength,
-                                                          dishName:
-                                                              menuItem['name'],
-                                                          quantity: menuItem[
-                                                              'quantity'],
-                                                          price:
-                                                              menuItem['price'],
-                                                          totalPrice: order[
-                                                              'totalPrice'],
-                                                          status: status,
-                                                          isTakeAway:
-                                                              order['isTakeAway'] ==
-                                                                      true
-                                                                  ? 'Самовывоз'
-                                                                  : 'Доставка',
-                                                          date: formattedDate);
+                                                      // showOrderDetails(
+                                                      //     extraIngredientsList:
+                                                      //         extraIngredientsList
+                                                      //             .cast(),
+                                                      //     extraIngredientsPrice:
+                                                      //         totalPrice
+                                                      //             .toInt(),
+                                                      //     orderID:
+                                                      //         order['orderID'],
+                                                      //     context: context,
+                                                      //     itemCount:
+                                                      //         orderLength,
+                                                      //     dishName:
+                                                      //         menuItem['name'],
+                                                      //     quantity: menuItem[
+                                                      //         'quantity'],
+                                                      //     price:
+                                                      //         menuItem['price'],
+                                                      //     totalPrice: order[
+                                                      //         'totalPrice'],
+                                                      //     status: status,
+                                                      //     isTakeAway:
+                                                      //         order['isTakeAway'] ==
+                                                      //                 true
+                                                      //             ? 'Самовывоз'
+                                                      //             : 'Доставка',
+                                                      //     date: formattedDate);
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              OrderInfoPage(
+                                                            // extraIngredients:
+                                                            //     order['menuItems']
+                                                            //                 [
+                                                            //                 index]
+                                                            //             [
+                                                            //             'extraIngredientsList'] ??
+                                                            //         [],
+                                                            createdAt:
+                                                                formattedDate,
+                                                            deliveryPrice: 250,
+                                                            isPayedByCard:
+                                                                false,
+                                                            isTakeAway: order[
+                                                                'isTakeAway'],
+                                                            menuList: order[
+                                                                'menuItems'],
+                                                            orderNumber: order[
+                                                                'orderID'],
+                                                            restarantAddress:
+                                                                'Later Adress Restaurant',
+                                                            restaurantName:
+                                                                'Later Name Restaurant',
+                                                            status: status,
+                                                            totalPrice: order[
+                                                                'totalPrice'],
+                                                          ),
+                                                        ),
+                                                      );
                                                     },
                                                     child: UserOrdersBox(
                                                         statusIcon: statusIcon,
@@ -366,7 +404,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
                                         );
                                       }
 
-                                      return Text('not found');
+                                      return const Text('not found');
                                     },
                                   ),
                                 )
@@ -404,9 +442,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
           title: Text(
             'Заказ №$orderID',
-            style: TextStyle(fontSize: 16),
+            style: const TextStyle(fontSize: 16),
           ),
-          content: Container(
+          content: SizedBox(
             width: MediaQuery.of(context).size.width - 70,
             height: 370,
             child: Column(
@@ -455,7 +493,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
               onPressed: () {
                 Navigator.of(context).pop();
               },
-              child: Text('ОК'),
+              child: const Text('ОК'),
             ),
           ],
         );
@@ -479,12 +517,12 @@ class ParametersOrder extends StatelessWidget {
       children: [
         Text(
           text,
-          style: TextStyle(fontSize: 14),
+          style: const TextStyle(fontSize: 14),
         ),
         const Spacer(),
         Text(
           value,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
         )
       ],
     );

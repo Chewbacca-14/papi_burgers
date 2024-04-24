@@ -1,8 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:papi_burgers/constants/color_palette.dart';
-import 'package:papi_burgers/constants/sized_box.dart';
 
 class ProjectBox extends StatelessWidget {
   final String mainImage;
@@ -42,7 +38,7 @@ class ProjectBox extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Align(
-                  alignment: Alignment(0, 0.787),
+                  alignment: const Alignment(0, 0.787),
                   child: Container(
                     height: 70,
                     decoration: const BoxDecoration(
@@ -70,12 +66,12 @@ class ProjectBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          SizedBox(width: 12),
+                          const SizedBox(width: 12),
                           Container(
                             width: 1,
                             color: const Color.fromARGB(132, 158, 158, 158),
                           ),
-                          SizedBox(width: 20),
+                          const SizedBox(width: 20),
                           Expanded(
                             flex: 8,
                             child: Text(
@@ -88,7 +84,7 @@ class ProjectBox extends StatelessWidget {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           Container(
                             width: 24,
                             height: 24,

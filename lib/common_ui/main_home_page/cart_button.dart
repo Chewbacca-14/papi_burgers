@@ -18,8 +18,8 @@ class _CartButtonState extends State<CartButton> {
           color: Colors.white,
           borderRadius: BorderRadiusDirectional.circular(16),
           border:
-              Border.all(width: 1, color: Color.fromARGB(255, 241, 241, 241))),
-      child: Center(
+              Border.all(width: 1, color: const Color.fromARGB(255, 241, 241, 241))),
+      child: const Center(
           child: Icon(
         Icons.add_shopping_cart_rounded,
         color: primaryColor,

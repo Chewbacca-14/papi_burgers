@@ -7,13 +7,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/common_ui/extra_ingredients_row.dart';
 import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/food_energy_column.dart';
 import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
-import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/extra_ingredients_list.dart';
 
 import 'package:papi_burgers/constants/sized_box.dart';
@@ -65,14 +63,14 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('liked').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       if (doc.exists) {
         Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
         if (data != null) {
           names.add(data['name']);
         }
       }
-    });
+    }
 
     return names;
   }
@@ -91,18 +89,18 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
     } else {}
   }
 
-  Future<void> addToSaved({
-    required int calories,
-    required int carbohydrates,
-    required String description,
-    required int fat,
-    required String imageUrl,
-    required String ingredients,
-    required String name,
-    required int price,
-    required int proteins,
-    required int weight,
-  }) async {
+  Future<void> addToSaved(
+      {required int calories,
+      required int carbohydrates,
+      required String description,
+      required int fat,
+      required String imageUrl,
+      required String ingredients,
+      required String name,
+      required int price,
+      required int proteins,
+      required int weight,
+      required String allergens}) async {
     CollectionReference<Map<String, dynamic>> firestoreCollection =
         FirebaseFirestore.instance.collection('liked');
 
@@ -117,6 +115,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
       'price': price,
       'proteins': proteins,
       'weight': weight,
+      'allergens': allergens,
     });
   }
 
@@ -252,16 +251,17 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                         } else {
                           if (user != null) {
                             addToSaved(
-                                calories: 44,
-                                carbohydrates: 548,
-                                description: 'description',
-                                fat: 87,
+                                calories: widget.calories,
+                                carbohydrates: widget.carbohydrates,
+                                description: widget.description,
+                                fat: widget.fat,
                                 imageUrl: widget.imageUrl,
-                                ingredients: 'ing',
+                                ingredients: widget.ingredients,
                                 name: widget.name,
                                 price: widget.price,
-                                proteins: 74,
-                                weight: 125);
+                                proteins: widget.proteins,
+                                weight: widget.weight,
+                                allergens: widget.allergens);
                             fetchNames();
                           } else {
                             showCustomSnackBar(
@@ -453,7 +453,7 @@ class _MenuItemDetailsPageState extends State<MenuItemDetailsPage> {
                             ? Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Дополнительно',
                                     style: TextStyle(
                                         color: grey7,

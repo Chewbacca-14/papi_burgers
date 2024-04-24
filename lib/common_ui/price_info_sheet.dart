@@ -1,13 +1,10 @@
-import 'dart:developer';
 
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/providers/delivery_price_provider.dart';
 import 'package:papi_burgers/providers/order_type_provider.dart';
-import 'package:papi_burgers/router/app_router.dart';
 import 'package:provider/provider.dart';
 
 class PriceInfoSheet extends StatefulWidget {
@@ -214,7 +211,7 @@ class _PriceInfoRowState extends State<PriceInfoRow> {
                               ),
                             ],
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     const Spacer(),
                     Text(
                       '${widget.value} ₽',

@@ -1,11 +1,7 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:google_places_flutter/google_places_flutter.dart';
-import 'package:google_places_flutter/model/prediction.dart';
 import 'package:papi_burgers/common_ui/address_info_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'package:papi_burgers/constants/color_palette.dart';
@@ -98,7 +94,7 @@ class _AddressSearchPageState extends State<AddressSearchPage> {
         appBar: AppBar(
           backgroundColor: greyf1,
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Поиск адреса',
             style: TextStyle(
               fontSize: 18,
@@ -139,7 +135,7 @@ class _AddressSearchPageState extends State<AddressSearchPage> {
                           },
                           child: Text(
                             placeList[index]['description'],
-                            style: TextStyle(
+                            style: const TextStyle(
                                 fontSize: 16, fontWeight: FontWeight.w700),
                           ),
                         ),

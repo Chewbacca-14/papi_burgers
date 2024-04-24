@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -138,7 +137,7 @@ class _LightContainerFieldState extends State<LightContainerField> {
                   child: Text(
                     widget.hintText,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.grey,
                       fontWeight: FontWeight.w600,
                       fontSize: 16,

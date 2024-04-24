@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/models/extra_ingredients.dart';
+
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
 import 'package:papi_burgers/common_ui/main_home_page/menu_item_card.dart';
@@ -50,14 +50,14 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
     QuerySnapshot querySnapshot =
         await FirebaseFirestore.instance.collection('liked').get();
 
-    querySnapshot.docs.forEach((doc) {
+    for (var doc in querySnapshot.docs) {
       if (doc.exists) {
         Map<String, dynamic>? data = doc.data() as Map<String, dynamic>?;
         if (data != null) {
           names.add(data['name']);
         }
       }
-    });
+    }
 
     return names;
   }
@@ -123,6 +123,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
       'price': price,
       'proteins': proteins,
       'weight': weight,
+      'allergens': allergens,
     });
   }
 
@@ -131,7 +132,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
     super.initState();
     getLikedDishes();
     fetchNames();
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
         showLoading = false;
       });
@@ -145,7 +146,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
     return Scaffold(
       backgroundColor: greyf1,
       body: showLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(color: primaryColor),
             )
           : SizedBox(
@@ -165,7 +166,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(50),
                                 color: Colors.white,
-                                boxShadow: [
+                                boxShadow: const [
                                   BoxShadow(
                                     color: Color.fromARGB(34, 0, 0, 0),
                                     blurRadius: 4,
@@ -214,7 +215,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
                       itemCount: items.length,
                       itemBuilder: (context, index) {
                         final menuItemData = items[index];
-
+                        log(menuItemData['allergens']);
                         return Padding(
                           padding: const EdgeInsets.symmetric(
                               vertical: 6, horizontal: 16),
@@ -246,7 +247,7 @@ class _LikedDishesPageState extends State<LikedDishesPage> {
                               onSave: () {
                                 if (savedNames.contains(menuItemData['name'])) {
                                   removeFromSaved(menuItemData['name']);
-                                  Future.delayed(Duration(milliseconds: 100),
+                                  Future.delayed(const Duration(milliseconds: 100),
                                       () {
                                     fetchNames();
                                     getLikedDishes();

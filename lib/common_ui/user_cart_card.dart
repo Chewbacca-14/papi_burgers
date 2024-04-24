@@ -1,12 +1,9 @@
-import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/common_ui/main_home_page/counter_button.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/db/db_helper.dart';
-import 'package:papi_burgers/models/extra_ingredients.dart';
 
 // ignore: must_be_immutable
 class UserCartCard extends StatefulWidget {

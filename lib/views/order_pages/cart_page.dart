@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:auto_route/auto_route.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/constants/extra_ingredients_list.dart';
 import 'package:papi_burgers/models/menu_item.dart';
 import 'package:papi_burgers/models/order.dart';
 import 'package:papi_burgers/providers/order_provider.dart';
@@ -178,7 +177,7 @@ class _UserCartPageState extends State<UserCartPage> {
                                           borderRadius:
                                               BorderRadius.circular(50),
                                           color: Colors.white,
-                                          boxShadow: [
+                                          boxShadow: const [
                                             BoxShadow(
                                               color:
                                                   Color.fromARGB(34, 0, 0, 0),

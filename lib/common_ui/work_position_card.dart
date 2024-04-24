@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:papi_burgers/common_ui/rounded_icon.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -46,7 +45,7 @@ class WorkPositionCard extends StatelessWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Color.fromARGB(34, 0, 0, 0),
                         blurRadius: 5,
@@ -61,7 +60,7 @@ class WorkPositionCard extends StatelessWidget {
                     ),
                     color: Colors.white,
                   ),
-                  child: Center(
+                  child: const Center(
                     child: Icon(
                       Icons.phone,
                       color: primaryColor,

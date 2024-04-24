@@ -19,7 +19,7 @@ class CustomTabBox extends StatelessWidget {
       width: 100,
       height: 190,
       decoration: BoxDecoration(
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: Color.fromARGB(8, 0, 0, 0),
             blurRadius: 12,

@@ -1,11 +1,7 @@
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:maps_toolkit/maps_toolkit.dart' as map_tool;
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,9 +12,7 @@ import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/address_info_text_field.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
-import 'package:papi_burgers/common_ui/classic_text_field.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
-import 'package:papi_burgers/constants/db_tables_names.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 import 'package:papi_burgers/controllers/show_custom_snackbar.dart';
 import 'package:papi_burgers/providers/current_address_provider.dart';
@@ -42,7 +36,7 @@ class AddressAddPage extends StatefulWidget {
 
 class _AddressAddPageState extends State<AddressAddPage> {
   bool canFindAddress = true;
-  final LatLng initialLocation = LatLng(47.228376, 39.702242);
+  final LatLng initialLocation = const LatLng(47.228376, 39.702242);
   TextEditingController frontDoorsController = TextEditingController();
   TextEditingController numberFlatController = TextEditingController();
   TextEditingController floorController = TextEditingController();
@@ -196,10 +190,10 @@ class _AddressAddPageState extends State<AddressAddPage> {
                       ),
                       circles: {
                         Circle(
-                            circleId: CircleId('1'),
+                            circleId: const CircleId('1'),
                             center: initialLocation,
                             radius: 10000,
-                            fillColor: Color(0xFF006491).withOpacity(0.2),
+                            fillColor: const Color(0xFF006491).withOpacity(0.2),
                             strokeWidth: 2,
                             strokeColor: Colors.red),
                       },
@@ -210,7 +204,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                         icon: Icons.arrow_back,
                         onTap: () {
                           context.router
-                              .replace(UserAddressesRoute(orders: []));
+                              .replace(UserAddressesRoute(orders: const []));
                         },
                       ),
                     ),
@@ -220,7 +214,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                   ],
                 ),
               ),
-              Container(
+              SizedBox(
                 height: 340,
                 width: MediaQuery.of(context).size.width,
                 child: Padding(
@@ -252,10 +246,10 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.start,
                                         children: [
-                                          Padding(
+                                          const Padding(
                                             padding:
-                                                const EdgeInsets.only(left: 37),
-                                            child: const Text(
+                                                EdgeInsets.only(left: 37),
+                                            child: Text(
                                                 'Нажмите, чтобы выбрать вручную',
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
@@ -376,13 +370,13 @@ class _AddressAddPageState extends State<AddressAddPage> {
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(
+                              const Icon(
                                 Icons.warning,
                                 color: Colors.red,
                                 size: 50,
                               ),
                               h20,
-                              Text(
+                              const Text(
                                 'Адрес не в зоне доставки',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold, fontSize: 18),
@@ -392,7 +386,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                   onTap: () {
                                     mapController!
                                         .animateCamera(CameraUpdate.newLatLng(
-                                      LatLng(47.228376, 39.702242),
+                                      const LatLng(47.228376, 39.702242),
                                     ));
                                   },
                                   buttonText: 'Вернуться в зону')
