@@ -91,103 +91,98 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                         ),
                       ),
                       h16,
-                      Row(
-                        children: [
-                          const Column(
-                            children: [
-                              Icon(
-                                Icons.location_on_outlined,
-                                color: primaryColor,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                      !widget.isTakeAway
+                          ? Row(
+                              children: [
+                                const Column(
+                                  children: [
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      color: primaryColor,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            SmallDot(),
+                                            SmallDot(),
+                                            SmallDot(),
+                                            SmallDot(),
+                                            SmallDot(),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    const Icon(
+                                      Icons.location_on_outlined,
+                                      color: primaryColor,
+                                    ),
+                                  ],
+                                ),
+                                Expanded(
+                                  child: Column(
                                     children: [
-                                      SmallDot(),
-                                      SmallDot(),
-                                      SmallDot(),
-                                      SmallDot(),
-                                      SmallDot(),
+                                      ListTile(
+                                        title: Text(
+                                          'Откуда',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          '${widget.restaurantName} - ${widget.restarantAddress}',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
+                                      ListTile(
+                                        title: const Text(
+                                          'Куда',
+                                          style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 14,
+                                          ),
+                                        ),
+                                        subtitle: Text(
+                                          widget.deliveredAddress ??
+                                              'No adress - test',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: primaryColor,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                              const Icon(
-                                Icons.location_on_outlined,
-                                color: primaryColor,
-                              ),
-                            ],
-                          ),
-                          Expanded(
-                            child: Column(
-                              children: [
-                                ListTile(
-                                  title: Text(
-                                    'Откуда',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    '${widget.restaurantName} - ${widget.restarantAddress}',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryColor,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                ListTile(
-                                  title: const Text(
-                                    'Куда',
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  subtitle: Text(
-                                    widget.deliveredAddress ??
-                                        'No adress - test',
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: primaryColor,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
+                                )
                               ],
+                            )
+                          : ListTile(
+                              title: const Text(
+                                'Откуда',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              subtitle: Text(
+                                '${widget.restaurantName} - ${widget.restarantAddress}',
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-
-                      // const Padding(
-                      //   padding: EdgeInsets.only(left: 40),
-                      //   child: Row(
-                      //     mainAxisAlignment: MainAxisAlignment.start,
-                      //     children: [
-                      //       Column(
-                      //         crossAxisAlignment: CrossAxisAlignment.start,
-                      //         children: [
-                      //           SmallDot(),
-                      //           SmallDot(),
-                      //           SmallDot(),
-                      //           SmallDot(),
-                      //           SmallDot(),
-                      //         ],
-                      //       ),
-                      //     ],
-                      //   ),
-                      // ),
-
                       h16,
                     ],
                   ),
@@ -199,54 +194,53 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                     child: Center(
                       child: Column(
                         children: [
-                          SizedBox(
-                            height: 300,
-                            child: ListView.builder(
-                              itemCount: widget.menuList.length,
-                              itemBuilder: (context, index) {
-                                var dish = widget.menuList[index];
-                                var extraIngredients =
-                                    dish['extraIngredientsList'];
-                                double extraIngredientPrice = 0;
-                                extraIngredients != null
-                                    ? extraIngredientPrice =
-                                        calculateExtraIngredientsPrice(
-                                            extraIngredients)
-                                    : null;
-                                var extraIngredientsWidget =
-                                    extraIngredients != null
-                                        ? Text(
-                                            extraIngredients
-                                                .map<String>((extraIngredient) =>
-                                                    '${extraIngredient['name']} - ${extraIngredient['price']} ₽')
-                                                .join('\n'),
-                                            style: const TextStyle(
-                                              fontSize: 14,
-                                            ),
-                                          )
-                                        : SizedBox.shrink();
-                                var totalDishPrice =
-                                    (extraIngredientPrice + dish['price']) *
-                                        dish['quantity'];
-                                int totalDishPriceInt = totalDishPrice.toInt();
-                                return ListTile(
-                                  leading: Text(
-                                    '${dish['quantity']}X',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                          ListView.builder(
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: widget.menuList.length,
+                            itemBuilder: (context, index) {
+                              var dish = widget.menuList[index];
+                              var extraIngredients =
+                                  dish['extraIngredientsList'];
+                              double extraIngredientPrice = 0;
+                              extraIngredients != null
+                                  ? extraIngredientPrice =
+                                      calculateExtraIngredientsPrice(
+                                          extraIngredients)
+                                  : null;
+                              var extraIngredientsWidget =
+                                  extraIngredients != null
+                                      ? Text(
+                                          extraIngredients
+                                              .map<String>((extraIngredient) =>
+                                                  '${extraIngredient['name']} - ${extraIngredient['price']} ₽')
+                                              .join('\n'),
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                          ),
+                                        )
+                                      : SizedBox.shrink();
+                              var totalDishPrice =
+                                  (extraIngredientPrice + dish['price']) *
+                                      dish['quantity'];
+                              int totalDishPriceInt = totalDishPrice.toInt();
+                              return ListTile(
+                                leading: Text(
+                                  '${dish['quantity']}X',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  title: Text(
-                                    '${dish['name']}',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                ),
+                                title: Text(
+                                  '${dish['name']}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
                                   ),
-                                  subtitle: extraIngredientsWidget,
-                                  trailing: Text('$totalDishPriceInt ₽'),
-                                );
-                              },
-                            ),
+                                ),
+                                subtitle: extraIngredientsWidget,
+                                trailing: Text('$totalDishPriceInt ₽'),
+                              );
+                            },
                           ),
                           h16,
                           Container(

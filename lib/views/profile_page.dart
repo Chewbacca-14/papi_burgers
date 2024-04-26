@@ -217,200 +217,208 @@ class _UserProfilePageState extends State<UserProfilePage> {
                   ],
                 ),
               ),
-              h10,
               const Spacer(),
               user != null
-                  ? Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: 320,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(25),
-                          topRight: Radius.circular(25),
-                        ),
-                      ),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 7),
-                          Container(
-                            height: 4,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: const Color.fromARGB(255, 231, 231, 231),
-                              borderRadius: BorderRadius.circular(50),
+                  ? Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                          height: 252,
+                          width: MediaQuery.of(context).size.width,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(25),
+                              topRight: Radius.circular(25),
                             ),
                           ),
-                          uid != null
-                              ? SizedBox(
-                                  height: 309,
-                                  child: StreamBuilder<QuerySnapshot>(
-                                    stream: stream,
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                          ConnectionState.waiting) {
-                                        return const CircularProgressIndicator();
-                                      }
-                                      if (snapshot.hasError) {
-                                        return Text('Error: ${snapshot.error}');
-                                      }
+                          child: Column(
+                            children: [
+                              const SizedBox(height: 7),
+                              Container(
+                                height: 4,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                  color:
+                                      const Color.fromARGB(255, 231, 231, 231),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              uid != null
+                                  ? Expanded(
+                                      child: StreamBuilder<QuerySnapshot>(
+                                        stream: stream,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return const CircularProgressIndicator();
+                                          }
+                                          if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          }
 
-                                      if (snapshot.hasData) {
-                                        final List<QueryDocumentSnapshot>
-                                            documents = snapshot.data!.docs;
-                                        return ListView.builder(
-                                          itemCount: documents.length,
-                                          itemBuilder: (context, index) {
-                                            var order = documents[index];
-                                            int orderLength =
-                                                order['menuItems'].length;
-                                            String status;
-                                            Color statusColor;
-                                            IconData statusIcon;
+                                          if (snapshot.hasData) {
+                                            final List<QueryDocumentSnapshot>
+                                                documents = snapshot.data!.docs;
+                                            return ListView.builder(
+                                              itemCount: documents.length,
+                                              itemBuilder: (context, index) {
+                                                var order = documents[index];
+                                                int orderLength =
+                                                    order['menuItems'].length;
+                                                String status;
+                                                Color statusColor;
+                                                IconData statusIcon;
 
-                                            OrderStatuses orderStatuses;
+                                                OrderStatuses orderStatuses;
 
-                                            orderStatuses = getStatusFromString(
-                                                order['orderStatus']);
-                                            status =
-                                                getStatusText(orderStatuses);
-                                            statusColor =
-                                                getColorFromStatusText(
+                                                orderStatuses =
+                                                    getStatusFromString(
+                                                        order['orderStatus']);
+                                                status = getStatusText(
                                                     orderStatuses);
-                                            statusIcon =
-                                                getIconDataFromStatusText(
-                                                    orderStatuses);
+                                                statusColor =
+                                                    getColorFromStatusText(
+                                                        orderStatuses);
+                                                statusIcon =
+                                                    getIconDataFromStatusText(
+                                                        orderStatuses);
 
-                                            Timestamp timestamp =
-                                                order['datetime'];
-                                            int seconds = timestamp.seconds;
-                                            DateTime dateTime = DateTime
-                                                .fromMillisecondsSinceEpoch(
-                                                    seconds * 1000);
-                                            String formattedDate =
-                                                DateFormat.yMMMd()
-                                                    .format(dateTime);
-                                            int dishCountTotal =
-                                                order['menuItems'].length;
+                                                Timestamp timestamp =
+                                                    order['datetime'];
+                                                int seconds = timestamp.seconds;
+                                                DateTime dateTime = DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                        seconds * 1000);
+                                                String formattedDate =
+                                                    DateFormat.yMMMd()
+                                                        .format(dateTime);
+                                                int dishCountTotal =
+                                                    order['menuItems'].length;
 
-                                            List<Widget> menuItemsWidgets = [];
+                                                List<Widget> menuItemsWidgets =
+                                                    [];
 
-                                            for (var menuItem
-                                                in order['menuItems']) {
-                                              int quantity =
-                                                  menuItem['quantity'];
-                                              menuItemsWidgets.add(
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal: 16,
-                                                  ),
-                                                  child: GestureDetector(
-                                                    onTap: () {
-                                                      List<dynamic>
-                                                          extraIngredientsList =
-                                                          menuItem[
-                                                                  'extraIngredientsList'] ??
-                                                              [];
-                                                      double totalPrice =
-                                                          extraIngredientsList.fold(
-                                                              0,
-                                                              (previousValue,
-                                                                      element) =>
-                                                                  previousValue +
-                                                                  element[
-                                                                      "price"]);
+                                                for (var menuItem
+                                                    in order['menuItems']) {
+                                                  int quantity =
+                                                      menuItem['quantity'];
+                                                  menuItemsWidgets.add(
+                                                    Padding(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal: 16,
+                                                      ),
+                                                      child: GestureDetector(
+                                                        onTap: () {
+                                                          List<dynamic>
+                                                              extraIngredientsList =
+                                                              menuItem[
+                                                                      'extraIngredientsList'] ??
+                                                                  [];
+                                                          double totalPrice =
+                                                              extraIngredientsList.fold(
+                                                                  0,
+                                                                  (previousValue,
+                                                                          element) =>
+                                                                      previousValue +
+                                                                      element[
+                                                                          "price"]);
 
-                                                      // showOrderDetails(
-                                                      //     extraIngredientsList:
-                                                      //         extraIngredientsList
-                                                      //             .cast(),
-                                                      //     extraIngredientsPrice:
-                                                      //         totalPrice
-                                                      //             .toInt(),
-                                                      //     orderID:
-                                                      //         order['orderID'],
-                                                      //     context: context,
-                                                      //     itemCount:
-                                                      //         orderLength,
-                                                      //     dishName:
-                                                      //         menuItem['name'],
-                                                      //     quantity: menuItem[
-                                                      //         'quantity'],
-                                                      //     price:
-                                                      //         menuItem['price'],
-                                                      //     totalPrice: order[
-                                                      //         'totalPrice'],
-                                                      //     status: status,
-                                                      //     isTakeAway:
-                                                      //         order['isTakeAway'] ==
-                                                      //                 true
-                                                      //             ? 'Самовывоз'
-                                                      //             : 'Доставка',
-                                                      //     date: formattedDate);
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              OrderInfoPage(
-                                                            // extraIngredients:
-                                                            //     order['menuItems']
-                                                            //                 [
-                                                            //                 index]
-                                                            //             [
-                                                            //             'extraIngredientsList'] ??
-                                                            //         [],
-                                                            createdAt:
-                                                                formattedDate,
-                                                            deliveryPrice: 250,
-                                                            isPayedByCard:
-                                                                false,
-                                                            isTakeAway: order[
-                                                                'isTakeAway'],
-                                                            menuList: order[
-                                                                'menuItems'],
-                                                            orderNumber: order[
-                                                                'orderID'],
-                                                            restarantAddress:
-                                                                'Later Adress Restaurant',
-                                                            restaurantName:
-                                                                'Later Name Restaurant',
-                                                            status: status,
+                                                          // showOrderDetails(
+                                                          //     extraIngredientsList:
+                                                          //         extraIngredientsList
+                                                          //             .cast(),
+                                                          //     extraIngredientsPrice:
+                                                          //         totalPrice
+                                                          //             .toInt(),
+                                                          //     orderID:
+                                                          //         order['orderID'],
+                                                          //     context: context,
+                                                          //     itemCount:
+                                                          //         orderLength,
+                                                          //     dishName:
+                                                          //         menuItem['name'],
+                                                          //     quantity: menuItem[
+                                                          //         'quantity'],
+                                                          //     price:
+                                                          //         menuItem['price'],
+                                                          //     totalPrice: order[
+                                                          //         'totalPrice'],
+                                                          //     status: status,
+                                                          //     isTakeAway:
+                                                          //         order['isTakeAway'] ==
+                                                          //                 true
+                                                          //             ? 'Самовывоз'
+                                                          //             : 'Доставка',
+                                                          //     date: formattedDate);
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  OrderInfoPage(
+                                                                // extraIngredients:
+                                                                //     order['menuItems']
+                                                                //                 [
+                                                                //                 index]
+                                                                //             [
+                                                                //             'extraIngredientsList'] ??
+                                                                //         [],
+                                                                createdAt:
+                                                                    formattedDate,
+                                                                deliveryPrice:
+                                                                    250,
+                                                                isPayedByCard:
+                                                                    false,
+                                                                isTakeAway: order[
+                                                                    'isTakeAway'],
+                                                                menuList: order[
+                                                                    'menuItems'],
+                                                                orderNumber: order[
+                                                                    'orderID'],
+                                                                restarantAddress:
+                                                                    'Later Adress Restaurant',
+                                                                restaurantName:
+                                                                    'Later Name Restaurant',
+                                                                status: status,
+                                                                totalPrice: order[
+                                                                    'totalPrice'],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        },
+                                                        child: UserOrdersBox(
+                                                            statusIcon:
+                                                                statusIcon,
+                                                            orderStatus: status,
+                                                            color: statusColor,
+                                                            date: formattedDate,
+                                                            dishCount:
+                                                                dishCountTotal *
+                                                                    quantity,
                                                             totalPrice: order[
                                                                 'totalPrice'],
-                                                          ),
-                                                        ),
-                                                      );
-                                                    },
-                                                    child: UserOrdersBox(
-                                                        statusIcon: statusIcon,
-                                                        orderStatus: status,
-                                                        color: statusColor,
-                                                        date: formattedDate,
-                                                        dishCount:
-                                                            dishCountTotal *
-                                                                quantity,
-                                                        totalPrice:
-                                                            order['totalPrice'],
-                                                        type: 'Не оплачено'),
-                                                  ),
-                                                ),
-                                              );
-                                            }
-                                            return Column(
-                                              children: menuItemsWidgets,
+                                                            type:
+                                                                'Не оплачено'),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }
+                                                return Column(
+                                                  children: menuItemsWidgets,
+                                                );
+                                              },
                                             );
-                                          },
-                                        );
-                                      }
+                                          }
 
-                                      return const Text('not found');
-                                    },
-                                  ),
-                                )
-                              : const SizedBox(),
-                        ],
-                      ))
+                                          return const Text('not found');
+                                        },
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                            ],
+                          )),
+                    )
                   : const SizedBox(),
             ],
           ),

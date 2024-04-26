@@ -245,6 +245,7 @@ class _MenuMainPageState extends State<MenuMainPage>
                         h20,
                         const Text(
                           // projectName,
+                          //TODO
                           'Papi Burgers',
                           style: TextStyle(
                             fontSize: 28,
@@ -269,7 +270,8 @@ class _MenuMainPageState extends State<MenuMainPage>
                                   height: 48,
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(16),
-                                    color: const Color.fromARGB(255, 246, 246, 246),
+                                    color: const Color.fromARGB(
+                                        255, 246, 246, 246),
                                   ),
                                   child: const Padding(
                                     padding: EdgeInsets.all(14),
@@ -389,8 +391,8 @@ class _MenuMainPageState extends State<MenuMainPage>
                                               .contains(element['name'])) {
                                             removeFromSaved(element['name']);
                                             Future.delayed(
-                                                const Duration(milliseconds: 100),
-                                                () {
+                                                const Duration(
+                                                    milliseconds: 100), () {
                                               fetchNames();
                                             });
                                           } else {

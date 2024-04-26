@@ -1,4 +1,3 @@
-
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
@@ -26,20 +25,6 @@ class _HomePageState extends State<HomePage> {
     const UserCartPage(),
     const UserProfilePage(),
   ];
-  // bool result = false;
-  // Future checkInternetConnection() async {
-  //   Timer.periodic(Duration(seconds: 2), (timer) async {
-  //     setState(() async {
-  //       result = await InternetConnection().hasInternetAccess;
-  //     });
-  //   });
-  // }
-
-  // @override
-  // void initState() {
-  //   checkInternetConnection();
-  //   super.initState();
-  // }
 
   @override
   Widget build(BuildContext context) {
