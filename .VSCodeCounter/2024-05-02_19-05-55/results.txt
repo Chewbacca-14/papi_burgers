@@ -1,0 +1,110 @@
+Date : 2024-05-02 19:05:55
+Directory : c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib
+Total : 69 files,  8586 codes, 310 comments, 694 blanks, all 9590 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |         69 |      8,586 |        310 |        694 |      9,590 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++--------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                                 | files      | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                                    |         69 |      8,586 |        310 |        694 |      9,590 |
+| . (Files)                                                                                                                            |          1 |         72 |          0 |          5 |         77 |
+| common_ui                                                                                                                            |         23 |      2,398 |         54 |        129 |      2,581 |
+| common_ui (Files)                                                                                                                    |         12 |      1,553 |         50 |         84 |      1,687 |
+| common_ui\auth_pages                                                                                                                 |          1 |         33 |          0 |          3 |         36 |
+| common_ui\main_home_page                                                                                                             |          9 |        704 |          2 |         38 |        744 |
+| common_ui\project_selecting_box                                                                                                      |          1 |        108 |          2 |          4 |        114 |
+| constants                                                                                                                            |          5 |        196 |          0 |         14 |        210 |
+| controllers                                                                                                                          |          3 |         81 |          3 |         15 |         99 |
+| db                                                                                                                                   |          1 |        165 |          0 |         24 |        189 |
+| models                                                                                                                               |          7 |        300 |         21 |         49 |        370 |
+| providers                                                                                                                            |          9 |        218 |          3 |         50 |        271 |
+| router                                                                                                                               |          2 |        529 |         41 |         99 |        669 |
+| views                                                                                                                                |         18 |      4,627 |        188 |        309 |      5,124 |
+| views (Files)                                                                                                                        |          6 |      1,527 |         56 |        102 |      1,685 |
+| views\date_picker                                                                                                                    |          1 |        386 |          4 |         21 |        411 |
+| views\order_pages                                                                                                                    |          4 |      1,897 |        128 |        135 |      2,160 |
+| views\refactored_pages                                                                                                               |          7 |        817 |          0 |         51 |        868 |
++--------------------------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++--------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                                             | language | code       | comment    | blank      | total      |
++--------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\address_info_text_field.dart                     | Dart     |         41 |          0 |          5 |         46 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\auth_pages\pin_code_fields.dart                  | Dart     |         33 |          0 |          3 |         36 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\classic_long_button.dart                         | Dart     |         59 |          0 |          3 |         62 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\classic_text_field.dart                          | Dart     |        142 |          0 |         11 |        153 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\extra_ingredients_row.dart                       | Dart     |         79 |          0 |          5 |         84 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\app_bar_restaurant_selection.dart | Dart     |         53 |          2 |          4 |         59 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\cart_button.dart                  | Dart     |         26 |          0 |          4 |         30 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\counter_button.dart               | Dart     |         34 |          0 |          3 |         37 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\custom_tab_box.dart               | Dart     |         81 |          0 |          3 |         84 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\food_energy_column.dart           | Dart     |         33 |          0 |          3 |         36 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\menu_item_card.dart               | Dart     |        183 |          0 |          4 |        187 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\more_icon.dart                    | Dart     |         45 |          0 |          4 |         49 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\search_bottom_sheet.dart          | Dart     |        122 |          0 |          9 |        131 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\main_home_page\searching_dish_box.dart           | Dart     |        127 |          0 |          4 |        131 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\notification_card.dart                           | Dart     |         63 |          0 |          5 |         68 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\order_info.dart                                  | Dart     |        348 |          0 |         15 |        363 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\price_info_sheet.dart                            | Dart     |        226 |          0 |         10 |        236 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\project_selecting_box\project_box.dart           | Dart     |        108 |          2 |          4 |        114 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\restaurant_info_dialog.dart                      | Dart     |         71 |          0 |          3 |         74 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\rounded_icon.dart                                | Dart     |         38 |          0 |          3 |         41 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\user_cart_card.dart                              | Dart     |        260 |          3 |         14 |        277 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\user_orders_box.dart                             | Dart     |        144 |         47 |          6 |        197 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\common_ui\work_position_card.dart                          | Dart     |         82 |          0 |          4 |         86 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\color_palette.dart                               | Dart     |         10 |          0 |          2 |         12 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\db_tables_names.dart                             | Dart     |          2 |          0 |          1 |          3 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\extra_ingredients_list.dart                      | Dart     |         31 |          0 |          1 |         32 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\sized_box.dart                                   | Dart     |         10 |          0 |          3 |         13 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\statuses.dart                                    | Dart     |        143 |          0 |          7 |        150 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\controllers\login_controller.dart                          | Dart     |         52 |          2 |          8 |         62 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\controllers\show_custom_snackbar.dart                      | Dart     |          9 |          0 |          2 |         11 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\controllers\timer_controller.dart                          | Dart     |         20 |          1 |          5 |         26 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\db\db_helper.dart                                          | Dart     |        165 |          0 |         24 |        189 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\main.dart                                                  | Dart     |         72 |          0 |          5 |         77 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\address_model.dart                                  | Dart     |         16 |          0 |          4 |         20 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\extra_ingredients.dart                              | Dart     |         44 |          1 |         11 |         56 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\location_model.dart                                 | Dart     |          6 |          0 |          2 |          8 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\menu_item.dart                                      | Dart     |        137 |          1 |         12 |        150 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\order.dart                                          | Dart     |         52 |         19 |         13 |         84 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\restaurant_model.dart                               | Dart     |         28 |          0 |          4 |         32 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\models\user.dart                                           | Dart     |         17 |          0 |          3 |         20 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\current_address_provider.dart                    | Dart     |         29 |          0 |          6 |         35 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\date_picker_provider.dart                        | Dart     |         82 |          3 |         12 |         97 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\delivery_price_provider.dart                     | Dart     |          8 |          0 |          3 |         11 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\firestore_db_provider.dart                       | Dart     |         50 |          0 |         11 |         61 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\navigation_index_provider.dart                   | Dart     |          8 |          0 |          3 |         11 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\order_address_provider.dart                      | Dart     |         14 |          0 |          4 |         18 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\order_provider.dart                              | Dart     |          8 |          0 |          3 |         11 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\order_type_provider.dart                         | Dart     |          9 |          0 |          4 |         13 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\providers\restaurant_provider.dart                         | Dart     |         10 |          0 |          4 |         14 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\router\app_router.dart                                     | Dart     |         44 |          0 |          3 |         47 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\router\app_router.gr.dart                                  | Dart     |        485 |         41 |         96 |        622 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\address_add_page.dart                                | Dart     |        372 |         11 |         20 |        403 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\address_search_page.dart                             | Dart     |        128 |          5 |         19 |        152 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\date_picker\date_picker.dart                         | Dart     |        386 |          4 |         21 |        411 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\liked_dishes_page.dart                               | Dart     |        257 |          2 |         23 |        282 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\login_code_page.dart                                 | Dart     |        150 |          1 |          7 |        158 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\order_pages\cart_page.dart                           | Dart     |        350 |         39 |         31 |        420 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\order_pages\dish_details.dart                        | Dart     |        552 |         38 |         33 |        623 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\order_pages\menu_page.dart                           | Dart     |        428 |         47 |         40 |        515 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\order_pages\order_details_page.dart                  | Dart     |        567 |          4 |         31 |        602 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\profile_page.dart                                    | Dart     |        485 |         37 |         21 |        543 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\about_project_page.dart             | Dart     |        194 |          0 |         10 |        204 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\home_page.dart                      | Dart     |         76 |          0 |          7 |         83 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\login_page.dart                     | Dart     |        177 |          0 |          8 |        185 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\order_confirmation_page.dart        | Dart     |         50 |          0 |          3 |         53 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\project_selecting_page.dart         | Dart     |         90 |          0 |          9 |         99 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\restaurants_map.dart                | Dart     |        134 |          0 |          9 |        143 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\refactored_pages\user_details_page.dart              | Dart     |         96 |          0 |          5 |        101 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\views\user_addresses_page.dart                             | Dart     |        135 |          0 |         12 |        147 |
+| Total                                                                                                                                |          |      8,586 |        310 |        694 |      9,590 |
++--------------------------------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

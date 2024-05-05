@@ -3,8 +3,11 @@ import 'dart:developer';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:expandable_page_view/expandable_page_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -39,7 +42,7 @@ class _MenuMainPageState extends State<MenuMainPage>
   List<String> catImages = [];
   List<Map<String, dynamic>> menuItems = [];
 
-  late TabController _tabController;
+  // TabController? _tabController;
 
   void searchBottomSheet() {
     showModalBottomSheet<void>(
@@ -78,6 +81,7 @@ class _MenuMainPageState extends State<MenuMainPage>
 
   List<String> savedNames = [];
 
+  int selectedIndex = 0;
   Future<void> removeFromSaved(String name) async {
     CollectionReference<Map<String, dynamic>> firestoreCollection =
         FirebaseFirestore.instance.collection('liked');
@@ -130,7 +134,7 @@ class _MenuMainPageState extends State<MenuMainPage>
     super.initState();
     fetchData();
     getRestaurantInfo();
-    _tabController = TabController(length: categories.length, vsync: this);
+    // _tabController = TabController(length: categories.length, vsync: this);
     fetchNames();
     request();
     Future.delayed(const Duration(milliseconds: 900), () {
@@ -156,11 +160,11 @@ class _MenuMainPageState extends State<MenuMainPage>
     setState(() {
       categories = List<String>.from(restaurantDoc['categories']);
       catImages = List<String>.from(restaurantDoc['catImages']);
-      _tabController = TabController(length: categories.length, vsync: this);
-      _tabController.addListener(() {
-        log('${_tabController.index}');
-        setState(() {});
-      });
+      // _tabController = TabController(length: categories.length, vsync: this);
+      // _tabController?.addListener(() {
+      //   log('${_tabController?.index}');
+      //   setState(() {});
+      // });
 
       // Fetch menu items
       menuItems = List<Map<String, dynamic>>.from(restaurantDoc['menu']);
@@ -234,111 +238,104 @@ class _MenuMainPageState extends State<MenuMainPage>
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: DefaultTabController(
                 length: categories.length,
+                initialIndex: 0,
                 child: SingleChildScrollView(
-                  child: SizedBox(
-                    height: menuItems.length.toDouble() != 0
-                        ? menuItems.length.toDouble() * 300 * 2.3
-                        : 300,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        h20,
-                        const Text(
-                          // projectName,
-                          //TODO
-                          'Papi Burgers',
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                          ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      h20,
+                      const Text(
+                        // projectName,
+                        //TODO
+                        'Papi Burgers',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
                         ),
-                        const Text(
-                          'Доставка еды и напитков',
-                          style: TextStyle(
-                            fontSize: 16,
-                          ),
+                      ),
+                      const Text(
+                        'Доставка еды и напитков',
+                        style: TextStyle(
+                          fontSize: 16,
                         ),
-                        h20,
-                        Row(
-                          children: [
-                            Expanded(
-                              child: GestureDetector(
-                                onTap: () {
-                                  searchBottomSheet();
-                                },
-                                child: Container(
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(16),
-                                    color: const Color.fromARGB(
-                                        255, 246, 246, 246),
-                                  ),
-                                  child: const Padding(
-                                    padding: EdgeInsets.all(14),
-                                    child: Row(
-                                      children: [
-                                        Icon(Icons.search),
-                                        w12,
-                                        Text(
-                                          'Найдите любимое блюдо...',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Color.fromARGB(
-                                                255, 153, 153, 153),
-                                          ),
+                      ),
+                      h20,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                searchBottomSheet();
+                              },
+                              child: Container(
+                                height: 48,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(16),
+                                  color:
+                                      const Color.fromARGB(255, 246, 246, 246),
+                                ),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(14),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.search),
+                                      w12,
+                                      Text(
+                                        'Найдите любимое блюдо...',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Color.fromARGB(
+                                              255, 153, 153, 153),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
-                            w12,
-                            RoundedIcon(
-                              icon: Icons.location_on_outlined,
-                              isWhite: true,
-                              onTap: () {
-                                context.router.push(const RestaurantMapRoute());
-                              },
+                          ),
+                          w12,
+                          RoundedIcon(
+                            icon: Icons.location_on_outlined,
+                            isWhite: true,
+                            onTap: () {
+                              context.router.push(const RestaurantMapRoute());
+                            },
+                          )
+                        ],
+                      ),
+                      h20,
+                      TabBar(
+                        splashBorderRadius: BorderRadius.circular(22),
+                        labelPadding: EdgeInsets.zero,
+                        padding: EdgeInsets.zero,
+                        onTap: (value) {
+                          setState(() {
+                            selectedIndex = value;
+                          });
+                        },
+                        dividerColor: Colors.transparent,
+                        // isScrollable: true,
+                        indicatorColor: Colors.transparent,
+                        tabs: categories
+                            .map(
+                              (category) => CustomTabBox(
+                                name: category,
+                                photo: catImages[categories.indexOf(category)],
+                                isSelected: selectedIndex ==
+                                    categories.indexOf(category),
+                              ),
                             )
-                          ],
-                        ),
-                        h20,
-                        TabBar(
-                          splashBorderRadius: BorderRadius.circular(22),
-                          labelPadding: EdgeInsets.zero,
-                          padding: EdgeInsets.zero,
-
-                          onTap: (value) {
-                            _tabController.animateTo(value);
-                            setState(() {});
-                          },
-                          controller: _tabController,
-                          dividerColor: Colors.transparent,
-                          // isScrollable: true,
-                          indicatorColor: Colors.transparent,
-                          tabs: categories
-                              .map(
-                                (category) => CustomTabBox(
-                                  name: category,
-                                  photo:
-                                      catImages[categories.indexOf(category)],
-                                  isSelected: _tabController.index ==
-                                      categories.indexOf(category),
-                                ),
-                              )
-                              .toList(),
-                        ),
-                        h20,
-                        Expanded(
-                          child: TabBarView(
-                            physics: const AlwaysScrollableScrollPhysics(),
-                            controller: _tabController,
-                            children: categories.map((category) {
+                            .toList(),
+                      ),
+                      h20,
+                      categories.isNotEmpty
+                          ? categories.map((category) {
                               List<Map<String, dynamic>> items = menuItems
                                   .where((item) => item['cat'] == category)
                                   .toList();
                               return GroupedListView(
+                                shrinkWrap: true,
                                 physics: const NeverScrollableScrollPhysics(),
                                 elements: items,
                                 groupBy: (element) {
@@ -438,11 +435,9 @@ class _MenuMainPageState extends State<MenuMainPage>
 
                               //   },
                               // );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
-                    ),
+                            }).toList()[selectedIndex]
+                          : const SizedBox.shrink(),
+                    ],
                   ),
                 )),
           ),

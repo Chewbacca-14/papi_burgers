@@ -1,0 +1,29 @@
+Date : 2024-05-02 19:06:19
+Directory : c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants
+Total : 5 files,  196 codes, 0 comments, 14 blanks, all 210 lines
+
+Languages
++----------+------------+------------+------------+------------+------------+
+| language | files      | code       | comment    | blank      | total      |
++----------+------------+------------+------------+------------+------------+
+| Dart     |          5 |        196 |          0 |         14 |        210 |
++----------+------------+------------+------------+------------+------------+
+
+Directories
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                            | files      | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                               |          5 |        196 |          0 |         14 |        210 |
++-----------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-----------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| filename                                                                                                        | language | code       | comment    | blank      | total      |
++-----------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\color_palette.dart          | Dart     |         10 |          0 |          2 |         12 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\db_tables_names.dart        | Dart     |          2 |          0 |          1 |          3 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\extra_ingredients_list.dart | Dart     |         31 |          0 |          1 |         32 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\sized_box.dart              | Dart     |         10 |          0 |          3 |         13 |
+| c:\Users\Max\Desktop\PROGRAMMING\Flutter\Commercial Apps\papi_burgers\lib\constants\statuses.dart               | Dart     |        143 |          0 |          7 |        150 |
+| Total                                                                                                           |          |        196 |          0 |         14 |        210 |
++-----------------------------------------------------------------------------------------------------------------+----------+------------+------------+------------+------------+

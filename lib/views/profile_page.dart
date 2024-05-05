@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:papi_burgers/common_ui/no_internet_connection.dart';
 import 'package:papi_burgers/common_ui/order_info.dart';
 import 'package:papi_burgers/common_ui/user_orders_box.dart';
 import 'package:papi_burgers/constants/statuses.dart';
@@ -77,6 +78,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
   @override
   Widget build(BuildContext context) {
     User? user = FirebaseAuth.instance.currentUser;
+
     return SafeArea(
       child: Scaffold(
         backgroundColor: greyf1,
