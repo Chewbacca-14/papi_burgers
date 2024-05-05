@@ -55,7 +55,7 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
           log('NOT connected');
 
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NotConnectedPage()));
+              MaterialPageRoute(builder: (context) => const NotConnectedPage()));
           break;
       }
     });
@@ -125,6 +125,6 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
               ],
             ),
           )
-        : NotConnectedPage();
+        : const NotConnectedPage();
   }
 }

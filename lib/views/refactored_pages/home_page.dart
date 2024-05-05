@@ -1,8 +1,6 @@
-import 'dart:developer';
 
 import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/views/liked_dishes_page.dart';
 import 'package:papi_burgers/constants/color_palette.dart';

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 
@@ -19,7 +18,7 @@ class _NotConnectedPageState extends State<NotConnectedPage> {
               bool result = await InternetConnection().hasInternetAccess;
               result ? Navigator.pop(context) : null;
             },
-            child: Text('Try')),
+            child: const Text('Try')),
       ),
     );
   }

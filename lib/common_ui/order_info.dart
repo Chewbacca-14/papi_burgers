@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:papi_burgers/constants/color_palette.dart';
 import 'package:papi_burgers/constants/sized_box.dart';
 
@@ -117,7 +115,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                                         ),
                                       ],
                                     ),
-                                    const Icon(
+                                    Icon(
                                       Icons.location_on_outlined,
                                       color: primaryColor,
                                     ),
@@ -127,7 +125,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                                   child: Column(
                                     children: [
                                       ListTile(
-                                        title: Text(
+                                        title: const Text(
                                           'Откуда',
                                           style: TextStyle(
                                             color: Colors.grey,
@@ -136,7 +134,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                                         ),
                                         subtitle: Text(
                                           '${widget.restaurantName} - ${widget.restarantAddress}',
-                                          style: TextStyle(
+                                          style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: primaryColor,
                                             fontSize: 16,
@@ -195,7 +193,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                       child: Column(
                         children: [
                           ListView.builder(
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             shrinkWrap: true,
                             itemCount: widget.menuList.length,
                             itemBuilder: (context, index) {
@@ -219,7 +217,7 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                                             fontSize: 14,
                                           ),
                                         )
-                                      : SizedBox.shrink();
+                                      : const SizedBox.shrink();
                               var totalDishPrice =
                                   (extraIngredientPrice + dish['price']) *
                                       dish['quantity'];
@@ -267,11 +265,11 @@ class _OrderInfoPageState extends State<OrderInfoPage> {
                             color: Colors.grey.shade300,
                           ),
                           h16,
-                          Padding(
-                            padding: const EdgeInsets.only(left: 16),
+                          const Padding(
+                            padding: EdgeInsets.only(left: 16),
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child: const Text(
+                              child: Text(
                                 'Способ оплаты',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
