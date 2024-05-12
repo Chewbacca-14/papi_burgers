@@ -192,8 +192,9 @@ class _UserProfilePageState extends State<UserProfilePage> {
                         child: ClassicLongButton(
                             height: 25,
                             onTap: () {
-                              context.router
-                                  .push(UserAddressesRoute(orders: const []));
+                              context.router.push(UserAddressesRoute(
+                                orders: const [],
+                              ));
                             },
                             buttonText: 'Мои адреса'),
                       ),

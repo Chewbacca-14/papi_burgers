@@ -186,12 +186,21 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             h16,
-            const Padding(
+            Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      )),
+                  Spacer(),
                   Text(
                     'Оформление заказа',
                     style: TextStyle(
@@ -199,6 +208,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                         fontSize: 18,
                         fontWeight: FontWeight.w700),
                   ),
+                  const Spacer(),
                 ],
               ),
             ),

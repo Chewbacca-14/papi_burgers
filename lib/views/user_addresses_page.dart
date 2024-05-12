@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:papi_burgers/models/order.dart';
+import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/classic_long_button.dart';
@@ -18,8 +19,12 @@ import 'package:sqflite/sqflite.dart';
 class UserAddressesPage extends StatefulWidget {
   final bool returnOrderDetails;
   final List<OrderModel> orders;
-  const UserAddressesPage(
-      {super.key, this.returnOrderDetails = false, required this.orders});
+
+  const UserAddressesPage({
+    super.key,
+    this.returnOrderDetails = false,
+    required this.orders,
+  });
 
   @override
   State<UserAddressesPage> createState() => _UserAddressesPageState();
@@ -61,12 +66,20 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
 
   @override
   Widget build(BuildContext context) {
+    NavigationIndexProvider navigationIndexProvider =
+        Provider.of<NavigationIndexProvider>(context, listen: true);
     OrderAddressProvider orderAddressProvider =
         Provider.of<OrderAddressProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: greyf1,
         centerTitle: true,
+        leading: BackButton(
+          onPressed: () {
+            navigationIndexProvider.selectedIndex = 3;
+            context.router.push(HomeRoute());
+          },
+        ),
         title: const Text(
           'Мои адреса',
           style: TextStyle(
@@ -102,6 +115,7 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                 var address = addressesList[index];
                 return GestureDetector(
                   onTap: () {
+                    if (widget.orders == []) {}
                     orderAddressProvider.changeOrderAddress(Address(
                       address: address.address,
                       frontDoorNumber: address.frontDoorNumber,
@@ -112,13 +126,14 @@ class _UserAddressesPageState extends State<UserAddressesPage> {
                     if (widget.returnOrderDetails) {
                       context.router
                           .replace(OrderDetailsRoute(order: widget.orders));
-                    } else {}
+                      Navigator.pop(context);
+                    }
                   },
                   child: ListTile(
                     title: Text(
                       address.address,
-                      style:
-                          const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.w700),
                     ),
                     trailing: IconButton(
                       onPressed: () async {

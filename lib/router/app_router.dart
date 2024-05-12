@@ -12,6 +12,7 @@ import 'package:papi_burgers/views/login_code_page.dart';
 import 'package:papi_burgers/views/refactored_pages/login_page.dart';
 import 'package:papi_burgers/views/order_pages/dish_details.dart';
 import 'package:papi_burgers/views/order_pages/menu_page.dart';
+import 'package:papi_burgers/views/refactored_pages/not_connected_page.dart';
 import 'package:papi_burgers/views/refactored_pages/order_confirmation_page.dart';
 import 'package:papi_burgers/views/refactored_pages/project_selecting_page.dart';
 import 'package:papi_burgers/views/refactored_pages/restaurants_map.dart';
@@ -42,5 +43,6 @@ class AppRouter extends _$AppRouter {
         AutoRoute(page: AboutProjectRoute.page),
         AutoRoute(page: OrderDetailsRoute.page),
         AutoRoute(page: OrderConfirmationRoute.page),
+        AutoRoute(page: NotConnectedRoute.page),
       ];
 }

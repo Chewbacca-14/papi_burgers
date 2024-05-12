@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:papi_burgers/providers/date_picker_provider.dart';
+import 'package:papi_burgers/providers/internet_status_provider.dart';
 import 'package:papi_burgers/providers/order_address_provider.dart';
 import 'package:papi_burgers/providers/order_provider.dart';
 import 'package:papi_burgers/providers/order_type_provider.dart';
@@ -13,6 +15,7 @@ import 'package:papi_burgers/providers/delivery_price_provider.dart';
 import 'package:papi_burgers/providers/firestore_db_provider.dart';
 import 'package:papi_burgers/providers/navigation_index_provider.dart';
 import 'package:papi_burgers/providers/restaurant_provider.dart';
+import 'package:papi_burgers/views/refactored_pages/not_connected_page.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -32,8 +35,18 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: providers,
-      child: MaterialApp.router(
-        routerConfig: _appRouter.config(),
+      child: Consumer<InternetStatusProvider>(
+        builder: (context, value, child) {
+          switch (value.status) {
+            case InternetStatus.connected:
+              return MaterialApp.router(
+                routerDelegate: _appRouter.delegate(),
+                routeInformationParser: _appRouter.defaultRouteParser(),
+              );
+            case InternetStatus.disconnected:
+              return const MaterialApp(home: NotConnectedPage());
+          }
+        },
       ),
     );
   }
@@ -67,10 +80,13 @@ List<SingleChildWidget> providers = [
   ChangeNotifierProvider<OrderTypeProvider>(
     create: (_) => OrderTypeProvider(),
   ),
-   ChangeNotifierProvider<OrderAddressProvider>(
+  ChangeNotifierProvider<OrderAddressProvider>(
     create: (_) => OrderAddressProvider(),
   ),
   ChangeNotifierProvider<OrderProvider>(
     create: (_) => OrderProvider(),
+  ),
+  ChangeNotifierProvider<InternetStatusProvider>(
+    create: (_) => InternetStatusProvider(),
   ),
 ];

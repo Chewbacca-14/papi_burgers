@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:papi_burgers/providers/firestore_db_provider.dart';
+import 'package:papi_burgers/providers/internet_status_provider.dart';
 import 'package:papi_burgers/router/app_router.dart';
 import 'package:papi_burgers/common_ui/project_selecting_box/project_box.dart';
 
@@ -40,23 +41,16 @@ class _ProjectSelectingPageState extends State<ProjectSelectingPage> {
   void initState() {
     loadingTimer();
     super.initState();
+    checkInternetConnection();
+  }
 
-    final listener =
-        InternetConnection().onStatusChange.listen((InternetStatus status) {
-      switch (status) {
-        case InternetStatus.connected:
-          log('connected');
-          setState(() {
-            internetConnected = true;
-          });
-          // Navigator.pop(context);
-          break;
-        case InternetStatus.disconnected:
-          log('NOT connected');
-
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const NotConnectedPage()));
-          break;
+  void checkInternetConnection() {
+    final connectionProvider =
+        Provider.of<InternetStatusProvider>(context, listen: false);
+    InternetConnection().onStatusChange.listen((InternetStatus status) {
+      connectionProvider.updateStatus(status);
+      if (status == InternetStatus.disconnected) {
+        Navigator.pushReplacementNamed(context, '/not-connected');
       }
     });
   }

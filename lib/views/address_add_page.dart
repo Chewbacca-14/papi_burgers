@@ -203,8 +203,9 @@ class _AddressAddPageState extends State<AddressAddPage> {
                       child: RoundedIcon(
                         icon: Icons.arrow_back,
                         onTap: () {
-                          context.router
-                              .replace(UserAddressesRoute(orders: const []));
+                          context.router.replace(UserAddressesRoute(
+                            orders: const [],
+                          ));
                         },
                       ),
                     ),
@@ -247,8 +248,7 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           const Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 37),
+                                            padding: EdgeInsets.only(left: 37),
                                             child: Text(
                                                 'Нажмите, чтобы выбрать вручную',
                                                 overflow: TextOverflow.ellipsis,
@@ -354,8 +354,9 @@ class _AddressAddPageState extends State<AddressAddPage> {
                                         );
                                         showCustomSnackBar(context, 'Сохранено',
                                             AnimatedSnackBarType.success);
-                                        context.router.push(
-                                            UserAddressesRoute(orders: widget.orders, returnOrderDetails: true));
+                                        context.router.push(UserAddressesRoute(
+                                            orders: widget.orders,
+                                            returnOrderDetails: true));
                                       } catch (e) {
                                         showCustomSnackBar(
                                             context,
